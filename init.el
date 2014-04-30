@@ -5,91 +5,29 @@
 (setq column-number-mode t)
 
 
-
-;; Experiment with packaging.
-;; http://stackoverflow.com/questions/14836958/updating-packages-in-emacs
-(require 'package)
-(setq rw-packages
-      '(
-	elpy
-	helm
-	jedi
-	magit
-	yasnippet
-	))
-
-(package-initialize)
-(add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/"))
-(add-to-list 'package-archives
-	     '("org" . "http://orgmode.org/elpa/"))
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
-
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-(dolist (pkg rw-packages)
-  (when (and (not (package-installed-p pkg))
-	     (assoc pkg package-archive-contents))
-    (package-install pkg)))
-
-(defun package-list-unaccounted-packages ()
-  "Like `package-list-packages', but shows only the packages that
-  are installed and are not in `rw-packages'.  Useful for
-  cleaning out unwanted packages."
-  (interactive)
-  (package-show-package-list
-   (remove-if-not (lambda (x) (and (not (memq x rw-packages))
-				   (not (package-built-in-p x))
-				   (package-installed-p x)))
-		  (mapcar 'car package-archive-contents))))
+;; Do not show backslash at end of wrapped line.
+;; (Convenient for copy/paste to shell.)
+;; http://www.emacswiki.org/emacs/LineWrap
+(set-display-table-slot standard-display-table 'wrap ?\ )
 
 
-;; Python:  elpy
-(elpy-enable)
-(elpy-use-ipython)
-(elpy-clean-modeline)
-;;
-;; To get rid of left highlights:
-;; M-x highlight-indentation-mode
-;;
-;; Also, remove from elpy minor mode.
-;; deactivate highlight-indentation-mode
-;; https://github.com/chaoflow/.emacs.d/blob/master/setup-python.el
-(cl-callf2 delq 'highlight-indentation-mode elpy-default-minor-modes)
+;; org
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
 
 
-
-;; helm
-(global-set-key (kbd "C-c h") 'helm-mini)
-(helm-mode 1)
-
-
-;; Python:  jedi
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+;; ido
+(require 'ido)
+(ido-mode t)
+(ido-everywhere t)
+(setq ido-enable-flex-matching t)  ;; 'aa' matches 'alpha'
+(setq ido-use-filename-at-point t)
 
 
-;; magit
-;;(require 'magit)
-
-
-;; yas
-;;(require 'yasnippet)
-(setq yas-snippet-dirs
-      '("~/.emacs.d/elpa/yasnippet-20140106.1009/snippets"
-;; 	"~/.emacs.d/elisp/yasnippet-git/yasmate/snippets" ;; yasmate
-;; 	"~/.emacs.d/elisp/yasnippet-git/snippets" ;; the default collection
- 	))
-(yas-global-mode 1) ;; or M-x yas-reload-all if started YASnippet already.
-
-
-;; python-mode
-;; (add-to-list 'load-path "~/.emacs.d/elisp/python-mode-bzr")
-;; (setq py-install-directory "~/.emacs.d/elisp/python-mode-bzr")
-;; (require 'python-mode)
-;; (setq py-shell-name "ipython")
+;; dired
+;; So do not created many dired buffers.
+;;(dired-toggle-find-file-reuse-dir 1)
 
 
 ;; zsh mode when loading in .zsh* files.
@@ -101,11 +39,13 @@
 		(sh-set-shell "zsh"))))
 
 
+
 ;; My stuff.
 ;; Function keys
 (add-to-list 'load-path "~/.emacs.d/rw")
 (load-library "rw_funcs")
 (load-library "rw_keys")
+
 
 
 ;; At end?
@@ -115,3 +55,4 @@
 ;; The default desktop is loaded anyway if it is locked
 (setq desktop-load-locked-desktop t)
 (desktop-read)
+(put 'dired-find-alternate-file 'disabled nil)

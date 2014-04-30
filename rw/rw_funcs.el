@@ -1,3 +1,4 @@
+
 ;; Load ~/.emacs.d/init.el
 ;; Bound do M-x e
 (fset 'e

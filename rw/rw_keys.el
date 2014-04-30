@@ -34,6 +34,35 @@
 ;;
 ;; Don't forget either ' eval-after-load is not a macro, so it needs them.
 
+;; Issues with Mac and iterm2
+;; http://stackoverflow.com/questions/19062315/how-do-i-find-out-what-escape-sequence-my-terminal-needs-to-send
+;; http://unix.stackexchange.com/questions/53581/sending-function-keys-f1-f12-over-ssh
+;; for x in {1..12}; do echo -n "F$x "; tput kf$x | cat -A; echo; done
+;; on Mac:  cat -vet
+;; F1 ^[OP
+;; F2 ^[OQ
+;; F3 ^[OR
+;; F4 ^[OS
+;; F5 ^[[15~
+;; F6 ^[[17~
+;; F7 ^[[18~
+;; F8 ^[[19~
+;; F9 ^[[20~
+;; F10 ^[[21~
+;; F11 ^[[23~
+;; F12 ^[[24~
+								       
+;; 2 Shift
+;; 3 Alt
+;; 4 Shift + Alt
+;; 5 Control
+;; 6 Control + Shift
+
+;; http://aperiodic.net/phil/archives/Geekery/term-function-keys.html
+
+;; https://www.google.com/search?q=advantage+pro+kinesis+mac+linux+keys&oq=advantage+pro+kinesis+mac+linux+keys&aqs=chrome..69i57.15589j0j7&sourceid=chrome&es_sm=91&ie=UTF-8#q=advantage+pro+kinesis+mac+linux
+
+
 ;; OVERWRITE DEFAULT.
 (global-set-key [f1] 'delete-other-windows)
 
@@ -49,27 +78,32 @@
 (global-set-key [f3] 'bury-buffer)
 
 ;; OVERWRITE DEFAULT.
-(global-set-key [f4] 'delete-window)
+;;(global-set-key [f4] 'delete-window)
+;; I find that I use kill-buffer more than delete-window.
+(global-set-key [f4] 'kill-buffer)
 
 (global-set-key [f5] [?\C-x ?b return]) ;; Switch to previous buffer
 
 (global-set-key [f6] 'other-window)
 
-(global-set-key [f7] 'split-esh1)
-(global-set-key [C-f7] 'split-ipy1)
-(global-set-key [M-f7] 'split-term1)
-(global-set-key [S-f7] 'eshell)
-(global-set-key [S-C-f7] 'new-ansi-term)
+(global-set-key [f7] 'eshell)
+;; (global-set-key [f7] 'split-esh1)
+;; (global-set-key [C-f7] 'split-ipy1)
+;; (global-set-key [M-f7] 'split-term1)
+;; (global-set-key [S-f7] 'eshell)
+;; (global-set-key [S-C-f7] 'new-ansi-term)
 
-;;(global-set-key [f8] 'bs-show) ;; See all buffers summary
-(global-set-key [f8] 'helm-mini)
+(global-set-key [f8] 'ido-switch-buffer) ;; See all buffers summary
+;;(global-set-key [f8] 'helm-mini)
 (global-set-key [C-f8] 'bs-show-one-window)
 
+;; default f10 is menu. New way of the world: do not overwrite.
 ;;(global-set-key [f10] 'find-file-at-point)
-;; (global-set-key [f10] 'ido-find-file)
+(global-set-key [f10] 'ido-find-file)
 ;; (global-set-key [C-f10] 'info)
-;; (global-set-key [M-f10] 'tmm-menubar)
-;; (global-set-key [S-f10] 'end-of-buffer)
+(global-set-key [M-f10] 'tmm-menubar)
+(global-set-key [S-f9] 'beginning-of-buffer)
+(global-set-key [S-f10] 'end-of-buffer)
 ;; (global-set-key [S-C-f10] 'insert-kbd-macro)
 
 ;; OVERWRITE DEFAULT.
