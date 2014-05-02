@@ -82,7 +82,10 @@
 ;; I find that I use kill-buffer more than delete-window.
 (global-set-key [f4] 'kill-buffer)
 
-(global-set-key [f5] [?\C-x ?b return]) ;; Switch to previous buffer
+(fset 'f5new
+   "\C-xb\C-m")
+(global-set-key [f5] 'f5new) ;; Switch to previous buffer
+;;(global-set-key [f5] [?\C-x ?b return]) ;; Switch to previous buffer
 
 (global-set-key [f6] 'other-window)
 
