@@ -11,15 +11,20 @@ All must be readable for when anything below crashes:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Readability counts.
+  ;; `C-x C-+’ and ‘C-x C--’
+  ;; C-x C-0 to reset.
   (when (eq system-type 'gnu/linux)
     ;; Readable font
     (set-face-attribute 'default nil :height 260)
-    ;; Frame sizes.
-    (add-to-list 'initial-frame-alist '(height . 55))
-    (add-to-list 'initial-frame-alist '(width . 80))
-    (add-to-list 'default-frame-alist '(height . 55))
-    (add-to-list 'default-frame-alist '(width . 80))
     )
+  (when (eq system-type 'darwin)
+    ;; On Mac, use Command-t to bring up font menu.
+    (set-face-attribute 'default nil :height 240)
+    )
+  (add-to-list 'initial-frame-alist '(height . 55))
+  (add-to-list 'initial-frame-alist '(width . 80))
+  (add-to-list 'default-frame-alist '(height . 55))
+  (add-to-list 'default-frame-alist '(width . 80))
 #+END_SRC
 
 Note that all the =#+BEGIN_SRC= blocks are indented in this =.org=
@@ -227,12 +232,17 @@ Some more tweaks to solarized:
      '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
 #+END_SRC
 
-** Some old favorite keys of mine (rw)
-For historical reasons, until I change it:
+*** Some old favorite keys of mine (rw)
+ For historical reasons, until I change it:
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; My stuff.
-;; Function keys
-(add-to-list 'load-path "~/.emacs.d/rw")
-;; (load-library "rw_funcs")
-(load-library "rw_keys")
+  ;; My stuff.
+  ;; Function keys
+  (add-to-list 'load-path "~/.emacs.d/rw")
+  ;; (load-library "rw_funcs")
+  (load-library "rw_keys")
+#+END_SRC
+*** Bells and whistles, and menus
+Especially on Mac, audible bell is *annoying*!
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq visible-bell t)
 #+END_SRC
