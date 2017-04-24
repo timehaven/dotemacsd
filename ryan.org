@@ -41,12 +41,20 @@ My only difference is ~$HOME/.emacs.d/elisp~ instead of ~$HOME/elisp~.
 Therefore, I:
 
 #+BEGIN_SRC sh
+  sudo apt-get install emacs25-common-non-dfsg install-info \
+       texi2html texinfo texinfo-doc-nonfree
   mkdir $HOME/.emacs.d/elisp && cd $HOME/.emacs.d/elisp
   git clone git://orgmode.org/org-mode.git
   cd org-mode && make
 #+END_SRC
 
-Need to point to where updated Info is:
+Need to point to where updated Info is.  Need to do shell env hack:
+
+#+BEGIN_SRC sh
+export INFOPATH=$HOME/.emacs.d/elisp/org-mode/doc:$INFOPATH
+#+END_SRC
+
+even though the following [[http://orgmode.org/worg/org-faq.html#keeping-current-with-Org-mode-development][from here]] should work (it doesn't seem to):
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Info directory
