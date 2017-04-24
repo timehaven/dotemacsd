@@ -6,6 +6,32 @@
 # http://sachachua.com/dotemacs
 # http://sachachua.com
 
+* Preamble
+
+** Readability
+
+All must be readable for when anything below crashes:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; Readability counts.
+  (when (eq system-type 'gnu/linux)
+    ;; Readable font
+    (set-face-attribute 'default nil :height 200)
+    ;; Frame sizes.
+    (add-to-list 'initial-frame-alist '(height . 55))
+    (add-to-list 'initial-frame-alist '(width . 80))
+    (add-to-list 'default-frame-alist '(height . 55))
+    (add-to-list 'default-frame-alist '(width . 80))
+    )
+#+END_SRC
+
+Note that all the =#+BEGIN_SRC= blocks are indented in this =.org=
+file but not in the tangled =.el= output.  Monkey around with that
+using =org-edit-src-content-indentation= and
+=org-src-preserve-indentation=. 
+
+** It's all about the org
+
 For me, everything is now about ~org mode~ and, therefore, keeping the
 bleeding edge development github version, so I'm following:
 
@@ -14,26 +40,28 @@ http://orgmode.org/worg/org-faq.html#keeping-current-with-Org-mode-development
 My only difference is ~$HOME/.emacs.d/elisp~ instead of ~$HOME/elisp~.
 Therefore, I:
 
-#+BEGIN_SRC shell
-mkdir $HOME/.emacs.d/elisp && cd $HOME/.emacs.d/elisp
-git clone git://orgmode.org/org-mode.git
-cd org-mode && make
+#+BEGIN_SRC sh
+  mkdir $HOME/.emacs.d/elisp && cd $HOME/.emacs.d/elisp
+  git clone git://orgmode.org/org-mode.git
+  cd org-mode && make
 #+END_SRC
 
 Need to point to where updated Info is:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-;; Info directory
-(add-to-list 'Info-additional-directory-list
-             (expand-file-name "~/.emacs.d/elisp/org-mode/info"))
+  ;; Info directory
+
+  (setq Info-additional-directory-list
+	(cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
+	      Info-default-directory-list))
 #+END_SRC
 
 To update occasionally:
 
-#+BEGIN_SRC shell
-cd $HOME/elisp/org-mode && make up2
-git log  # to see what has changed
-git gc  # to clean things up, keep dir smaller
+#+BEGIN_SRC sh
+  cd $HOME/elisp/org-mode && make up2
+  git log  # to see what has changed
+  git gc  # to clean things up, keep dir smaller
 #+END_SRC
 
 * Configuration
@@ -64,22 +92,24 @@ config can load =Sacha.el= without loading Org first.
 
 Here's how we start:
 
-#+begin_src emacs-lisp :tangle yes
-;; This sets up the load path so that we can override it
-(package-initialize)
-;; Override the packages with the git version of Org and other packages
-(add-to-list 'load-path "~/.emacs.d/elisp/org-mode/lisp")
-(add-to-list 'load-path "~/.emacs.d/elisp/org-mode/contrib/lisp")
-(setq package-enable-at-startup nil)
-(setq custom-file "~/.emacs.d/custom-settings.el")
-(load custom-file t)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; This sets up the load path so that we can override it
+  (package-initialize)
+
+  ;; Override the packages with the git version of Org and other packages
+  (add-to-list 'load-path "~/.emacs.d/elisp/org-mode/lisp")
+  (add-to-list 'load-path "~/.emacs.d/elisp/org-mode/contrib/lisp")
+  (setq package-enable-at-startup nil)
+  (setq custom-file "~/.emacs.d/custom-settings.el")
+  (load custom-file t)
 #+END_SRC
 
 ** Personal information
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq user-full-name "Ryan Woodard"
-      user-mail-address "ryan@timehaven.org")
+  ;; Who am I?
+  (setq user-full-name "Ryan Woodard"
+        user-mail-address "ryan@timehaven.org")
 #+END_SRC
 
 ** Emacs initialization
@@ -87,14 +117,28 @@ Here's how we start:
 *** Add package sources
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;  (package-refresh-contents)
-)
+  ;; Modern emacs packaging.
+  (unless (assoc-default "melpa" package-archives)
+    (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+    ;;(package-refresh-contents)
+  )
+
+  ;; (setq package-archives
+  ;;       '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
+  ;;         ("MELPA Stable" . "https://stable.melpa.org/packages/")
+  ;;         ("MELPA"        . "https://melpa.org/packages/"))
+  ;;       package-archive-priorities
+  ;;       '(("MELPA Stable" . 0)
+  ;;         ("GNU ELPA"     . 5)
+  ;;         ("MELPA"        . 10)))
+  ;; (when (not package-archive-contents)
+  ;;   (package-refresh-contents))
+
 #+END_SRC
 
-Use =M-x package-refresh-contents= to reload the list of packages
-after adding these for the first time.
+Since it can take long and be annoying at start up, it's commented out
+above.../but/ use =M-x package-refresh-contents= to reload the list of
+packages after adding these for the first time.
 
 *** Add my elisp directory and other files
 
@@ -102,15 +146,20 @@ Sometimes I load files outside the package system. As long as they're
 in a directory in my =load-path=, Emacs can find them.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(add-to-list 'load-path "~/.emacs.d/elisp")
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(setq use-package-verbose t)
-(setq use-package-always-ensure t)
-(require 'use-package)
-(use-package auto-compile
-  :config (auto-compile-on-load-mode))
-(setq load-prefer-newer t)
+  (add-to-list 'load-path "~/.emacs.d/elisp")
+
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (setq use-package-verbose t)
+  (setq use-package-always-ensure t)
+
+  (require 'use-package)
+
+  (use-package auto-compile
+    :config (auto-compile-on-load-mode))
+
+  (setq load-prefer-newer t)
 #+END_SRC
 
 *** Load secrets
@@ -119,6 +168,11 @@ I keep slightly more sensitive information in a separate file so that
 I can easily publish my main configuration.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(load "~/.emacs.secrets" t)
+  (load "~/.emacs.secrets" t)
 #+END_SRC
 
+*** Magit - nice git interface
+#+begin_src emacs-lisp :tangle yes
+  (use-package magit)
+  (global-set-key (kbd "C-x g") 'magit-status)
+#+end_src
