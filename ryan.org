@@ -1,0 +1,124 @@
+#+TITLE: Ryan Woodard's Emacs configuration
+#+OPTIONS: toc:4 h:4
+
+# We dearly thank Sacha Chua for this file, vision and general great
+# stuff.  She is wonderful.
+# http://sachachua.com/dotemacs
+# http://sachachua.com
+
+For me, everything is now about ~org mode~ and, therefore, keeping the
+bleeding edge development github version, so I'm following:
+
+http://orgmode.org/worg/org-faq.html#keeping-current-with-Org-mode-development
+
+My only difference is ~$HOME/.emacs.d/elisp~ instead of ~$HOME/elisp~.
+Therefore, I:
+
+#+BEGIN_SRC shell
+mkdir $HOME/.emacs.d/elisp && cd $HOME/.emacs.d/elisp
+git clone git://orgmode.org/org-mode.git
+cd org-mode && make
+#+END_SRC
+
+Need to point to where updated Info is:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Info directory
+(add-to-list 'Info-additional-directory-list
+             (expand-file-name "~/.emacs.d/elisp/org-mode/info"))
+#+END_SRC
+
+To update occasionally:
+
+#+BEGIN_SRC shell
+cd $HOME/elisp/org-mode && make up2
+git log  # to see what has changed
+git gc  # to clean things up, keep dir smaller
+#+END_SRC
+
+* Configuration
+** About this file
+   :PROPERTIES:
+   :CUSTOM_ID: babel-init
+   :END:
+<<babel-init>>
+
+See http://sachachua.com/dotemacs for Sacha's great explanations!
+From that file:
+
+#+BEGIN_QUOTE
+My =~/.emacs.d/init.el= is now a symlink to =Sacha.el=, which is what
+=M-x org-babel-tangle= (=C-c C-v t=) produces. *A note about Org
+updates:* I like running Org Mode from checked-out source code instead
+of package.el. I add the Lisp directories to my =load-path=, and I
+also use the =:load-path= option in my first =use-package org= call to
+set the load path. One of those is probably doing the trick and the
+other one is redundant, but maybe it's a belt-and-suspenders sort of
+thing. Using the git checkout also makes upgrading Org easy. All I
+have to do is =git pull; make=, and stuff happens in an external Emacs
+process. Since I create =Sacha.el= via =org-babel-tangle=, my Emacs
+config can load =Sacha.el= without loading Org first.
+#+END_QUOTE
+
+** Starting up
+
+Here's how we start:
+
+#+begin_src emacs-lisp :tangle yes
+;; This sets up the load path so that we can override it
+(package-initialize)
+;; Override the packages with the git version of Org and other packages
+(add-to-list 'load-path "~/.emacs.d/elisp/org-mode/lisp")
+(add-to-list 'load-path "~/.emacs.d/elisp/org-mode/contrib/lisp")
+(setq package-enable-at-startup nil)
+(setq custom-file "~/.emacs.d/custom-settings.el")
+(load custom-file t)
+#+END_SRC
+
+** Personal information
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq user-full-name "Ryan Woodard"
+      user-mail-address "ryan@timehaven.org")
+#+END_SRC
+
+** Emacs initialization
+
+*** Add package sources
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+;  (package-refresh-contents)
+)
+#+END_SRC
+
+Use =M-x package-refresh-contents= to reload the list of packages
+after adding these for the first time.
+
+*** Add my elisp directory and other files
+
+Sometimes I load files outside the package system. As long as they're
+in a directory in my =load-path=, Emacs can find them.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'load-path "~/.emacs.d/elisp")
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(setq use-package-verbose t)
+(setq use-package-always-ensure t)
+(require 'use-package)
+(use-package auto-compile
+  :config (auto-compile-on-load-mode))
+(setq load-prefer-newer t)
+#+END_SRC
+
+*** Load secrets
+
+I keep slightly more sensitive information in a separate file so that
+I can easily publish my main configuration.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(load "~/.emacs.secrets" t)
+#+END_SRC
+
