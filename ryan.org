@@ -1,13 +1,10 @@
 #+TITLE: Ryan Woodard's Emacs configuration
 #+OPTIONS: toc:4 h:4
 
-# We dearly thank Sacha Chua for this file, vision and general great
-# stuff.  She is wonderful.
-# http://sachachua.com/dotemacs
-# http://sachachua.com
+We dearly thank [[http://sachachua.com][Sacha Chua]] for [[http://sachachua.com/dotemacs][this file]], vision and general great
+stuff.  She is wonderful.
 
 * Preamble
-
 ** Readability
 
 All must be readable for when anything below crashes:
@@ -16,7 +13,7 @@ All must be readable for when anything below crashes:
   ;; Readability counts.
   (when (eq system-type 'gnu/linux)
     ;; Readable font
-    (set-face-attribute 'default nil :height 200)
+    (set-face-attribute 'default nil :height 260)
     ;; Frame sizes.
     (add-to-list 'initial-frame-alist '(height . 55))
     (add-to-list 'initial-frame-alist '(width . 80))
@@ -121,7 +118,6 @@ Here's how we start:
 #+END_SRC
 
 ** Emacs initialization
-
 *** Add package sources
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -186,3 +182,57 @@ I can easily publish my main configuration.
   (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
   (setq global-magit-file-mode t)
 #+end_src
+*** Set up a light-on-dark color scheme
+
+I like light on dark because I find it to be more restful. The
+color-theme in ELPA was a little odd, though, so we define some advice
+to make it work. Some things still aren't quite right.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (defadvice color-theme-alist (around sacha activate)
+  ;;   (if (ad-get-arg 0)
+  ;;       ad-do-it
+  ;;     nil))
+  (use-package color-theme)
+  (use-package color-theme-solarized)
+  (defun my/setup-color-theme ()
+    (interactive)
+    (color-theme-solarized-dark)
+    (set-face-foreground 'secondary-selection "darkblue")
+    (set-face-background 'secondary-selection "lightblue")
+    (set-face-background 'font-lock-doc-face "black")
+    (set-face-foreground 'font-lock-doc-face "wheat")
+    (set-face-background 'font-lock-string-face "black")
+    (set-face-foreground 'org-todo "green")
+    (set-face-background 'org-todo "black"))
+
+  (eval-after-load 'color-theme (my/setup-color-theme))
+#+END_SRC
+
+#+RESULTS:
+
+I sometimes need to switch to a lighter background for screenshots.
+For that, I use =color-theme-vim=.
+
+Some more tweaks to solarized:
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (when window-system
+    (custom-set-faces
+     '(erc-input-face ((t (:foreground "antique white"))))
+     '(helm-selection ((t (:background "ForestGreen" :foreground "black"))))
+     '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
+     '(org-agenda-done ((t (:foreground "dim gray" :strike-through nil))))
+     '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
+     '(org-clock-overlay ((t (:background "SkyBlue4" :foreground "black"))))
+     '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
+     '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
+#+END_SRC
+
+** Some old favorite keys of mine (rw)
+For historical reasons, until I change it:
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; My stuff.
+;; Function keys
+(add-to-list 'load-path "~/.emacs.d/rw")
+;; (load-library "rw_funcs")
+(load-library "rw_keys")
+#+END_SRC
