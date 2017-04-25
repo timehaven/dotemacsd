@@ -1,0 +1,8 @@
+..
+local/src
+l
+ls
+git clone https://github.com/sachac/.emacs.d.git sachac.emacs.d.git
+ls
+less dir
+grep Info-dir *.el

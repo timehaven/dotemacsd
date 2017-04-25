@@ -1,16 +1,53 @@
+;; check OS type
+(setq is-linux nil)
+(setq is-mac nil)
+(cond
+ ((string-equal system-type "darwin") ; Mac OS X
+  (progn
+    (message "Mac OS X")
+    (setq is-mac t)))
+ ((string-equal system-type "gnu/linux") ; linux
+  (progn
+    (message "Linux")
+    (setq is-linux t))))
+
+;; check emacs version
+(if (version< emacs-version "25.1")
+    ((message "Old Emacs, YMMV")
+     (kill-emacs))
+  (message "Why not try 26.1?"))
+
+(message "Spinning up %s@%s using %s"
+	 system-name
+	 user-login-name
+	 ;;user-emacs-directory
+	 user-init-file)
+
+;;  t for a termcap frame (a character-only terminal),
+;; ‘x’ for an Emacs frame that is really an X window,
+;; ‘w32’ for an Emacs frame that is a window on MS-Windows display,
+;; ‘ns’ for an Emacs frame on a GNUstep or Macintosh Cocoa display,
+
 ;; Readability counts.
-(when (eq system-type 'gnu/linux)
+;; `C-x C-+’ and ‘C-x C--’
+;; C-x C-0 to reset.
+(when (eq is-linux t)
   ;; Readable font
   (set-face-attribute 'default nil :height 260)
-  ;; Frame sizes.
-  (add-to-list 'initial-frame-alist '(height . 55))
-  (add-to-list 'initial-frame-alist '(width . 80))
-  (add-to-list 'default-frame-alist '(height . 55))
-  (add-to-list 'default-frame-alist '(width . 80))
   )
 
-;; Info directory
+(when (eq is-mac t)
 
+  ;; Macbook built-in display.
+  (when (eq window-system 'ns)
+    ;; On Mac, use Command-t to bring up font menu.
+    (set-face-attribute 'default nil :height 240)
+    (add-to-list 'initial-frame-alist '(height . 33))
+    (add-to-list 'initial-frame-alist '(width . 80))
+    (add-to-list 'default-frame-alist '(height . 33))
+    (add-to-list 'default-frame-alist '(width . 80))))
+
+;; Info directory
 (setq Info-additional-directory-list
       (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	    Info-default-directory-list))
@@ -68,6 +105,14 @@
 (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 (setq global-magit-file-mode t)
 
+(use-package smart-mode-line)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(use-package miniedit
+  :commands minibuffer-edit
+  :init (miniedit-install))
+
 ;; (defadvice color-theme-alist (around sacha activate)
 ;;   (if (ad-get-arg 0)
 ;;       ad-do-it
@@ -98,8 +143,69 @@
    '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
 
+(global-set-key (kbd "<f12>") 'eval-last-sexp)
+
 ;; My stuff.
 ;; Function keys
 (add-to-list 'load-path "~/.emacs.d/rw")
 ;; (load-library "rw_funcs")
 (load-library "rw_keys")
+
+(setq visible-bell t)
+
+(setq org-structure-template-alist
+      '(("s" "#+BEGIN_SRC ?\n\n#+END_SRC" "<src lang=\"?\">\n\n</src>")
+        ("e" "#+BEGIN_EXAMPLE\n?\n#+END_EXAMPLE" "<example>\n?\n</example>")
+        ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE" "<quote>\n?\n</quote>")
+        ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
+        ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+	("p" "#+BEGIN_SRC ipython\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
+        ;;("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
+        ("l" "#+BEGIN_SRC emacs-lisp :tangle yes\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")
+        ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+        ("h" "#+BEGIN_HTML\n?\n#+END_HTML" "<literal style=\"html\">\n?\n</literal>")
+        ("H" "#+html: " "<literal style=\"html\">?</literal>")
+        ("a" "#+BEGIN_ASCII\n?\n#+END_ASCII")
+        ("A" "#+ascii: ")
+        ("i" "#+index: ?" "#+index: ?")
+        ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+
+;; Sacha says: "Since Helm can be a little complex, you may want to
+;; start with ido-mode instead."
+(ido-mode 1)
+
+(setq Info-directory-list
+      (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
+	    Info-directory-list))
+
+(require 'ob-ipython)
+(require 'jedi)
+
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (string= lang "ipython")))  ; don't ask for ipython
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+;; Use conda env in shell from which Emacs was started!
+;;(setq ob-ipython-command "~/local/miniconda3/envs/py27/bin/jupyter")
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ipython . t)
+   ;; other languages..
+   ))
+
+;; don’t prompt me to confirm everytime I want to evaluate a block
+;;(setq org-confirm-babel-evaluate nil)
+
+;;; display/update images in the buffer after I evaluate
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+
+
+;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
+;; Intermittent silliness!
+;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
+(add-to-list 'load-path "~/.emacs.d/elisp/scimax")
+(require 'scimax-org-babel-ipython)

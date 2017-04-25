@@ -5,7 +5,48 @@ We dearly thank [[http://sachachua.com][Sacha Chua]] for [[http://sachachua.com/
 stuff.  She is wonderful.
 
 * Preamble
+
+** Which machine, OS
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; check OS type
+  (setq is-linux nil)
+  (setq is-mac nil)
+  (cond
+   ((string-equal system-type "darwin") ; Mac OS X
+    (progn
+      (message "Mac OS X")
+      (setq is-mac t)))
+   ((string-equal system-type "gnu/linux") ; linux
+    (progn
+      (message "Linux")
+      (setq is-linux t))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; check emacs version
+  (if (version< emacs-version "25.1")
+      ((message "Old Emacs, YMMV")
+       (kill-emacs))
+    (message "Why not try 26.1?"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (message "Spinning up %s@%s using %s"
+	   system-name
+	   user-login-name
+	   ;;user-emacs-directory
+	   user-init-file)
+#+END_SRC
+
 ** Readability
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+   ;;  t for a termcap frame (a character-only terminal),
+   ;; ‘x’ for an Emacs frame that is really an X window,
+   ;; ‘w32’ for an Emacs frame that is a window on MS-Windows display,
+   ;; ‘ns’ for an Emacs frame on a GNUstep or Macintosh Cocoa display,
+#+END_SRC
 
 All must be readable for when anything below crashes:
 
@@ -13,18 +54,21 @@ All must be readable for when anything below crashes:
   ;; Readability counts.
   ;; `C-x C-+’ and ‘C-x C--’
   ;; C-x C-0 to reset.
-  (when (eq system-type 'gnu/linux)
+  (when (eq is-linux t)
     ;; Readable font
     (set-face-attribute 'default nil :height 260)
     )
-  (when (eq system-type 'darwin)
-    ;; On Mac, use Command-t to bring up font menu.
-    (set-face-attribute 'default nil :height 240)
-    )
-  (add-to-list 'initial-frame-alist '(height . 55))
-  (add-to-list 'initial-frame-alist '(width . 80))
-  (add-to-list 'default-frame-alist '(height . 55))
-  (add-to-list 'default-frame-alist '(width . 80))
+
+  (when (eq is-mac t)
+
+    ;; Macbook built-in display.
+    (when (eq window-system 'ns)
+      ;; On Mac, use Command-t to bring up font menu.
+      (set-face-attribute 'default nil :height 240)
+      (add-to-list 'initial-frame-alist '(height . 33))
+      (add-to-list 'initial-frame-alist '(width . 80))
+      (add-to-list 'default-frame-alist '(height . 33))
+      (add-to-list 'default-frame-alist '(width . 80))))
 #+END_SRC
 
 Note that all the =#+BEGIN_SRC= blocks are indented in this =.org=
@@ -60,7 +104,6 @@ even though the following [[http://orgmode.org/worg/org-faq.html#keeping-current
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; Info directory
-
   (setq Info-additional-directory-list
 	(cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	      Info-default-directory-list))
@@ -75,11 +118,8 @@ To update occasionally:
 #+END_SRC
 
 * Configuration
+
 ** About this file
-   :PROPERTIES:
-   :CUSTOM_ID: babel-init
-   :END:
-<<babel-init>>
 
 See http://sachachua.com/dotemacs for Sacha's great explanations!
 From that file:
@@ -123,6 +163,7 @@ Here's how we start:
 #+END_SRC
 
 ** Emacs initialization
+
 *** Add package sources
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -181,17 +222,50 @@ I can easily publish my main configuration.
 #+END_SRC
 
 *** Magit - nice git interface
+
 #+begin_src emacs-lisp :tangle yes
   (use-package magit)
   (global-set-key (kbd "C-x g") 'magit-status)
   (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
   (setq global-magit-file-mode t)
 #+end_src
+
+*** Mode line format
+
+Display a more compact mode line
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smart-mode-line)
+#+END_SRC
+
+*** Change "yes or no" to "y or n"
+
+Lazy people like me never want to type "yes" when "y" will suffice.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+*** Minibuffer editing - more space!
+
+Sometimes you want to be able to do fancy things with the text that
+you're entering into the minibuffer. Sometimes you just want to be
+able to read it, especially when it comes to lots of text.  This binds
+=C-M-e= in a minibuffer) so that you can edit the contents of the
+minibuffer before submitting it.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package miniedit
+  :commands minibuffer-edit
+  :init (miniedit-install))
+#+END_SRC
+
 *** Set up a light-on-dark color scheme
 
 I like light on dark because I find it to be more restful. The
 color-theme in ELPA was a little odd, though, so we define some advice
 to make it work. Some things still aren't quite right.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (defadvice color-theme-alist (around sacha activate)
   ;;   (if (ad-get-arg 0)
@@ -213,12 +287,11 @@ to make it work. Some things still aren't quite right.
   (eval-after-load 'color-theme (my/setup-color-theme))
 #+END_SRC
 
-#+RESULTS:
-
 I sometimes need to switch to a lighter background for screenshots.
 For that, I use =color-theme-vim=.
 
 Some more tweaks to solarized:
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (when window-system
     (custom-set-faces
@@ -233,7 +306,13 @@ Some more tweaks to solarized:
 #+END_SRC
 
 *** Some old favorite keys of mine (rw)
- For historical reasons, until I change it:
+    
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-set-key (kbd "<f12>") 'eval-last-sexp)
+#+END_SRC
+
+For historical reasons, until I change it:
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; My stuff.
   ;; Function keys
@@ -241,8 +320,94 @@ Some more tweaks to solarized:
   ;; (load-library "rw_funcs")
   (load-library "rw_keys")
 #+END_SRC
+
 *** Bells and whistles, and menus
+
 Especially on Mac, audible bell is *annoying*!
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq visible-bell t)
 #+END_SRC
+
+* Just trying things out
+
+** org mode structure templates (=<s= things)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-structure-template-alist
+	'(("s" "#+BEGIN_SRC ?\n\n#+END_SRC" "<src lang=\"?\">\n\n</src>")
+          ("e" "#+BEGIN_EXAMPLE\n?\n#+END_EXAMPLE" "<example>\n?\n</example>")
+          ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE" "<quote>\n?\n</quote>")
+          ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
+          ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+	  ("p" "#+BEGIN_SRC ipython\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
+          ;;("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
+          ("l" "#+BEGIN_SRC emacs-lisp :tangle yes\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")
+          ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+          ("h" "#+BEGIN_HTML\n?\n#+END_HTML" "<literal style=\"html\">\n?\n</literal>")
+          ("H" "#+html: " "<literal style=\"html\">?</literal>")
+          ("a" "#+BEGIN_ASCII\n?\n#+END_ASCII")
+          ("A" "#+ascii: ")
+          ("i" "#+index: ?" "#+index: ?")
+          ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; Sacha says: "Since Helm can be a little complex, you may want to
+  ;; start with ido-mode instead."
+  (ido-mode 1)
+#+END_SRC
+
+* Make sure source code packages (org) have latest Info
+
+Need to do this again because =magit= (from =elpa=) overwrites
+previous attempt at this. 
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq Info-directory-list
+	(cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
+	      Info-directory-list))
+#+END_SRC
+* Python
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'ob-ipython)
+(require 'jedi)
+
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (string= lang "ipython")))  ; don't ask for ipython
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+;; Use conda env in shell from which Emacs was started!
+;;(setq ob-ipython-command "~/local/miniconda3/envs/py27/bin/jupyter")
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ipython . t)
+   ;; other languages..
+   ))
+
+;; don’t prompt me to confirm everytime I want to evaluate a block
+;;(setq org-confirm-babel-evaluate nil)
+
+;;; display/update images in the buffer after I evaluate
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+
+
+;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
+;; Intermittent silliness!
+;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
+(add-to-list 'load-path "~/.emacs.d/elisp/scimax")
+(require 'scimax-org-babel-ipython)
+#+END_SRC
+
+#+BEGIN_SRC ipython
+print("hi")
+#+end_SRC
+
+#+RESULTS:
+:RESULTS:
+hi
+:END:
