@@ -1,3 +1,13 @@
+(global-set-key [home] 'move-beginning-of-line)
+(global-set-key [end] 'move-end-of-line)
+
+
+;; (setq org-use-speed-commands t)  ;; Way cool!
+;; For example, to activate speed commands when the point is on any
+;; star at the beginning of the headline, you can do this:
+(setq org-use-speed-commands
+      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+
 ;; check OS type
 (setq is-linux nil)
 (setq is-mac nil)
@@ -70,7 +80,7 @@
 (setq user-full-name "Ryan Woodard")
 (when (eq user-login-name "ryan")
   (setq user-mail-address "ryan@timehaven.org"))
-(when (eq user-login-name "rwoodard")
+(when (eq user-login-name 'rwoodard)
   (setq user-mail-address "rwoodard@appnexus.com"))
 
 ;; Modern emacs packaging.
@@ -106,7 +116,73 @@
 
 (load "~/.emacs.secrets" t)
 
+(defvar my/refile-map (make-sparse-keymap))
+
+(defmacro my/defshortcut (key file)
+  `(progn
+     (set-register ,key (cons 'file ,file))
+     (define-key my/refile-map
+       (char-to-string ,key)
+       (lambda (prefix)
+         (interactive "p")
+         (let ((org-refile-targets '(((,file) :maxlevel . 6)))
+	       (current-prefix-arg (or current-prefix-arg '(4))))
+           (call-interactively 'org-refile))))))
+
+(my/defshortcut ?a "~/org/2017_appnexus_projects.org")
+(my/defshortcut ?i "~/.emacs.d/ryan.org")
+(my/defshortcut ?p "~/stash/users/rwoodard/slopbucket/packratatat/packratatat.org")
+;; (my/defshortcut ?s "~/personal/sewing.org")
+;; (my/defshortcut ?b "~/personal/business.org")
+;; (my/defshortcut ?p "~/personal/google-inbox.org")
+;; (my/defshortcut ?P "~/personal/google-ideas.org")
+;; (my/defshortcut ?B "~/Dropbox/books")
+;; (my/defshortcut ?e "~/code/emacs-notes/tasks.org")
+;; (my/defshortcut ?w "~/Dropbox/public/sharing/index.org")
+;; (my/defshortcut ?W "~/Dropbox/public/sharing/blog.org")
+;; (my/defshortcut ?j "~/personal/journal.org")
+;; (my/defshortcut ?I "~/Dropbox/Inbox")
+;; (my/defshortcut ?g "~/sachac.github.io/evil-plans/index.org")
+;; (my/defshortcut ?c "~/code/dev/elisp-course.org")
+;; (my/defshortcut ?C "~/personal/calendar.org")
+;; (my/defshortcut ?l "~/dropbox/public/sharing/learning.org")
+;; (my/defshortcut ?q "~/personal/questions.org")
+
 (setq org-startup-with-inline-images t)
+
+;; capture & refile
+;;
+;; (require 'org)  ;; In init.el.
+(setq org-directory "~/org")
+(setq rw/stash-rw-dir "~/stash/users/rwoodard")
+
+(setq rw/slopbucket-dir (concat rw/stash-rw-dir "/" "slopbucket"))
+
+(setq rw/packratatat (concat rw/slopbucket-dir "/packratatat/packratatat.org"))
+
+(setq org-default-notes-file (concat org-directory "/" "an_capture.org"))
+(setq org-refile-use-outline-path 'file)
+
+(defun rw/paths-that-exist (paths)
+  (delq nil
+	(mapcar (lambda (path) (and (file-exists-p path) path)) paths)))
+
+(defun rw/prepend-org-dir (paths)
+  (mapcar (lambda (path) (concat org-directory "/" path)) paths)
+  )
+
+(setq rw/org-refile-targets
+      (rw/paths-that-exist
+       (rw/prepend-org-dir
+	'(
+	  "projects.org"
+	  "gtd.org"
+	  "blah.org"	  
+	  ))))
+(add-to-list 'rw/org-refile-targets (concat rw/slopbucket-dir "/packratatat/packratatat.org"))
+
+(setq org-refile-targets '((rw/org-refile-targets . (:maxlevel . 6))))
+;; Using #+STARTUP: lognoterefile  org-log-refile
 
 (setq org-startup-with-inline-images t)
 (use-package org
@@ -191,6 +267,7 @@
 ;; (load-library "rw_funcs")
 (load-library "rw_keys")
 
+(tool-bar-mode -1)
 (setq visible-bell t)
 
 ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
