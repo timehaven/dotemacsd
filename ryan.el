@@ -33,8 +33,12 @@
 ;; C-x C-0 to reset.
 (when (eq is-linux t)
   ;; Readable font
-  (set-face-attribute 'default nil :height 260)
-  )
+  (when (eq window-system 'x)
+    (set-face-attribute 'default nil :height 260)
+    (add-to-list 'initial-frame-alist '(height . 55))
+    (add-to-list 'initial-frame-alist '(width . 80))
+    (add-to-list 'default-frame-alist '(height . 55))
+    (add-to-list 'default-frame-alist '(width . 80))))
 
 (when (eq is-mac t)
 

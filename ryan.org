@@ -56,8 +56,12 @@ All must be readable for when anything below crashes:
   ;; C-x C-0 to reset.
   (when (eq is-linux t)
     ;; Readable font
-    (set-face-attribute 'default nil :height 260)
-    )
+    (when (eq window-system 'x)
+      (set-face-attribute 'default nil :height 260)
+      (add-to-list 'initial-frame-alist '(height . 55))
+      (add-to-list 'initial-frame-alist '(width . 80))
+      (add-to-list 'default-frame-alist '(height . 55))
+      (add-to-list 'default-frame-alist '(width . 80))))
 
   (when (eq is-mac t)
 
@@ -369,6 +373,12 @@ previous attempt at this.
 	      Info-directory-list))
 #+END_SRC
 * Python
+
+#+BEGIN_SRC sh
+  cd ~/.emacs.d/elisp
+  git clone https://github.com/jkitchin/scimax.git
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'ob-ipython)
 (require 'jedi)
@@ -404,10 +414,11 @@ previous attempt at this.
 #+END_SRC
 
 #+BEGIN_SRC ipython
-print("hi")
+  print("hi there")
+  print
 #+end_SRC
 
 #+RESULTS:
 :RESULTS:
-hi
+hi there
 :END:
