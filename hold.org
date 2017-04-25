@@ -1,0 +1,21 @@
+  (use-package org
+    :config
+    (progn
+    ;;(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    ;; append is for ipython, scimax stuff down below
+   ;;; display/update images in the buffer after I evaluate
+      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '(
+	 ;; (dot . t)
+	 ;; (ditaa . t)
+	 (ipython . t)
+	 (sh . t)
+	 ;; (sqlite . t)
+	 ;; (http . t)
+	 ;; (ledger . t)
+	 (shell . t)
+	 ;; (R . t)
+	 ))
+      (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot)))

@@ -1,0 +1,58 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/home/ryan/local/src/" . "sachac.emacs.d.git/")
+ ("/home/ryan/.emacs.d/elisp/scimax/" . "ob-ipython/")
+ ("/home/ryan/.emacs.d/elisp/" . "scimax/")
+ ("/home/ryan/.emacs.d/" . "elpa/")
+ ("/home/ryan/local/" . "src/")
+ ("/home/ryan/" . "local/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/home/ryan/local/src/sachac.emacs.d.git/"
+ "/home/ryan/.emacs.d/"
+ "/home/ryan/.emacs.d/elisp/scimax/"
+ "/home/ryan/org/"
+ "/home/ryan/local/src/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "Sacha.org"
+ "hold.org"
+ "custom-settings.el"
+ "ryan.org"
+ "scimax-org-babel-ipython.el"
+ "letters.pdf"
+ "letters.org"
+ "eless"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/home/ryan/" (22783 27453 109945 560000) "github/" "write/" ".cache/" "cads_training_2017-03-30__01:09.png" ".ssh_sofia/" ".ssh/" ".Xauthority" "ipynb/" ".tmp/" ".zshrc" "other_dot_files/" ".emacs.d_john/" ".zcompdump" "emacs.d_src/" ".zshrc.pre-oh-my-zsh" ".lesshst" "Downloads/" ".config/" ".bashrc-miniconda3.bak" ".local/" ".texlive2016/" ".gnome2_private/" "audacity/" ".mozilla/" "Videos/" ".aws/" ".ssh_macbook/" ".dbus/" ".continuum/" ".xsession-errors" ".tmux.conf" "Templates/" ".emacs.d/" "songs/" ".Xdefault~" ".zshrc_local~" ".ssh_orig/" ".Skype/" ".inputrc" "ookpik_lease_purchase_joel_scurr_ilrg/" ".audacity-data/" ".zsh-update" ".pki/" "mac_dotfiles/" "org/" ".ssh_old_jeff/" "local/" ".Xdefaults" "courses/" ".gksu.lock" ".ICEauthority" ".zshrc_local" ".tmux.conf~" "tmp/" "stash/" ".ipython/" "AN_dots/" ".gconf/" "Ryan_AN_bu_rsync/" ".joe_state" ".bashrc" "Pictures/" ".xinitrc~" ".zcompdump-john-5.3.1" ".tmux/" ".zshrc~" ".oh-my-zsh/" ".bashrc~" ".bash_history" ".wicd/" ".mlterm/" ".python_history" "./" "rsync_exclude_files" "Public/" ".conda/" ".jupyter/" "Music/" ".xinitrc" "btscanner.log" ".profile" ".bash_logout" "../" ".ipynb_checkpoints/" ".gnupg/" ".gitconfig~" ".gitconfig" "Desktop/" ".bashrc-miniconda2.bak" ".gnome2/" ".zsh_history" ".Xdefaults~" ".gnome/" "cgit/")
+
+ ("/home/ryan/.emacs.d/" (22783 27466 981849 70000) "ipython-inline-images/" ".emacs.desktop" "init.el" "rw/" "custom-settings.el" "zunused/" "snippets/" "ido.last" "ac-comphist.dat" ".#ryan.org" ".git/" ".gitignore" "eshell/" "hold.org" "./" "elpa/" "../" "ryan.org" "ryan.html" "ido.last~" "elisp/" "ryan.el" "auto-save-list/")
+
+ ("/home/ryan/local/src/sachac.emacs.d.git/" (22782 18167 623524 97000) "README.org" "Sacha.org" ".git/" "index.html" "./" "../" "Sacha.html")
+
+ ("/home/ryan/.emacs.d/elpa/" (22783 22083 958313 965000) "color-theme-20080305.34/" "concurrent-20161228.1930/" "archives/" "with-editor-20170417.1458/" "auto-complete-20170124.1845/" "dash-functional-20160615.1351/" "popup-20160709.729/" "smart-mode-line-20160818.508/" "gnupg/" "find-file-in-project-20170402.2100/" "deferred-20170331.1759/" "magit-20170422.623/" "ivy-20170416.1021/" "elpy-20170414.319/" "visual-fill-column-20161109.337/" "miniedit-20100419.1045/" "jedi-20160425.2156/" "highlight-indentation-20170411.40/" "ctable-20140304.1659/" "jedi-core-20170121.610/" "auto-compile-20170130.1017/" "packed-20170314.1340/" "company-20170420.1837/" "python-environment-20150310.153/" "ob-ipython-20160918.1001/" "use-package-20170405.1028/" "diminish-20170419.1036/" "./" "epc-20140609.2234/" "writeroom-mode-20170324.1514/" "pyvenv-20170224.538/" "git-commit-20170314.1414/" "async-20170219.942/" "../" "f-20170404.1039/" "bind-key-20161218.1520/" "dash-20170207.2056/" "rich-minority-20160725.1255/" "color-theme-solarized-20160626.743/" "magit-popup-20170420.544/" "yasnippet-20170418.351/" "s-20160928.636/")
+
+ ("/home/ryan/.emacs.d/elisp/scimax/ob-ipython/" (22782 44521 409003 653000) "./" "../")
+
+ ("/home/ryan/.emacs.d/elisp/scimax/" (22782 44521 413003 625000) "scimax-utils.el" "techela/" "ob-ipython/" "ipython-inline-images/" "org-show/" "test/" "init.el" "packages.el" "scimax.el" "org-ref/" "scimax-ivy.el" "ox-word.el" "Cask" ".travis.yml" "ox-cmu/" "org-ov-highlighter.el" "README.org" "scimax.org" "kitchingroup.el" "ox-manuscript/" "org-editmarks.el" "examples/" "org-mime.el" "install-scimax-mac.sh" "ox-rtf.el" "scimax-elfeed.el" "scimax-notebook.el" "user/" "scimax-org-babel-ipython.el" "cm-mods.el" "ox-ipynb.el" "install-scimax-linux.sh" "install-scimax-win.sh" "contacts.el" "scimax-macros.el" ".git/" "scimax-ldap.el" "ore.el" "scimax-org.el" "bootstrap.el" ".gitignore" "./" "ox-clip.el" "pianobar.el" "ov-highlighter.el" "Makefile" "../" "scimax-mode.el" "scimax-org-babel-python.el" ".gitmodules" "scimax-email.el" "words.el" "contacts.org" "scimax-latex.el" "org-db.el" "scimax-hydra.el" "emacs-keybinding-command-tooltip-mode.el")
+
+ ("/home/ryan/.emacs.d/elisp/" (22782 44520 97012 836000) "org-mode/" "scimax/" "./" "../")
+
+ ("/home/ryan/org/" (22783 19759 329077 553000) "linux.org" "AWS.org" "learn.org" "ookpik.org" "linux.org~" "AWS.org~" "letters.org" "courses.org" "data/" "letters.log" ".git/" "letters.tex~" "./" "letters.org~" "../" "letters.tex" "ookpik.org~" "learn.org~")
+
+ ("/home/ryan/local/src/" (22782 54265 906488 120000) "spoofer-1.0.8.tar" "tmux-resurrect/" "jupyterlab/" "solarized/" "spoofer-1.0.8/" "./" "../" "sachac.emacs.d.git/")
+
+ ("/home/ryan/local/" (22748 34029 485985 297000) "miniconda2_old/" "miniconda3/" "bin/" "src/" "./" "../" "Miniconda3-latest-Linux-x86_64.sh" "Miniconda3-latest-Linux-x86.sh")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t

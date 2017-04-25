@@ -67,16 +67,18 @@
 (load custom-file t)
 
 ;; Who am I?
-(setq user-full-name "Ryan Woodard"
-      user-mail-address "ryan@timehaven.org")
+(setq user-full-name "Ryan Woodard")
+(when (eq user-login-name "ryan")
+  (setq user-mail-address "ryan@timehaven.org"))
+(when (eq user-login-name "rwoodard")
+  (setq user-mail-address "rwoodard@appnexus.com"))
 
 ;; Modern emacs packaging.
 (unless (assoc-default "melpa" package-archives)
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
   ;;(package-refresh-contents)
 )
-
-;; (setq package-archives
 ;;       '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
 ;;         ("MELPA Stable" . "https://stable.melpa.org/packages/")
 ;;         ("MELPA"        . "https://melpa.org/packages/"))
@@ -103,6 +105,33 @@
 (setq load-prefer-newer t)
 
 (load "~/.emacs.secrets" t)
+
+(setq org-startup-with-inline-images t)
+
+(setq org-startup-with-inline-images t)
+(use-package org
+  :load-path "~/.emacs.d/elisp/org-mode/lisp"
+  :config
+  (progn
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '(
+       ;; (dot . t)
+       ;;   (ditaa . t)
+       (emacs-lisp . t)
+       (ipython . t)
+       (sh . t)
+       ;; (sqlite . t)
+       ;; (http . t)
+       ;; (ledger . t)
+       (shell . t)
+       ;; (R . t)))
+       ))
+  (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))))
+  ;;:config
+
+(setq org-src-window-setup 'current-window)
 
 (use-package magit)
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -147,6 +176,13 @@
    '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
 
+(eval-after-load 'org
+'(define-key org-src-mode-map (kbd "S-<f12>") 'org-edit-src-exit))
+(eval-after-load 'org
+'(define-key org-mode-map (kbd "S-<f12>") 'org-edit-special))
+(eval-after-load 'org
+'(define-key org-mode-map (kbd "<f12>") 'org-ctrl-c-ctrl-c))
+
 (global-set-key (kbd "<f12>") 'eval-last-sexp)
 
 ;; My stuff.
@@ -156,6 +192,15 @@
 (load-library "rw_keys")
 
 (setq visible-bell t)
+
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+    (defun unfill-paragraph (&optional region)
+      "Takes a multi-line paragraph and makes it into a single line of text."
+      (interactive (progn (barf-if-buffer-read-only) '(t)))
+      (let ((fill-column (point-max))
+            ;; This would override `fill-column' if it's an integer.
+            (emacs-lisp-docstring-fill-column t))
+        (fill-paragraph nil region)))
 
 (setq org-structure-template-alist
       '(("s" "#+BEGIN_SRC ?\n\n#+END_SRC" "<src lang=\"?\">\n\n</src>")
@@ -182,31 +227,15 @@
       (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	    Info-directory-list))
 
+(use-package elpy)
+(elpy-enable)
+
 (require 'ob-ipython)
-(require 'jedi)
-
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
-
-(defun my-org-confirm-babel-evaluate (lang body)
-  (not (string= lang "ipython")))  ; don't ask for ipython
-(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 
 ;; Use conda env in shell from which Emacs was started!
 ;;(setq ob-ipython-command "~/local/miniconda3/envs/py27/bin/jupyter")
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((ipython . t)
-   ;; other languages..
-   ))
-
-;; don’t prompt me to confirm everytime I want to evaluate a block
-;;(setq org-confirm-babel-evaluate nil)
-
-;;; display/update images in the buffer after I evaluate
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
-
+;; see org-babel stuff for ipython in Org section above
 
 ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
 ;; Intermittent silliness!
