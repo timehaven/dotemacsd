@@ -2,3 +2,4 @@
 elisp/org-mode
 *~
 *.elc
+*.pyc

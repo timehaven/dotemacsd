@@ -613,7 +613,8 @@ previous attempt at this.
 #+RESULTS:
 : scimax-org-babel-ipython
 
-#+BEGIN_SRC ipython :session :results output drawer
+
+#+BEGIN_SRC ipython :session
   print("hi there, sir")
   print
 #+END_SRC
@@ -621,7 +622,5 @@ previous attempt at this.
 #+RESULTS:
 :RESULTS:
 hi there, sir
-
-:END:
 
 :END:
