@@ -511,6 +511,7 @@ Especially on Mac, audible bell is *annoying*!
 #+BEGIN_SRC emacs-lisp :tangle yes
   (tool-bar-mode -1)
   (setq visible-bell t)
+  (column-number-mode 1)
 #+END_SRC
 
 #+RESULTS:
@@ -578,8 +579,22 @@ previous attempt at this.
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
+
+  ;; Standard Jedi.el setting
+  (use-package jedi)
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)
+
+  ;; Type:
+  ;;     M-x package-install RET jedi RET
+  ;;     M-x jedi:install-server RET
+  ;; Then open Python file.
+
   (use-package elpy)
   (elpy-enable)
+
+  (setq elpy-rpc-backend "jedi")  
 
   (require 'ob-ipython)
 

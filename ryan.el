@@ -269,6 +269,7 @@
 
 (tool-bar-mode -1)
 (setq visible-bell t)
+(column-number-mode 1)
 
 ;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
     (defun unfill-paragraph (&optional region)
@@ -304,8 +305,20 @@
       (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	    Info-directory-list))
 
+;; Standard Jedi.el setting
+(use-package jedi)
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
+;; Type:
+;;     M-x package-install RET jedi RET
+;;     M-x jedi:install-server RET
+;; Then open Python file.
+
 (use-package elpy)
 (elpy-enable)
+
+(setq elpy-rpc-backend "jedi")  
 
 (require 'ob-ipython)
 
