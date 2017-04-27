@@ -1,13 +1,6 @@
 (global-set-key [home] 'move-beginning-of-line)
 (global-set-key [end] 'move-end-of-line)
 
-
-;; (setq org-use-speed-commands t)  ;; Way cool!
-;; For example, to activate speed commands when the point is on any
-;; star at the beginning of the headline, you can do this:
-;; (setq org-use-speed-commands
-;; 	(lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
-
 ;; check OS type
 (setq is-linux nil)
 (setq is-mac nil)
@@ -116,6 +109,26 @@
 
 (load "~/.emacs.secrets" t)
 
+(use-package org
+    :load-path "~/.emacs.d/elisp/org-mode/lisp")
+
+(defun my/check-org ()
+  (message (concat "org-version " org-version))
+  (if (version< org-version "9.0")
+      (progn
+       (message "Old org.")
+       (kill-emacs))
+    (message "Why not try 9.1?")))
+
+(my/check-org)
+
+(setq org-use-speed-commands t)  ;; Way cool!
+  ;; For example, to activate speed commands when the point is on any
+  ;; star at the beginning of the headline, you can do this:
+  (setq org-use-speed-commands
+	  (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+(my/check-org)
+
 (setq org-startup-with-inline-images t)
   (use-package org
     :load-path "~/.emacs.d/elisp/org-mode/lisp"
@@ -139,45 +152,41 @@
     (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))))
     ;;:config
 
-(message (concat "org-version " org-version))
-(if (version< org-version "9.0")
-      (progn
-       (message "Old org.")
-       (kill-emacs))
-    (message "Why not try 9.1?"))
+(my/check-org)
 
 (defvar my/refile-map (make-sparse-keymap))
 
-(defmacro my/defshortcut (key file)
-  `(progn
-     (set-register ,key (cons 'file ,file))
-     (define-key my/refile-map
-       (char-to-string ,key)
-       (lambda (prefix)
-         (interactive "p")
-         (let ((org-refile-targets '(((,file) :maxlevel . 6)))
-	       (current-prefix-arg (or current-prefix-arg '(4))))
-           (call-interactively 'org-refile))))))
+  (defmacro my/defshortcut (key file)
+    `(progn
+       (set-register ,key (cons 'file ,file))
+       (define-key my/refile-map
+	 (char-to-string ,key)
+	 (lambda (prefix)
+           (interactive "p")
+           (let ((org-refile-targets '(((,file) :maxlevel . 6)))
+		 (current-prefix-arg (or current-prefix-arg '(4))))
+             (call-interactively 'org-refile))))))
 
-(my/defshortcut ?a "~/org/2017_appnexus_projects.org")
-(my/defshortcut ?i "~/.emacs.d/ryan.org")
-(my/defshortcut ?p "~/stash/users/rwoodard/slopbucket/packratatat/packratatat.org")
-(my/defshortcut ?m "~/org/moe.org")
-;; (my/defshortcut ?s "~/personal/sewing.org")
-;; (my/defshortcut ?b "~/personal/business.org")
-;; (my/defshortcut ?p "~/personal/google-inbox.org")
-;; (my/defshortcut ?P "~/personal/google-ideas.org")
-;; (my/defshortcut ?B "~/Dropbox/books")
-;; (my/defshortcut ?e "~/code/emacs-notes/tasks.org")
-;; (my/defshortcut ?w "~/Dropbox/public/sharing/index.org")
-;; (my/defshortcut ?W "~/Dropbox/public/sharing/blog.org")
-;; (my/defshortcut ?j "~/personal/journal.org")
-;; (my/defshortcut ?I "~/Dropbox/Inbox")
-;; (my/defshortcut ?g "~/sachac.github.io/evil-plans/index.org")
-;; (my/defshortcut ?c "~/code/dev/elisp-course.org")
-;; (my/defshortcut ?C "~/personal/calendar.org")
-;; (my/defshortcut ?l "~/dropbox/public/sharing/learning.org")
-;; (my/defshortcut ?q "~/personal/questions.org")
+  (my/defshortcut ?a "~/org/2017_appnexus_projects.org")
+  (my/defshortcut ?i "~/.emacs.d/ryan.org")
+  (my/defshortcut ?p "~/stash/users/rwoodard/slopbucket/packratatat/packratatat.org")
+  (my/defshortcut ?m "~/org/moe.org")
+  ;; (my/defshortcut ?s "~/personal/sewing.org")
+  ;; (my/defshortcut ?b "~/personal/business.org")
+  ;; (my/defshortcut ?p "~/personal/google-inbox.org")
+  ;; (my/defshortcut ?P "~/personal/google-ideas.org")
+  ;; (my/defshortcut ?B "~/Dropbox/books")
+  ;; (my/defshortcut ?e "~/code/emacs-notes/tasks.org")
+  ;; (my/defshortcut ?w "~/Dropbox/public/sharing/index.org")
+  ;; (my/defshortcut ?W "~/Dropbox/public/sharing/blog.org")
+  ;; (my/defshortcut ?j "~/personal/journal.org")
+  ;; (my/defshortcut ?I "~/Dropbox/Inbox")
+  ;; (my/defshortcut ?g "~/sachac.github.io/evil-plans/index.org")
+  ;; (my/defshortcut ?c "~/code/dev/elisp-course.org")
+  ;; (my/defshortcut ?C "~/personal/calendar.org")
+  ;; (my/defshortcut ?l "~/dropbox/public/sharing/learning.org")
+  ;; (my/defshortcut ?q "~/personal/questions.org")
+(my/check-org)
 
 (setq org-startup-with-inline-images t)
 
@@ -315,42 +324,6 @@
       (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	    Info-directory-list))
 
-;; (use-package helm
-;;   :diminish helm-mode
-;;   :init
-;;   (progn
-;;     (require 'helm-config)
-;;     (setq helm-candidate-number-limit 100)
-;;     ;; From https://gist.github.com/antifuchs/9238468
-;;     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-;;           helm-input-idle-delay 0.01  ; this actually updates things
-;;                                         ; reeeelatively quickly.
-;;           helm-yas-display-key-on-candidate t
-;;           helm-quick-update t
-;;           helm-M-x-requires-pattern nil
-;;           helm-ff-skip-boring-files t)
-;;     (helm-mode))
-;;   :bind (("C-c h" . helm-mini)
-;;          ("C-h a" . helm-apropos)
-;;          ("C-x C-b" . helm-buffers-list)
-;;          ("C-x b" . helm-buffers-list)
-;;          ("M-y" . helm-show-kill-ring)
-;;          ("M-x" . helm-M-x)
-;;          ("C-x c o" . helm-occur)
-;;          ("C-x c s" . helm-swoop)
-;;          ("C-x c y" . helm-yas-complete)
-;;          ("C-x c Y" . helm-yas-create-snippet-on-region)
-;;          ("C-x c b" . my/helm-do-grep-book-notes)
-;;          ("C-x c SPC" . helm-all-mark-rings)))
-;; (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
-
-;; (use-package helm-org-rifle)
-
-;; (use-package helm-descbinds
-;;   :defer t
-;;   :bind (("C-h b" . helm-descbinds)
-;;          ("C-h w" . helm-descbinds)))
-
 ;; Standard Jedi.el setting
 ;; (use-package jedi)
 ;; (add-hook 'python-mode-hook 'jedi:setup)
@@ -361,12 +334,12 @@
 ;;     M-x jedi:install-server RET
 ;; Then open Python file.
 
-;; (use-package elpy)
-;; (elpy-enable)
+(use-package elpy)
+(elpy-enable)
 
 ;; (setq elpy-rpc-backend "jedi")  
 
-;; (require 'ob-ipython)
+(require 'ob-ipython)
 
 ;; Use conda env in shell from which Emacs was started!
 ;;(setq ob-ipython-command "~/local/miniconda3/envs/py27/bin/jupyter")
@@ -378,3 +351,62 @@
 ;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
 (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
 (require 'scimax-org-babel-ipython)
+
+(add-to-list 'load-path (file-name-directory (file-truename "/home/ryan/.emacs.d/elpa/helm-20170425.2201/emacs-helm.sh")))
+;; (setq default-frame-alist '((vertical-scroll-bars . nil)
+;;                             (tool-bar-lines . 0)
+;;                             (menu-bar-lines . 0)
+;;                             (fullscreen . nil)))
+(unless (member "helm.el" (directory-files default-directory))
+  (setq package-load-list '((helm-core t) (helm t) (async t) (popup t)))
+  (package-initialize))
+(blink-cursor-mode 1)
+(require 'helm-config)
+(helm-mode 1)
+(define-key global-map [remap find-file] 'helm-find-files)
+(define-key global-map [remap occur] 'helm-occur)
+(define-key global-map [remap list-buffers] 'helm-buffers-list)
+(define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(unless (boundp 'completion-in-region-function)
+  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+
+
+  (use-package helm
+    :diminish helm-mode
+    :init
+    (progn
+      (require 'helm-config)
+      (setq helm-candidate-number-limit 100)
+      ;; From https://gist.github.com/antifuchs/9238468
+      (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+            helm-input-idle-delay 0.01  ; this actually updates things
+                                          ; reeeelatively quickly.
+            helm-yas-display-key-on-candidate t
+            helm-quick-update t
+            helm-M-x-requires-pattern nil
+            helm-ff-skip-boring-files t)
+      (helm-mode))
+    :bind (("C-c h" . helm-mini)
+           ("C-h a" . helm-apropos)
+           ("C-x C-b" . helm-buffers-list)
+           ("C-x b" . helm-buffers-list)
+           ("M-y" . helm-show-kill-ring)
+           ("M-x" . helm-M-x)
+           ("C-x c o" . helm-occur)
+           ("C-x c s" . helm-swoop)
+           ("C-x c y" . helm-yas-complete)
+           ("C-x c Y" . helm-yas-create-snippet-on-region)
+           ("C-x c b" . my/helm-do-grep-book-notes)
+           ("C-x c SPC" . helm-all-mark-rings)))
+  (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+
+  ;; (use-package helm-org-rifle)
+
+;; (use-package helm-descbinds
+;;   :defer t
+;;   :bind (("C-h b" . helm-descbinds)
+;;          ("C-h w" . helm-descbinds)))
+
+(my/check-org)

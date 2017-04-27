@@ -1,9 +1,6 @@
 #+TITLE: Ryan Woodard's Emacs configuration
 #+OPTIONS: toc:4 h:4
-
-
-
-#  +  STARTUP: lognoterefile
+#+STARTUP: lognoterefile
 
 
 #org-confirm-elisp-link-function
@@ -20,14 +17,6 @@ stuff.  She is wonderful.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key [home] 'move-beginning-of-line)
   (global-set-key [end] 'move-end-of-line)
-
-
-  ;; (setq org-use-speed-commands t)  ;; Way cool!
-  ;; For example, to activate speed commands when the point is on any
-  ;; star at the beginning of the headline, you can do this:
-  ;; (setq org-use-speed-commands
-  ;; 	(lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
-
 #+END_SRC
 
 #+RESULTS:
@@ -263,6 +252,30 @@ I can easily publish my main configuration.
 
 ** org
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org
+    :load-path "~/.emacs.d/elisp/org-mode/lisp")
+
+(defun my/check-org ()
+  (message (concat "org-version " org-version))
+  (if (version< org-version "9.0")
+      (progn
+       (message "Old org.")
+       (kill-emacs))
+    (message "Why not try 9.1?")))
+
+(my/check-org)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (setq org-use-speed-commands t)  ;; Way cool!
+    ;; For example, to activate speed commands when the point is on any
+    ;; star at the beginning of the headline, you can do this:
+    (setq org-use-speed-commands
+	    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+  (my/check-org)
+#+END_SRC
+
 #+begin_src emacs-lisp :tangle yes
   (setq org-startup-with-inline-images t)
   (use-package org
@@ -287,12 +300,7 @@ I can easily publish my main configuration.
     (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))))
     ;;:config
 
-(message (concat "org-version " org-version))
-(if (version< org-version "9.0")
-      (progn
-       (message "Old org.")
-       (kill-emacs))
-    (message "Why not try 9.1?"))
+(my/check-org)
 
 #+end_src
 
@@ -340,6 +348,7 @@ shortcuts for refiling.
   ;; (my/defshortcut ?C "~/personal/calendar.org")
   ;; (my/defshortcut ?l "~/dropbox/public/sharing/learning.org")
   ;; (my/defshortcut ?q "~/personal/questions.org")
+(my/check-org)
 #+END_SRC
 
 #+RESULTS:
@@ -597,54 +606,6 @@ previous attempt at this.
 	(cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	      Info-directory-list))
 #+END_SRC
-* helm
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; (use-package helm
-;;   :diminish helm-mode
-;;   :init
-;;   (progn
-;;     (require 'helm-config)
-;;     (setq helm-candidate-number-limit 100)
-;;     ;; From https://gist.github.com/antifuchs/9238468
-;;     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-;;           helm-input-idle-delay 0.01  ; this actually updates things
-;;                                         ; reeeelatively quickly.
-;;           helm-yas-display-key-on-candidate t
-;;           helm-quick-update t
-;;           helm-M-x-requires-pattern nil
-;;           helm-ff-skip-boring-files t)
-;;     (helm-mode))
-;;   :bind (("C-c h" . helm-mini)
-;;          ("C-h a" . helm-apropos)
-;;          ("C-x C-b" . helm-buffers-list)
-;;          ("C-x b" . helm-buffers-list)
-;;          ("M-y" . helm-show-kill-ring)
-;;          ("M-x" . helm-M-x)
-;;          ("C-x c o" . helm-occur)
-;;          ("C-x c s" . helm-swoop)
-;;          ("C-x c y" . helm-yas-complete)
-;;          ("C-x c Y" . helm-yas-create-snippet-on-region)
-;;          ("C-x c b" . my/helm-do-grep-book-notes)
-;;          ("C-x c SPC" . helm-all-mark-rings)))
-;; (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
-
-;; (use-package helm-org-rifle)
-
-#+END_SRC
-
-#+RESULTS:
-
-Great for describing bindings. I'll replace the binding for =where-is= too.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; (use-package helm-descbinds
-;;   :defer t
-;;   :bind (("C-h b" . helm-descbinds)
-;;          ("C-h w" . helm-descbinds)))
-#+END_SRC
-
-#+RESULTS:
-
 * Python
 
 #+BEGIN_SRC sh
@@ -665,12 +626,12 @@ Great for describing bindings. I'll replace the binding for =where-is= too.
   ;;     M-x jedi:install-server RET
   ;; Then open Python file.
 
-  ;; (use-package elpy)
-  ;; (elpy-enable)
+  (use-package elpy)
+  (elpy-enable)
 
   ;; (setq elpy-rpc-backend "jedi")  
 
-  ;; (require 'ob-ipython)
+  (require 'ob-ipython)
 
   ;; Use conda env in shell from which Emacs was started!
   ;;(setq ob-ipython-command "~/local/miniconda3/envs/py27/bin/jupyter")
@@ -697,3 +658,78 @@ Great for describing bindings. I'll replace the binding for =where-is= too.
 :RESULTS:
 hi there, sir
 :END:
+
+* helm
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (add-to-list 'load-path (file-name-directory (file-truename "/home/ryan/.emacs.d/elpa/helm-20170425.2201/emacs-helm.sh")))
+  ;; (setq default-frame-alist '((vertical-scroll-bars . nil)
+  ;;                             (tool-bar-lines . 0)
+  ;;                             (menu-bar-lines . 0)
+  ;;                             (fullscreen . nil)))
+  (unless (member "helm.el" (directory-files default-directory))
+    (setq package-load-list '((helm-core t) (helm t) (async t) (popup t)))
+    (package-initialize))
+  (blink-cursor-mode 1)
+  (require 'helm-config)
+  (helm-mode 1)
+  (define-key global-map [remap find-file] 'helm-find-files)
+  (define-key global-map [remap occur] 'helm-occur)
+  (define-key global-map [remap list-buffers] 'helm-buffers-list)
+  (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (unless (boundp 'completion-in-region-function)
+    (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+    (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+
+
+    (use-package helm
+      :diminish helm-mode
+      :init
+      (progn
+        (require 'helm-config)
+        (setq helm-candidate-number-limit 100)
+        ;; From https://gist.github.com/antifuchs/9238468
+        (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+              helm-input-idle-delay 0.01  ; this actually updates things
+                                            ; reeeelatively quickly.
+              helm-yas-display-key-on-candidate t
+              helm-quick-update t
+              helm-M-x-requires-pattern nil
+              helm-ff-skip-boring-files t)
+        (helm-mode))
+      :bind (("C-c h" . helm-mini)
+             ("C-h a" . helm-apropos)
+             ("C-x C-b" . helm-buffers-list)
+             ("C-x b" . helm-buffers-list)
+             ("M-y" . helm-show-kill-ring)
+             ("M-x" . helm-M-x)
+             ("C-x c o" . helm-occur)
+             ("C-x c s" . helm-swoop)
+             ("C-x c y" . helm-yas-complete)
+             ("C-x c Y" . helm-yas-create-snippet-on-region)
+             ("C-x c b" . my/helm-do-grep-book-notes)
+             ("C-x c SPC" . helm-all-mark-rings)))
+    (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+
+    ;; (use-package helm-org-rifle)
+
+#+END_SRC
+
+#+RESULTS:
+
+Great for describing bindings. I'll replace the binding for =where-is= too.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (use-package helm-descbinds
+;;   :defer t
+;;   :bind (("C-h b" . helm-descbinds)
+;;          ("C-h w" . helm-descbinds)))
+#+END_SRC
+
+#+RESULTS:
+
+* Final org check
+#+BEGIN_SRC emacs-lisp :tangle yes
+(my/check-org)
+#+END_SRC

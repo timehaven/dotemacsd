@@ -102,7 +102,8 @@
 
 ;; default f10 is menu. New way of the world: do not overwrite.
 ;;(global-set-key [f10] 'find-file-at-point)
-(global-set-key [f10] 'ido-find-file)
+;; (global-set-key [f10] 'ido-find-file)
+(global-set-key [f10] 'helm-find-files)
 ;; (global-set-key [C-f10] 'info)
 (global-set-key [M-f10] 'tmm-menubar)
 (global-set-key [S-f9] 'beginning-of-buffer)
@@ -113,6 +114,7 @@
 (global-set-key [f11] 'save-buffer)
 
 (global-set-key [f12] 'eval-region) ;; lisp
+(global-set-key [C-f12] 'eval-last-sexp) ;; lisp
 (global-set-key [S-f12] 'speedbar-get-focus)
 ;; awesomeness from http://www.emacswiki.org/emacs/ToolBar and tool-bar+.el
 ;;(global-set-key [S-C-f12] 'show-tool-bar-for-one-command)
