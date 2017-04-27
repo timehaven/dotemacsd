@@ -2,6 +2,7 @@
 
 ;; ----- ido-last-directory-list -----
 (
+ ("/Users/rwoodard/" . ".link/")
  ("/home/ryan/local/src/" . "sachac.emacs.d.git/")
  ("/home/ryan/.emacs.d/elisp/scimax/" . "ob-ipython/")
  ("/home/ryan/.emacs.d/elisp/" . "scimax/")
@@ -12,6 +13,9 @@
 
 ;; ----- ido-work-directory-list -----
 (
+ "/Users/rwoodard/"
+ "/Users/rwoodard/org/"
+ "/Users/rwoodard/.link/"
  "/home/ryan/local/src/sachac.emacs.d.git/"
  "/home/ryan/.emacs.d/"
  "/home/ryan/.emacs.d/elisp/scimax/"
@@ -21,18 +25,30 @@
 
 ;; ----- ido-work-file-list -----
 (
+ "py36.yml"
+ "index.org"
+ "daily.org"
+ "link_rwoodard.config"
+ "link_sam.config"
+ "link.config"
+ "link_apetranovich.config"
+ "moe.org"
  "Sacha.org"
  "hold.org"
- "custom-settings.el"
- "ryan.org"
- "scimax-org-babel-ipython.el"
- "letters.pdf"
- "letters.org"
- "eless"
 )
 
 ;; ----- ido-dir-file-cache -----
 (
+ ("/Users/rwoodard/" (22785 6614 0 0) "zsh_tmp/" "Z_STORE/" "write/" "work/" "VirtualBox VMs/" "Untitled.ipynb" "tmp/" "test.xls" "tag_lr_query_to_pkl.tgz" "summit_beccar60.avi" "summit_beccar10.avi" "summit_becca.avi" "summit.mp4" "stash/" "stanford-corenlp-full-2015-12-09.zip" "snipe/" "Sites/" "site_domain_good_no_crop_proba89_2016-02-08_2016-02-14.mkv" "site_domain_good_no_crop_2016-02-08_2016-02-14.mkv" "site_domain_bad_no_crop_proba89_2016-02-08_2016-02-14.mkv" "site_domain_bad_no_crop_proba7_variable_marker_2016-02-08_2016-02-14.mkv" "site_domain_bad_no_crop_2016-02-08_2016-02-14.mkv" "similarweb.temp0" "sig_01557.png" "shoeshineboy" "second_opinion.py" "scratch_py27.ipynb" "ryan_lei_opinion.pkl" "rw/" "RSYNC_EXCLUDES" "ron.png" "README.devbox.org" "py27env.yml~" "py27env.yml" "py27env" "py27.txt" "pureclick.org" "public_html/" "Public/" "pub_348882_suspected_bad_apps.csv" "privileges_dialogue.png" "pre/" "ppl.sty" "play_exclude.scala" "Pictures/" "people/" "pdx_box_ip.txt" "output.jpg" "organizer.org" "organ_capture.org.org" "org_mac/" "org_bu/" "org/" "oliver.sh" "neo_escalations.cypher" "neo4j_notes.org" "neo4j/" "Music/" "movold/" "Movies/" "moeds/" "moe/" "mbox" "matt_disk_usage.csv" "macports/" "local/" "Library/" "lease_ookpik_jesse_bryan_rough_draft.pdf" "learn/" "jup_kernal.json" "Jts/" "iq_seller_blacklist_dashboard_ryan.py" "ipynb_mac/" "ipynb/" "Investor Profile Questionnaire expires 1-22-16.pdf" "hpfignewsquare/" "hpfignew.mkv" "hpfignew/" "hpfig_old2/" "hpfig_old/" "hpfig2_tag_id_human_2016-01-04_2016-01-10.mkv" "hpfig2_tag_id_human_2015-12-01_2015-12-07.mov" "hpfig2_publisher_id_human_2015-12-01_2015-12-07.mov" "hpfig2/" "hpfig/" "harsh/" "hackathon/" "hack_n_learn/" "Guidance Brochure_DC version.pdf" "good_sites.mkv" "github/" "get_data.py" "gd_repo_reorg.pdf" "enigma.org" "e.py" "ds_razzle" "Dropbox/" "Downloads/" "Documents/" "doc/" "devbox_conda" "Desktop/" "deliv_type_pct.png" "datacenters.ipynb" "ctrjoin_conf.py" "creative_id_41381575_cr-1483098531-486-creative.png" "cr-1480981456-373-creative.png" "cr-1471250633-990-creative.png" "count_click_imp_auctions.scala" "cohrfig.png" "cgit/" "cads_cache/" "BudgetingWorksheet_ENG_2015FINAL.pdf" "bpp_recorder" "bok_cnn.html" "blah2" "blah.py" "blah" "bidders.out" "bad_sites.mkv" "appnexus_ivt_ey.csv" "Applications/" "an/" "admin/" "50000010.jpg" "50000009.jpg" "50000008.jpg" "50000005.jpg" "50000001.jpg" ".zshrc_local" ".zshrc" ".zsh_history" ".zsh-update" ".zinc/" ".zcompdump-rwoodard-5.0.8" ".zcompdump-rwoodard-5.0.5" ".xinitrc" ".Xauthority" ".wireshark-etc/" ".wireshark/" ".wget-hsts" ".viminfo" ".Trash/" ".tmux.conf" ".theano/" ".swt/" ".ssh/" ".spark_history" ".serverauth.83260" ".screenrc" ".scala_history" ".sbt/" ".rnd" ".recentf~" ".recentf" ".README.md" ".python_history" ".pylint.d/" ".pydistutils.cfg_use_anaconda" ".pip/" ".passwords" ".oracle_jre_usage/" ".oh-my-zsh/" ".octave_hist" ".neoclipse/" ".matplotlib/" ".m2/" ".link/" ".lesshst" ".keras/" ".jupyter-scala/" ".jupyter/" ".jssc/" ".ivy2/" ".ipython/" ".ipynb_checkpoints/" ".ievms/" ".ido.last~" ".ido.last" ".hwid" ".hgignore_global" ".gsutil/" ".gnupg/" ".gitmessage.txt" ".gitignore_global" ".gitignore" ".gitconfig" ".git/" ".exports~" ".exports" ".emacs.d_mac_20170426/" ".emacs.d_mac_20160906/" ".emacs.d_hold/" ".emacs.d_epsilon/" ".emacs.d/" ".eclipse/" ".dvdcss/" ".DS_Store" ".dropbox/" ".distlib/" ".dbeaver/" ".dask/" ".cups/" ".coursier/" ".continuum/" ".config/" ".condarc" ".conda/" ".CFUserTextEncoding" ".cache/" ".byoburc" ".byobu/" ".bashrc" ".bash_profile~" ".bash_profile.backup" ".bash_profile-miniconda3.bak" ".bash_profile-anaconda.bak" ".bash_profile" ".bash_logout" ".bash_history" ".aws/" ".astropy/" ".aspell.en.pws" ".aspell.en.prepl" ".anyconnect" ".aliases~" ".aliases" ".account" "../" "./")
+
+ ("/Users/rwoodard/org/" (22785 3951 0 0) "scimax.org~" "scimax.org" "README_AN_useful.org" "OLDER/" "now.org~" "now.org" "moe.org~" "moe.org" "journal.org" "ipython-inline-images/" "index.org~" "index.org" "gtd.org" "fake_dir_for_blog_post/" "explore_model_output.pkl" "daily.org~" "daily.org" "daily.html~" "daily.html" "an_org.org~" "an_org.org" "an_capture.org~" "an_capture.org" "2017_peer_feedback.org" "2017_appnexus_projects.txt" "2017_appnexus_projects.org" ".gitignore" ".git/" "../" "./")
+
+ ("/Users/rwoodard/.link/" (21993 7702 0 0) "link_sand_simple.config~" "link_sand_simple.config" "link_sam.config" "link_rwoodard.config~" "link_rwoodard.config" "link_apetranovich.config~" "link_apetranovich.config" "link.config~" "link.config_bu" "link.config" "../" "./")
+
+ ("/Users/rwoodard/github/dotemacsd/" (22784 59525 0 0) "zunused/" "snippets/" "ryan.org" "ryan.html~" "ryan.html" "ryan.el" "rw/" "init.el" "ido.last~" "ido.last" "hold.org" "eshell/" "elpa/" "elisp/" "custom-settings.el" "bookmarks" "auto-save-list/" "ac-comphist.dat" ".python-environments/" ".gitignore" ".git/" "../" "./")
+
+ ("/Users/rwoodard/github/" (22782 25745 0 0) "dotemacsd/" "../" "./")
+
  ("/home/ryan/" (22783 27453 109945 560000) "github/" "write/" ".cache/" "cads_training_2017-03-30__01:09.png" ".ssh_sofia/" ".ssh/" ".Xauthority" "ipynb/" ".tmp/" ".zshrc" "other_dot_files/" ".emacs.d_john/" ".zcompdump" "emacs.d_src/" ".zshrc.pre-oh-my-zsh" ".lesshst" "Downloads/" ".config/" ".bashrc-miniconda3.bak" ".local/" ".texlive2016/" ".gnome2_private/" "audacity/" ".mozilla/" "Videos/" ".aws/" ".ssh_macbook/" ".dbus/" ".continuum/" ".xsession-errors" ".tmux.conf" "Templates/" ".emacs.d/" "songs/" ".Xdefault~" ".zshrc_local~" ".ssh_orig/" ".Skype/" ".inputrc" "ookpik_lease_purchase_joel_scurr_ilrg/" ".audacity-data/" ".zsh-update" ".pki/" "mac_dotfiles/" "org/" ".ssh_old_jeff/" "local/" ".Xdefaults" "courses/" ".gksu.lock" ".ICEauthority" ".zshrc_local" ".tmux.conf~" "tmp/" "stash/" ".ipython/" "AN_dots/" ".gconf/" "Ryan_AN_bu_rsync/" ".joe_state" ".bashrc" "Pictures/" ".xinitrc~" ".zcompdump-john-5.3.1" ".tmux/" ".zshrc~" ".oh-my-zsh/" ".bashrc~" ".bash_history" ".wicd/" ".mlterm/" ".python_history" "./" "rsync_exclude_files" "Public/" ".conda/" ".jupyter/" "Music/" ".xinitrc" "btscanner.log" ".profile" ".bash_logout" "../" ".ipynb_checkpoints/" ".gnupg/" ".gitconfig~" ".gitconfig" "Desktop/" ".bashrc-miniconda2.bak" ".gnome2/" ".zsh_history" ".Xdefaults~" ".gnome/" "cgit/")
 
  ("/home/ryan/.emacs.d/" (22783 27466 981849 70000) "ipython-inline-images/" ".emacs.desktop" "init.el" "rw/" "custom-settings.el" "zunused/" "snippets/" "ido.last" "ac-comphist.dat" ".#ryan.org" ".git/" ".gitignore" "eshell/" "hold.org" "./" "elpa/" "../" "ryan.org" "ryan.html" "ido.last~" "elisp/" "ryan.el" "auto-save-list/")

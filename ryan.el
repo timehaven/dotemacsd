@@ -132,6 +132,7 @@
 (my/defshortcut ?a "~/org/2017_appnexus_projects.org")
 (my/defshortcut ?i "~/.emacs.d/ryan.org")
 (my/defshortcut ?p "~/stash/users/rwoodard/slopbucket/packratatat/packratatat.org")
+(my/defshortcut ?m "~/org/moe.org")
 ;; (my/defshortcut ?s "~/personal/sewing.org")
 ;; (my/defshortcut ?b "~/personal/business.org")
 ;; (my/defshortcut ?p "~/personal/google-inbox.org")
@@ -180,6 +181,7 @@
 	  "blah.org"	  
 	  ))))
 (add-to-list 'rw/org-refile-targets (concat rw/slopbucket-dir "/packratatat/packratatat.org"))
+(add-to-list 'rw/org-refile-targets (concat org-directory "/moe.org"))
 
 (setq org-refile-targets '((rw/org-refile-targets . (:maxlevel . 6))))
 ;; Using #+STARTUP: lognoterefile  org-log-refile
@@ -235,7 +237,8 @@
   (set-face-background 'secondary-selection "lightblue")
   (set-face-background 'font-lock-doc-face "black")
   (set-face-foreground 'font-lock-doc-face "wheat")
-  (set-face-background 'font-lock-string-face "black")
+  ;;(set-face-background 'font-lock-string-face "")
+  ;;(set-face-background 'font-lock-string-face "black")
   (set-face-foreground 'org-todo "green")
   (set-face-background 'org-todo "black"))
 
@@ -304,6 +307,42 @@
 (setq Info-directory-list
       (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	    Info-directory-list))
+
+(use-package helm
+  :diminish helm-mode
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("C-c h" . helm-mini)
+         ("C-h a" . helm-apropos)
+         ("C-x C-b" . helm-buffers-list)
+         ("C-x b" . helm-buffers-list)
+         ("M-y" . helm-show-kill-ring)
+         ("M-x" . helm-M-x)
+         ("C-x c o" . helm-occur)
+         ("C-x c s" . helm-swoop)
+         ("C-x c y" . helm-yas-complete)
+         ("C-x c Y" . helm-yas-create-snippet-on-region)
+         ("C-x c b" . my/helm-do-grep-book-notes)
+         ("C-x c SPC" . helm-all-mark-rings)))
+(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+
+(use-package helm-org-rifle)
+
+(use-package helm-descbinds
+  :defer t
+  :bind (("C-h b" . helm-descbinds)
+         ("C-h w" . helm-descbinds)))
 
 ;; Standard Jedi.el setting
 (use-package jedi)

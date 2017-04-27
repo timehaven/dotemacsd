@@ -3,9 +3,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files (quote ("~/org/moe.org")))
  '(package-selected-packages
    (quote
-    (jedi writeroom-mode use-package smart-mode-line python-environment ob-ipython miniedit magit epc elpy color-theme-solarized auto-complete auto-compile))))
+    (helm-descbinds helm-org-rifle helm copy-as-format jedi writeroom-mode use-package smart-mode-line python-environment ob-ipython miniedit magit epc elpy color-theme-solarized auto-complete auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
