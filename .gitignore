@@ -3,3 +3,9 @@ elisp/org-mode
 *~
 *.elc
 *.pyc
+eshell/history
+eshell/lastdir
+ido.last
+ac-comphist.dat
+custom-settings.el
+elpa/archives/melpa/archive-contents

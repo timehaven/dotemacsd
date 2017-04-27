@@ -1,5 +1,0 @@
-ls
-mkdir rw
-mv rw_keys.el rw/
-cd ~/.emacs.d/elisp
-git clone https://github.com/jkitchin/scimax.git

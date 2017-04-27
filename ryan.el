@@ -5,8 +5,8 @@
 ;; (setq org-use-speed-commands t)  ;; Way cool!
 ;; For example, to activate speed commands when the point is on any
 ;; star at the beginning of the headline, you can do this:
-(setq org-use-speed-commands
-      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+;; (setq org-use-speed-commands
+;; 	(lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
 
 ;; check OS type
 (setq is-linux nil)
@@ -74,7 +74,7 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/org-mode/contrib/lisp")
 (setq package-enable-at-startup nil)
 (setq custom-file "~/.emacs.d/custom-settings.el")
-(load custom-file t)
+;; (load custom-file t)
 
 ;; Who am I?
 (setq user-full-name "Ryan Woodard")
@@ -115,6 +115,36 @@
 (setq load-prefer-newer t)
 
 (load "~/.emacs.secrets" t)
+
+(setq org-startup-with-inline-images t)
+  (use-package org
+    :load-path "~/.emacs.d/elisp/org-mode/lisp"
+    :config
+    (progn
+      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '(
+	 ;; (dot . t)
+	 ;;   (ditaa . t)
+	 (emacs-lisp . t)
+	 (ipython . t)
+	 (sh . t)
+	 ;; (sqlite . t)
+	 ;; (http . t)
+	 ;; (ledger . t)
+	 (shell . t)
+	 ;; (R . t)))
+	 ))
+    (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))))
+    ;;:config
+
+(message (concat "org-version " org-version))
+(if (version< org-version "9.0")
+      (progn
+       (message "Old org.")
+       (kill-emacs))
+    (message "Why not try 9.1?"))
 
 (defvar my/refile-map (make-sparse-keymap))
 
@@ -185,29 +215,6 @@
 
 (setq org-refile-targets '((rw/org-refile-targets . (:maxlevel . 6))))
 ;; Using #+STARTUP: lognoterefile  org-log-refile
-
-(setq org-startup-with-inline-images t)
-(use-package org
-  :load-path "~/.emacs.d/elisp/org-mode/lisp"
-  :config
-  (progn
-    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '(
-       ;; (dot . t)
-       ;;   (ditaa . t)
-       (emacs-lisp . t)
-       (ipython . t)
-       (sh . t)
-       ;; (sqlite . t)
-       ;; (http . t)
-       ;; (ledger . t)
-       (shell . t)
-       ;; (R . t)))
-       ))
-  (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))))
-  ;;:config
 
 (setq org-src-window-setup 'current-window)
 
@@ -308,58 +315,58 @@
       (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	    Info-directory-list))
 
-(use-package helm
-  :diminish helm-mode
-  :init
-  (progn
-    (require 'helm-config)
-    (setq helm-candidate-number-limit 100)
-    ;; From https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ; this actually updates things
-                                        ; reeeelatively quickly.
-          helm-yas-display-key-on-candidate t
-          helm-quick-update t
-          helm-M-x-requires-pattern nil
-          helm-ff-skip-boring-files t)
-    (helm-mode))
-  :bind (("C-c h" . helm-mini)
-         ("C-h a" . helm-apropos)
-         ("C-x C-b" . helm-buffers-list)
-         ("C-x b" . helm-buffers-list)
-         ("M-y" . helm-show-kill-ring)
-         ("M-x" . helm-M-x)
-         ("C-x c o" . helm-occur)
-         ("C-x c s" . helm-swoop)
-         ("C-x c y" . helm-yas-complete)
-         ("C-x c Y" . helm-yas-create-snippet-on-region)
-         ("C-x c b" . my/helm-do-grep-book-notes)
-         ("C-x c SPC" . helm-all-mark-rings)))
-(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+;; (use-package helm
+;;   :diminish helm-mode
+;;   :init
+;;   (progn
+;;     (require 'helm-config)
+;;     (setq helm-candidate-number-limit 100)
+;;     ;; From https://gist.github.com/antifuchs/9238468
+;;     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+;;           helm-input-idle-delay 0.01  ; this actually updates things
+;;                                         ; reeeelatively quickly.
+;;           helm-yas-display-key-on-candidate t
+;;           helm-quick-update t
+;;           helm-M-x-requires-pattern nil
+;;           helm-ff-skip-boring-files t)
+;;     (helm-mode))
+;;   :bind (("C-c h" . helm-mini)
+;;          ("C-h a" . helm-apropos)
+;;          ("C-x C-b" . helm-buffers-list)
+;;          ("C-x b" . helm-buffers-list)
+;;          ("M-y" . helm-show-kill-ring)
+;;          ("M-x" . helm-M-x)
+;;          ("C-x c o" . helm-occur)
+;;          ("C-x c s" . helm-swoop)
+;;          ("C-x c y" . helm-yas-complete)
+;;          ("C-x c Y" . helm-yas-create-snippet-on-region)
+;;          ("C-x c b" . my/helm-do-grep-book-notes)
+;;          ("C-x c SPC" . helm-all-mark-rings)))
+;; (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
 
-(use-package helm-org-rifle)
+;; (use-package helm-org-rifle)
 
-(use-package helm-descbinds
-  :defer t
-  :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds)))
+;; (use-package helm-descbinds
+;;   :defer t
+;;   :bind (("C-h b" . helm-descbinds)
+;;          ("C-h w" . helm-descbinds)))
 
 ;; Standard Jedi.el setting
-(use-package jedi)
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+;; (use-package jedi)
+;; (add-hook 'python-mode-hook 'jedi:setup)
+;; (setq jedi:complete-on-dot t)
 
 ;; Type:
 ;;     M-x package-install RET jedi RET
 ;;     M-x jedi:install-server RET
 ;; Then open Python file.
 
-(use-package elpy)
-(elpy-enable)
+;; (use-package elpy)
+;; (elpy-enable)
 
-(setq elpy-rpc-backend "jedi")  
+;; (setq elpy-rpc-backend "jedi")  
 
-(require 'ob-ipython)
+;; (require 'ob-ipython)
 
 ;; Use conda env in shell from which Emacs was started!
 ;;(setq ob-ipython-command "~/local/miniconda3/envs/py27/bin/jupyter")
