@@ -51,7 +51,7 @@
 ;; F10 ^[[21~
 ;; F11 ^[[23~
 ;; F12 ^[[24~
-								       
+
 ;; 2 Shift
 ;; 3 Alt
 ;; 4 Shift + Alt
@@ -150,19 +150,19 @@
     (setq proc (get-process pname))))
 
     proc)
-    
+
 
 (defun sh-send-line-or-region (pname &optional step)
 
   (interactive ())
-  
+
   (let
 
       ((proc (my/get-proc pname))
        pbuf min max command)
 
     (setq pbuff (process-buffer proc))
-    
+
     (if (use-region-p)
         (setq min (region-beginning)
               max (region-end))
@@ -170,7 +170,7 @@
             max (point-at-eol)))
 
     (setq command (concat (buffer-substring min max) "\n"))
-    
+
     (with-current-buffer pbuff
       (goto-char (process-mark proc))
       (insert command)
@@ -181,7 +181,7 @@
 
     (display-buffer (process-buffer proc) t)
 
-    (when step 
+    (when step
       (goto-char max)
       (next-line))
     )

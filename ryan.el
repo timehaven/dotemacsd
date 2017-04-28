@@ -229,7 +229,7 @@
 	'(
 	  "projects.org"
 	  "gtd.org"
-	  "blah.org"	  
+	  "blah.org"
 	  ))))
 (add-to-list 'rw/org-refile-targets (concat rw/slopbucket-dir "/packratatat/packratatat.org"))
 (add-to-list 'rw/org-refile-targets (concat org-directory "/index.org"))
@@ -308,7 +308,7 @@
 (setq visible-bell t)
 (column-number-mode 1)
 
-;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
     (defun unfill-paragraph (&optional region)
       "Takes a multi-line paragraph and makes it into a single line of text."
       (interactive (progn (barf-if-buffer-read-only) '(t)))
@@ -354,10 +354,13 @@
 
 (use-package ob-ipython)
 
-(use-package elpy)
+
+(use-package elpy
+  :bind (:map elpy-mode-map
+	      ([f12] . elpy-shell-send-region-or-buffer)))
 (elpy-enable)
 
-;; (setq elpy-rpc-backend "jedi")  
+;; (setq elpy-rpc-backend "jedi")
 
 
 ;; Use conda env in shell from which Emacs was started!
@@ -435,7 +438,9 @@
 (mapcar (lambda (path) (find-file path))
 	(cons "~/.emacs.d/ryan.org" rw/org-refile-targets ))
 
-;; https://www.emacswiki.org/emacs/AutoFillMode
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+  ;; https://www.emacswiki.org/emacs/AutoFillMode
 
   ;; Ask for auto-fill each time:
   ;; (add-hook 'text-mode-hook
@@ -447,7 +452,7 @@
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
   ;; (global-set-key (kbd "C-c q") 'auto-fill-mode)
- 
+
 (use-package smartparens
     :config
     (progn

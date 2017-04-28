@@ -100,7 +100,7 @@ All must be readable for when anything below crashes:
 Note that all the =#+BEGIN_SRC= blocks are indented in this =.org=
 file but not in the tangled =.el= output.  Monkey around with that
 using =org-edit-src-content-indentation= and
-=org-src-preserve-indentation=. 
+=org-src-preserve-indentation=.
 
 ** It's all about the org
 
@@ -403,7 +403,7 @@ shortcuts for refiling.
 	  '(
 	    "projects.org"
 	    "gtd.org"
-	    "blah.org"	  
+	    "blah.org"
 	    ))))
   (add-to-list 'rw/org-refile-targets (concat rw/slopbucket-dir "/packratatat/packratatat.org"))
   (add-to-list 'rw/org-refile-targets (concat org-directory "/index.org"))
@@ -524,7 +524,7 @@ Some more tweaks to solarized:
 
 *** Some old favorite keys of mine (rw)
 
-Add to 
+Add to
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (eval-after-load 'org
@@ -537,7 +537,7 @@ Add to
 
 #+RESULTS:
 : org-ctrl-c-ctrl-c
-    
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key (kbd "<f12>") 'eval-last-sexp)
 #+END_SRC
@@ -572,7 +572,7 @@ Especially on Mac, audible bell is *annoying*!
 
 ** Unfill paragraph
 #+BEGIN_SRC emacs-lisp :tangle yes
-;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
     (defun unfill-paragraph (&optional region)
       "Takes a multi-line paragraph and makes it into a single line of text."
       (interactive (progn (barf-if-buffer-read-only) '(t)))
@@ -615,7 +615,7 @@ Especially on Mac, audible bell is *annoying*!
 * Make sure source code packages (org) have latest Info
 
 Need to do this again because =magit= (from =elpa=) overwrites
-previous attempt at this. 
+previous attempt at this.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq Info-directory-list
@@ -642,10 +642,13 @@ previous attempt at this.
 
   (use-package ob-ipython)
 
-  (use-package elpy)
+
+  (use-package elpy
+    :bind (:map elpy-mode-map
+		([f12] . elpy-shell-send-region-or-buffer)))
   (elpy-enable)
 
-  ;; (setq elpy-rpc-backend "jedi")  
+  ;; (setq elpy-rpc-backend "jedi")
 
 
   ;; Use conda env in shell from which Emacs was started!
@@ -748,7 +751,7 @@ Great for describing bindings. I'll replace the binding for =where-is= too.
 
 #+RESULTS:
 
- 
+
 * shell, term, etc.
 
 ;; I like zsh from non-emacs, but keep things simple within emacs.
@@ -757,17 +760,20 @@ Great for describing bindings. I'll replace the binding for =where-is= too.
 * Autoload at startup
 
 Instead of =desktop-save= I want to start fresh with only specific
-files. 
+files.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (mapcar (lambda (path) (find-file path))
 	  (cons "~/.emacs.d/ryan.org" rw/org-refile-targets ))
 #+END_SRC
- 
 
-* auto-fill-mode, parens, etc
+
+* auto-fill-mode, parens, whitespace etc
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
   ;; https://www.emacswiki.org/emacs/AutoFillMode
 
   ;; Ask for auto-fill each time:
@@ -780,7 +786,7 @@ files.
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
   ;; (global-set-key (kbd "C-c q") 'auto-fill-mode)
- 
+
 (use-package smartparens
     :config
     (progn
@@ -794,10 +800,10 @@ files.
 
 * To be tested and implemented one day
 Notice that the =tangle= is no for now!
-#+BEGIN_SRC emacs-lisp :tangle no 
+#+BEGIN_SRC emacs-lisp :tangle no
 
   ;; http://stackoverflow.com/questions/5981151/how-to-scroll-up-in-emacs-ansi-term
-  (use-package ansi-color) 
+  (use-package ansi-color)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 #+END_SRC
