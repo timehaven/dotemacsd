@@ -60,14 +60,39 @@
       (cons (expand-file-name "~/.emacs.d/elisp/org-mode/doc")
 	    Info-default-directory-list))
 
-;; This sets up the load path so that we can override it
-(package-initialize)
-
-;; Override the packages with the git version of Org and other packages
+;;
+;;
+;; https://emacs.stackexchange.com/questions/16831/using-package-el-to-install-and-update-but-use-package-for-loading-and-configuri
+;;
+(require 'package)
+(setq package-enable-at-startup nil)   ; To prevent initialising twice
 (add-to-list 'load-path "~/.emacs.d/elisp/org-mode/lisp")
 (add-to-list 'load-path "~/.emacs.d/elisp/org-mode/contrib/lisp")
-(setq package-enable-at-startup nil)
-(setq custom-file "~/.emacs.d/custom-settings.el")
+(add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://stable.melpa.org/packages/"))
+
+
+(package-initialize)
+
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+
+(eval-when-compile
+  (require 'use-package))
+;;;
+
+
+;;
+;; https://github.com/jwiegley/use-package
+;;
+(setq use-package-always-ensure t)
+(setq use-package-verbose t)
+
+
+;;(setq custom-file "~/.emacs.d/custom-settings.el")
 ;; (load custom-file t)
 
 ;; Who am I?
@@ -77,31 +102,25 @@
 (when (eq user-login-name 'rwoodard)
   (setq user-mail-address "rwoodard@appnexus.com"))
 
-;; Modern emacs packaging.
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
-  ;;(package-refresh-contents)
-)
-;;       '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
-;;         ("MELPA Stable" . "https://stable.melpa.org/packages/")
-;;         ("MELPA"        . "https://melpa.org/packages/"))
-;;       package-archive-priorities
-;;       '(("MELPA Stable" . 0)
-;;         ("GNU ELPA"     . 5)
-;;         ("MELPA"        . 10)))
-;; (when (not package-archive-contents)
-;;   (package-refresh-contents))
+;; http://cachestocaches.com/2015/8/getting-started-use-package/
+;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+;; (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 
-(add-to-list 'load-path "~/.emacs.d/elisp")
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
-(setq use-package-verbose t)
-(setq use-package-always-ensure t)
-
-(require 'use-package)
+    ;; ;; Modern emacs packaging.
+    ;; (unless (assoc-default "melpa" package-archives)
+    ;;   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+    ;;   (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+    ;;   ;;(package-refresh-contents)
+    ;;     )
+    ;;       '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
+    ;;         ("MELPA Stable" . "https://stable.melpa.org/packages/")
+    ;;         ("MELPA"        . "https://melpa.org/packages/"))
+    ;;       package-archive-priorities
+    ;;       '(("MELPA Stable" . 0)
+    ;;         ("GNU ELPA"     . 5)
+    ;;         ("MELPA"        . 10)))
+    ;; (when (not package-archive-contents)
+    ;;   (package-refresh-contents))
 
 (use-package auto-compile
   :config (auto-compile-on-load-mode))
@@ -111,14 +130,33 @@
 (load "~/.emacs.secrets" t)
 
 (use-package org
-    :load-path "~/.emacs.d/elisp/org-mode/lisp")
+  :load-path "~/.emacs.d/elisp/org-mode/lisp"
+  :config
+  (progn
+    (setq org-startup-with-inline-images t)
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '(
+       ;; (dot . t)
+       ;;   (ditaa . t)
+       (emacs-lisp . t)
+       (ipython . t)
+       (sh . t)
+       ;; (sqlite . t)
+       ;; (http . t)
+       ;; (ledger . t)
+       (shell . t)
+       ;; (R . t)))
+       ))))
+;;    (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
 
 (defun my/check-org ()
   (message (concat "org-version " org-version))
   (if (version< org-version "9.0")
       (progn
-       (message "Old org.")
-       (kill-emacs))
+	(message "Old org.")
+	(kill-emacs))
     (message "Why not try 9.1?")))
 
 (my/check-org)
@@ -128,31 +166,6 @@
   ;; star at the beginning of the headline, you can do this:
   (setq org-use-speed-commands
 	  (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
-(my/check-org)
-
-(setq org-startup-with-inline-images t)
-  (use-package org
-    :load-path "~/.emacs.d/elisp/org-mode/lisp"
-    :config
-    (progn
-      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '(
-	 ;; (dot . t)
-	 ;;   (ditaa . t)
-	 (emacs-lisp . t)
-	 (ipython . t)
-	 (sh . t)
-	 ;; (sqlite . t)
-	 ;; (http . t)
-	 ;; (ledger . t)
-	 (shell . t)
-	 ;; (R . t)))
-	 ))
-    (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))))
-    ;;:config
-
 (my/check-org)
 
 (defvar my/refile-map (make-sparse-keymap))
@@ -189,8 +202,6 @@
   ;; (my/defshortcut ?q "~/personal/questions.org")
 (my/check-org)
 
-(setq org-startup-with-inline-images t)
-
 ;; capture & refile
 ;;
 ;; (require 'org)  ;; In init.el.
@@ -221,10 +232,16 @@
 	  "blah.org"	  
 	  ))))
 (add-to-list 'rw/org-refile-targets (concat rw/slopbucket-dir "/packratatat/packratatat.org"))
+(add-to-list 'rw/org-refile-targets (concat org-directory "/index.org"))
+(add-to-list 'rw/org-refile-targets (concat org-directory "/daily.org"))
 (add-to-list 'rw/org-refile-targets (concat org-directory "/moe.org"))
+(add-to-list 'rw/org-refile-targets (concat org-directory "/smaller_projects.org"))
 
 (setq org-refile-targets '((rw/org-refile-targets . (:maxlevel . 6))))
 ;; Using #+STARTUP: lognoterefile  org-log-refile
+
+;; To add a note and timestamp when refiled.
+(setq org-log-refile 'note)
 
 (setq org-src-window-setup 'current-window)
 
@@ -250,15 +267,15 @@
 (defun my/setup-color-theme ()
   (interactive)
   (color-theme-solarized-dark)
-  (set-face-foreground 'secondary-selection "darkblue")
-  (set-face-background 'secondary-selection "lightblue")
-  (set-face-background 'font-lock-doc-face "black")
-  (set-face-foreground 'font-lock-doc-face "wheat")
+  ;; (set-face-foreground 'secondary-selection "darkblue")
+  ;; (set-face-background 'secondary-selection "lightblue")
+  ;; (set-face-background 'font-lock-doc-face "black")
+  ;; (set-face-foreground 'font-lock-doc-face "wheat")
   ;;(set-face-background 'font-lock-string-face "")
   ;;(set-face-background 'font-lock-string-face "black")
-  (set-face-foreground 'org-todo "green")
-  (set-face-background 'org-todo "black"))
-
+  ;; (set-face-foreground 'org-todo "green")
+  ;; (set-face-background 'org-todo "black")
+)
 (eval-after-load 'color-theme (my/setup-color-theme))
 
 (when window-system
@@ -335,12 +352,13 @@
 ;;     M-x jedi:install-server RET
 ;; Then open Python file.
 
+(use-package ob-ipython)
+
 (use-package elpy)
 (elpy-enable)
 
 ;; (setq elpy-rpc-backend "jedi")  
 
-(require 'ob-ipython)
 
 ;; Use conda env in shell from which Emacs was started!
 ;;(setq ob-ipython-command "~/local/miniconda3/envs/py27/bin/jupyter")
@@ -350,64 +368,92 @@
 ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
 ;; Intermittent silliness!
 ;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
+
 (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
 (require 'scimax-org-babel-ipython)
+;; Experiment with explicit.  Nope!
+;; (require 'scimax-org-babel-ipython
+;; 	 "~/.emacs.d/elisp/scimax/scimax-org-babel-python.el")
 
-(add-to-list 'load-path (file-name-directory (file-truename "/home/ryan/.emacs.d/elpa/helm-20170425.2201/emacs-helm.sh")))
+;; (add-to-list 'load-path (file-name-directory (file-truename "/home/ryan/.emacs.d/elpa/helm-20170425.2201/emacs-helm.sh")))
 ;; (setq default-frame-alist '((vertical-scroll-bars . nil)
 ;;                             (tool-bar-lines . 0)
 ;;                             (menu-bar-lines . 0)
 ;;                             (fullscreen . nil)))
-(unless (member "helm.el" (directory-files default-directory))
-  (setq package-load-list '((helm-core t) (helm t) (async t) (popup t)))
-  (package-initialize))
-(blink-cursor-mode 1)
-(require 'helm-config)
-(helm-mode 1)
-(define-key global-map [remap find-file] 'helm-find-files)
-(define-key global-map [remap occur] 'helm-occur)
-(define-key global-map [remap list-buffers] 'helm-buffers-list)
-(define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(unless (boundp 'completion-in-region-function)
-  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
-  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+;; (unless (member "helm.el" (directory-files default-directory))
+;;   (setq package-load-list '((helm-core t) (helm t) (async t) (popup t)))
+;;   (package-initialize))
+;; (blink-cursor-mode 1)
+;; (require 'helm-config)
+;; (helm-mode 1)
+;; (define-key global-map [remap find-file] 'helm-find-files)
+;; (define-key global-map [remap occur] 'helm-occur)
+;; (define-key global-map [remap list-buffers] 'helm-buffers-list)
+;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; (unless (boundp 'completion-in-region-function)
+;;   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+;;   (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
 
 
-  (use-package helm
-    :diminish helm-mode
-    :init
-    (progn
-      (require 'helm-config)
-      (setq helm-candidate-number-limit 100)
-      ;; From https://gist.github.com/antifuchs/9238468
-      (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-            helm-input-idle-delay 0.01  ; this actually updates things
-                                          ; reeeelatively quickly.
-            helm-yas-display-key-on-candidate t
-            helm-quick-update t
-            helm-M-x-requires-pattern nil
-            helm-ff-skip-boring-files t)
-      (helm-mode))
-    :bind (("C-c h" . helm-mini)
-           ("C-h a" . helm-apropos)
-           ("C-x C-b" . helm-buffers-list)
-           ("C-x b" . helm-buffers-list)
-           ("M-y" . helm-show-kill-ring)
-           ("M-x" . helm-M-x)
-           ("C-x c o" . helm-occur)
-           ("C-x c s" . helm-swoop)
-           ("C-x c y" . helm-yas-complete)
-           ("C-x c Y" . helm-yas-create-snippet-on-region)
-           ("C-x c b" . my/helm-do-grep-book-notes)
-           ("C-x c SPC" . helm-all-mark-rings)))
-  (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+(use-package helm
+  :diminish helm-mode
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+	  helm-input-idle-delay 0.01  ; this actually updates things
+					; reeeelatively quickly.
+	  helm-yas-display-key-on-candidate t
+	  helm-quick-update t
+	  helm-M-x-requires-pattern nil
+	  helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("C-c h" . helm-mini)
+	 ("C-h a" . helm-apropos)
+	 ("C-x C-b" . helm-buffers-list)
+	 ("C-x b" . helm-buffers-list)
+	 ("M-y" . helm-show-kill-ring)
+	 ("M-x" . helm-M-x)
+	 ("C-x c o" . helm-occur)
+	 ("C-x c s" . helm-swoop)
+	 ("C-x c y" . helm-yas-complete)
+	 ("C-x c Y" . helm-yas-create-snippet-on-region)
+	 ("C-x c b" . my/helm-do-grep-book-notes)
+	 ("C-x c SPC" . helm-all-mark-rings)))
+(ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
 
-  ;; (use-package helm-org-rifle)
+;; (use-package helm-org-rifle)
 
 ;; (use-package helm-descbinds
 ;;   :defer t
 ;;   :bind (("C-h b" . helm-descbinds)
 ;;          ("C-h w" . helm-descbinds)))
 
+(mapcar (lambda (path) (find-file path))
+	(cons "~/.emacs.d/ryan.org" rw/org-refile-targets ))
+
+;; https://www.emacswiki.org/emacs/AutoFillMode
+
+  ;; Ask for auto-fill each time:
+  ;; (add-hook 'text-mode-hook
+  ;; 	  (lambda ()
+  ;; 	    (when (y-or-n-p "Auto Fill mode? ")
+  ;; 	      (turn-on-auto-fill))))
+
+  ;; Auto auto fill always
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+  ;; (global-set-key (kbd "C-c q") 'auto-fill-mode)
+ 
+(use-package smartparens
+    :config
+    (progn
+      (require 'smartparens-config)
+      (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+      (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)))
+
 (my/check-org)
+(message "Successfully loaded all of init.el/ryan.el/ryan.org!")
