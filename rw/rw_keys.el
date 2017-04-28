@@ -65,6 +65,7 @@
 
 ;; OVERWRITE DEFAULT.
 (global-set-key [f1] 'delete-other-windows)
+(global-set-key [S-f1] 'info)
 
 ;; OVERWRITE DEFAULT.
 (fset 'smart-split-vertical
@@ -124,3 +125,94 @@
 
 ;; (global-set-key (kbd "<home>") 'move-beginning-of-line)
 ;; (global-set-key (kbd "<end>") 'move-end-of-line)
+
+;;
+;; I want to highlight some shell commands from some doc I am writing
+;; and send it directly to a shell to test.  Simple, I would think.
+;;
+;; The following func and the binding in my-org-keymap allow me to hit
+;; f12 at the end of any line within '#+BEGIN_SRC bash' section and
+;; send that line to the attached shell.
+;;
+;; http://stackoverflow.com/questions/6286579/emacs-shell-mode-how-to-send-region-to-shell
+;; Return appropriate process based on ansi-term or shell
+(defun my/get-proc (pname)
+
+  (setq proc (get-process pname))
+
+  (unless proc
+    (let (curbuff (current-buffer))
+    (when (eq pname "shell")
+      (shell))
+    (when (eq pname "ansi-term")
+      (ansi-term))
+    (switch-to-buffer curbuff)
+    (setq proc (get-process pname))))
+
+    proc)
+    
+
+(defun sh-send-line-or-region (pname &optional step)
+
+  (interactive ())
+  
+  (let
+
+      ((proc (my/get-proc pname))
+       pbuf min max command)
+
+    (setq pbuff (process-buffer proc))
+    
+    (if (use-region-p)
+        (setq min (region-beginning)
+              max (region-end))
+      (setq min (point-at-bol)
+            max (point-at-eol)))
+
+    (setq command (concat (buffer-substring min max) "\n"))
+    
+    (with-current-buffer pbuff
+      (goto-char (process-mark proc))
+      (insert command)
+      (move-marker (process-mark proc) (point))
+      )  ;;pop-to-buffer does not work with save-current-buffer -- bug?
+
+    (process-send-string proc command)
+
+    (display-buffer (process-buffer proc) t)
+
+    (when step 
+      (goto-char max)
+      (next-line))
+    )
+  )
+
+(defun sh-send-line-or-region-and-step ()
+  (interactive)
+  (sh-send-line-or-region "shell" t))
+
+(defun sh-ansi-term-send-line-or-region-and-step ()
+  (interactive)
+  (sh-send-line-or-region "*ansi-term*" t))
+
+
+(defun sh-switch-to-process-buffer ()
+  (interactive)
+  (pop-to-buffer (process-buffer (get-process "shell")) t))
+
+
+(defun my-org-keymap ()
+  (interactive)
+  (define-key org-mode-map (kbd "<f12>")
+    'sh-ansi-term-send-line-or-region-and-step)
+  (define-key org-src-mode-map (kbd "<f12>")
+    'sh-ansi-term-send-line-or-region-and-step)
+)
+
+(defun my-org-keymap ()
+  (interactive)
+  (define-key org-mode-map (kbd "<f12>")
+    'sh-send-line-or-region-and-step)
+  (define-key org-src-mode-map (kbd "<f12>")
+    'sh-send-line-or-region-and-step)
+)

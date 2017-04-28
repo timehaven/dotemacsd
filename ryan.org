@@ -89,7 +89,8 @@ All must be readable for when anything below crashes:
     ;; Macbook built-in display.
     (when (eq window-system 'ns)
       ;; On Mac, use Command-t to bring up font menu.
-      (set-face-attribute 'default nil :height 240)
+      (set-face-attribute 'default nil :height 220)
+      ;;(set-face-attribute 'default nil :height 240)
       (add-to-list 'initial-frame-alist '(height . 33))
       (add-to-list 'initial-frame-alist '(width . 80))
       (add-to-list 'default-frame-alist '(height . 33))
@@ -729,6 +730,20 @@ Great for describing bindings. I'll replace the binding for =where-is= too.
 
 #+RESULTS:
 
+ 
+* shell, term, etc.
+
+(setq explicit-shell-file-name "/bin/bash")
+
+* To be tested and implemented one day
+Notice that the =tangle= is no for now!
+#+BEGIN_SRC emacs-lisp :tangle no 
+
+  ;; http://stackoverflow.com/questions/5981151/how-to-scroll-up-in-emacs-ansi-term
+  (require 'ansi-color) 
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+#+END_SRC
 * Final org check
 #+BEGIN_SRC emacs-lisp :tangle yes
 (my/check-org)

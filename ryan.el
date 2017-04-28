@@ -48,7 +48,8 @@
   ;; Macbook built-in display.
   (when (eq window-system 'ns)
     ;; On Mac, use Command-t to bring up font menu.
-    (set-face-attribute 'default nil :height 240)
+    (set-face-attribute 'default nil :height 220)
+    ;;(set-face-attribute 'default nil :height 240)
     (add-to-list 'initial-frame-alist '(height . 33))
     (add-to-list 'initial-frame-alist '(width . 80))
     (add-to-list 'default-frame-alist '(height . 33))
