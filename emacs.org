@@ -1,0 +1,416 @@
+#+TITLE: Ryan Woodard's Emacs configuration
+#+OPTIONS: toc:4 h:4
+#+STARTUP: lognoterefile
+
+* Notes, non elisp
+
+We dearly thank [[http://sachachua.com][Sacha Chua]] for many ideas from [[http://sachachua.com/dotemacs][this file]], vision and
+general great stuff.  She is wonderful.
+
+* No external package dependencies
+** General setup, preferences
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-set-key [home] 'move-beginning-of-line)
+  (global-set-key [end] 'move-end-of-line)
+  (column-number-mode 1)
+  (message "Hello, world!")
+  (setq custom-file "~/.emacs.d/custom-settings.el")
+#+END_SRC
+
+Lazy people like me never want to type "yes" when "y" will suffice.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+** Machine, OS
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; check OS type
+  (setq is-linux nil)
+  (setq is-mac nil)
+  (cond
+   ((string-equal system-type "darwin") ; Mac OS X
+    (progn
+      (message "Mac OS X")
+      (setq is-mac t)))
+   ((string-equal system-type "gnu/linux") ; linux
+    (progn
+      (message "Linux")
+      (setq is-linux t))))
+#+END_SRC
+
+** Emacs version
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; check emacs version
+  (if (version< emacs-version "25.1")
+      ((message "Old Emacs, YMMV")
+       (kill-emacs))
+    (message "Why not try 26.1?"))
+#+END_SRC
+
+** Friendly greeting
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (message "Spinning up %s@%s using %s"
+	   system-name
+	   user-login-name
+	   ;;user-emacs-directory
+	   user-init-file)
+#+END_SRC
+
+** Frame size, font (no colors yet).
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;;  t for a termcap frame (a character-only terminal),
+  ;; ‘x’ for an Emacs frame that is really an X window,
+  ;; ‘w32’ for an Emacs frame that is a window on MS-Windows display,
+  ;; ‘ns’ for an Emacs frame on a GNUstep or Macintosh Cocoa display,
+
+  ;; Readability counts.
+  ;; `C-x C-+’ and ‘C-x C--’
+  ;; C-x C-0 to reset.
+  (when (eq is-linux t)
+    ;; Readable font
+    (when (eq window-system 'x)
+      (set-face-attribute 'default nil :height 260)
+      (add-to-list 'initial-frame-alist '(height . 55))
+      (add-to-list 'initial-frame-alist '(width . 80))
+      (add-to-list 'default-frame-alist '(height . 55))
+      (add-to-list 'default-frame-alist '(width . 80))))
+
+  (when (eq is-mac t)
+
+    ;; Macbook built-in display.
+    (when (eq window-system 'ns)
+      ;; On Mac, use Command-t to bring up font menu.
+      (set-face-attribute 'default nil :height 220)
+      ;;(set-face-attribute 'default nil :height 240)
+      (add-to-list 'initial-frame-alist '(height . 33))
+      (add-to-list 'initial-frame-alist '(width . 80))
+      (add-to-list 'default-frame-alist '(height . 33))
+      (add-to-list 'default-frame-alist '(width . 80))))
+#+END_SRC
+
+** Who am I?
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq user-full-name "Ryan Woodard")
+  (when (eq user-login-name "ryan")
+    (setq user-mail-address "ryan@timehaven.org"))
+  (when (eq user-login-name 'rwoodard)
+    (setq user-mail-address "rwoodard@appnexus.com"))
+#+END_SRC
+
+** shell, term, etc.
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; I like zsh from non-emacs, but keep things simple within emacs.
+(setq explicit-shell-file-name "/bin/bash")
+#+END_SRC
+* Cloned repos in ~/.emacs.d/elisp/
+* package, use-package
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (require 'package)
+  (setq package-enable-at-startup nil)   ; To prevent initialising twice
+
+  ;; Default  ("gnu" . "http://elpa.gnu.org/packages/")
+  ;; add-to-list always adds element to beginning of list
+  ;;  (unless t is after element to add).
+  (add-to-list 'package-archives '("melpa stable" . "https://stable.melpa.org/packages/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+
+  (add-to-list 'package-archive-priorities '("elpy"         . 4))
+  (add-to-list 'package-archive-priorities '("melpa"        . 3))
+  (add-to-list 'package-archive-priorities '("melpa stable" . 2))
+  (add-to-list 'package-archive-priorities '("gnu"          . 1))
+
+  (package-initialize)
+
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+  (eval-when-compile
+    (require 'use-package))
+
+  ;; https://github.com/jwiegley/use-package
+  (setq use-package-verbose t)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* org
+** Install Emacs, org-mode source and needed packages on debian-based
+#+BEGIN_SRC sh
+  sudo apt-get install emacs25-common-non-dfsg install-info \
+       texi2html texinfo texinfo-doc-nonfree
+  mkdir $HOME/.emacs.d/elisp && cd $HOME/.emacs.d/elisp
+  git clone git://orgmode.org/org-mode.git
+  cd org-mode && make
+#+END_SRC
+
+To update occasionally:
+
+#+BEGIN_SRC sh
+  cd $HOME/elisp/org-mode && make up2
+  git log  # to see what has changed
+  git gc  # to clean things up, keep dir smaller
+#+END_SRC
+
+** Version check
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun my/check-org ()
+  (message (concat "org-version " org-version))
+  (if (version< org-version "9.0")
+      (progn
+	(message "Yuck!  Old org!")
+	(kill-emacs))
+    (message "Why not try 9.1 now?")))
+(my/check-org)
+#+END_SRC
+
+** Other
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package org
+    :load-path "~/.emacs.d/elisp/org-mode/lisp"  ;; redundant, at this point
+    :ensure ob-ipython
+    :config
+    (progn
+    
+      ;; Some of this stuff is for ob-ipython, scimax, etc.
+      (setq org-startup-with-inline-images t)
+      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+    
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '(
+	 ;; (dot . t)
+	 ;;   (ditaa . t)
+	 (emacs-lisp . t)
+	 (ipython . t)
+	 (sh . t)
+	 ;; (sqlite . t)
+	 ;; (http . t)
+	 ;; (ledger . t)
+	 (shell . t)
+	 ;; (R . t)))
+	 ))
+
+      ;; (setq org-use-speed-commands t)  ;; Way cool!
+      ;; For example, to activate speed commands when the point is on any
+      ;; star at the beginning of the headline, you can do this:
+      (setq org-use-speed-commands
+	    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+      ))
+
+  (use-package org-element
+    :load-path "~/.emacs.d/elisp/org-mode/lisp")
+#+END_SRC
+
+Sacha doesn't want to get distracted by the same code in the other
+window, so I want org src to use the current window.
+
+#+begin_src emacs-lisp :tangle yes
+  (setq org-src-window-setup 'current-window)
+#+end_src
+
+** org mode structure templates (=<s= things)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-structure-template-alist
+       '(("s" "#+BEGIN_SRC ?\n\n#+END_SRC" "<src lang=\"?\">\n\n</src>")
+          ("e" "#+BEGIN_EXAMPLE\n?\n#+END_EXAMPLE" "<example>\n?\n</example>")
+          ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE" "<quote>\n?\n</quote>")
+          ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
+          ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+	 ("p" "#+BEGIN_SRC ipython\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
+          ;;("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
+          ("l" "#+BEGIN_SRC emacs-lisp :tangle yes\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")
+          ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+          ("h" "#+BEGIN_HTML\n?\n#+END_HTML" "<literal style=\"html\">\n?\n</literal>")
+          ("H" "#+html: " "<literal style=\"html\">?</literal>")
+          ("a" "#+BEGIN_ASCII\n?\n#+END_ASCII")
+          ("A" "#+ascii: ")
+          ("i" "#+index: ?" "#+index: ?")
+          ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+#+END_SRC
+
+* External packages
+** Magit - nice git interface
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package magit
+    :ensure t)
+  (global-set-key (kbd "C-x g") 'magit-status)
+  (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+  (setq global-magit-file-mode t)
+#+end_src
+
+** Mode line format
+
+Display a more compact mode line
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smart-mode-line
+    :ensure t)
+#+END_SRC
+
+#+RESULTS:
+** parens and such
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smartparens
+    :ensure t
+    :config
+    (progn
+      (require 'smartparens-config)
+      (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+      (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)))
+#+END_SRC
+* helm
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package helm
+    :ensure t
+    :diminish helm-mode
+    :init
+    (progn
+      (require 'helm-config)
+      (setq helm-candidate-number-limit 100)
+      ;; From https://gist.github.com/antifuchs/9238468
+      (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+	    helm-input-idle-delay 0.01  ; this actually updates things
+					  ; reeeelatively quickly.
+	    helm-yas-display-key-on-candidate t
+	    helm-quick-update t
+	    helm-M-x-requires-pattern nil
+	    helm-ff-skip-boring-files t)
+      (helm-mode))
+    :bind (("C-c h" . helm-mini)
+	   ("C-h a" . helm-apropos)
+	   ("C-x C-b" . helm-buffers-list)
+	   ("C-x b" . helm-buffers-list)
+	   ("M-y" . helm-show-kill-ring)
+	   ("M-x" . helm-M-x)
+	   ("C-x c o" . helm-occur)
+	   ("C-x c s" . helm-swoop)
+	   ("C-x c y" . helm-yas-complete)
+	   ("C-x c Y" . helm-yas-create-snippet-on-region)
+	   ("C-x c b" . my/helm-do-grep-book-notes)
+	   ("C-x c SPC" . helm-all-mark-rings)))
+  (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+#+END_SRC
+
+#+RESULTS:
+
+* TODO Python
+* Colors
+
+Sacha says:
+
+#+BEGIN_QUOTE :tangle yes
+Set up a light-on-dark color scheme.  I like light on dark because I
+find it to be more restful. The color-theme in ELPA was a little odd,
+though, so we define some advice to make it work. Some things still
+aren't quite right.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (defadvice color-theme-alist (around sacha activate)
+  ;;   (if (ad-get-arg 0)
+  ;;       ad-do-it
+  ;;     nil))
+  (use-package color-theme
+    :ensure t)
+  (use-package color-theme-solarized
+    :ensure t)
+
+  (defun my/setup-color-theme ()
+    (interactive)
+    (color-theme-solarized-dark)
+    ;; (set-face-foreground 'secondary-selection "darkblue")
+    ;; (set-face-background 'secondary-selection "lightblue")
+    ;; (set-face-background 'font-lock-doc-face "black")
+    ;; (set-face-foreground 'font-lock-doc-face "wheat")
+    ;;(set-face-background 'font-lock-string-face "")
+    ;;(set-face-background 'font-lock-string-face "black")
+    ;; (set-face-foreground 'org-todo "green")
+    ;; (set-face-background 'org-todo "black")
+    )
+  (eval-after-load 'color-theme (my/setup-color-theme))
+#+END_SRC
+
+#+BEGIN_QUOTE :tangle yes
+I sometimes need to switch to a lighter background for screenshots.
+For that, I use =color-theme-vim=.
+
+Some more tweaks to solarized:
+#+END_QUOTE
+
+NOTE:  not tangled!
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (when window-system
+    (custom-set-faces
+     '(erc-input-face ((t (:foreground "antique white"))))
+     '(helm-selection ((t (:background "ForestGreen" :foreground "black"))))
+     '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
+     '(org-agenda-done ((t (:foreground "dim gray" :strike-through nil))))
+     '(org-done ((t (:foreground "PaleGreen" :weight normal :strike-through t))))
+     '(org-clock-overlay ((t (:background "SkyBlue4" :foreground "black"))))
+     '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
+     '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
+#+END_SRC
+
+* My keys
+
+** Some old favorite keys of mine (rw)
+
+Add to
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (eval-after-load 'org
+  '(define-key org-src-mode-map (kbd "S-<f12>") 'org-edit-src-exit))
+  (eval-after-load 'org
+  '(define-key org-mode-map (kbd "S-<f12>") 'org-edit-special))
+  (eval-after-load 'org
+  '(define-key org-mode-map (kbd "<f12>") 'org-ctrl-c-ctrl-c))
+
+  (global-set-key (kbd "<f12>") 'eval-last-sexp)
+#+END_SRC
+
+For historical reasons, until I change it:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; My stuff.
+  ;; Function keys
+  (add-to-list 'load-path "~/.emacs.d/rw")
+  ;; (load-library "rw_funcs")
+  (load-library "rw_keys")
+#+END_SRC
+
+* Utility functions
+** unfill paragraph
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
+    (defun unfill-paragraph (&optional region)
+      "Takes a multi-line paragraph and makes it into a single line of text."
+      (interactive (progn (barf-if-buffer-read-only) '(t)))
+      (let ((fill-column (point-max))
+            ;; This would override `fill-column' if it's an integer.
+            (emacs-lisp-docstring-fill-column t))
+        (fill-paragraph nil region)))
+#+END_SRC
+
+* Initial files to load
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (mapcar (lambda (path) (find-file path))
+  ;; 	(list 
+  ;; 	 "~/.emacs.d/init.el"
+  ;; 	 "~/.emacs.d/zunused/ryan.org"
+  ;; 	 "~/.emacs.d/emacs.org"
+  ;; 	 ))
+#+END_SRC

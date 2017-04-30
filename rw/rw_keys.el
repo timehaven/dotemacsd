@@ -97,9 +97,13 @@
 ;; (global-set-key [S-f7] 'eshell)
 ;; (global-set-key [S-C-f7] 'new-ansi-term)
 
-(global-set-key [f8] 'ido-switch-buffer) ;; See all buffers summary
-;;(global-set-key [f8] 'helm-mini)
+
+;;(global-set-key [f8] 'ido-switch-buffer) ;; See all buffers summary
+;;(global-set-key [f8] 'list-buffers) ;; See all buffers summary
+(global-set-key [f8] 'helm-mini)
 (global-set-key [C-f8] 'bs-show-one-window)
+
+
 
 ;; default f10 is menu. New way of the world: do not overwrite.
 ;;(global-set-key [f10] 'find-file-at-point)

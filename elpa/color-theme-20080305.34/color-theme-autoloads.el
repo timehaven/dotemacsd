@@ -3,8 +3,8 @@
 ;;; Code:
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "color-theme" "color-theme.el" (22782 25127
-;;;;;;  88054 586000))
+;;;### (autoloads nil "color-theme" "color-theme.el" (22789 36923
+;;;;;;  0 0))
 ;;; Generated autoloads from color-theme.el
 
 (autoload 'color-theme-select "color-theme" "\
@@ -139,8 +139,7 @@ Initialize the color theme package by loading color-theme-libraries.
 
 ;;;***
 
-;;;### (autoloads nil nil ("color-theme-pkg.el") (22782 25127 52054
-;;;;;;  817000))
+;;;### (autoloads nil nil ("color-theme-pkg.el") (22789 36923 0 0))
 
 ;;;***
 
