@@ -128,13 +128,16 @@ Lazy people like me never want to type "yes" when "y" will suffice.
   (add-to-list 'package-archive-priorities '("melpa stable" . 2))
   (add-to-list 'package-archive-priorities '("gnu"          . 1))
 
+  (message "***** package-initialize *****")
   (package-initialize)
 
   (unless (package-installed-p 'use-package)
+    (message "***** package-refresh-contents *****")
     (package-refresh-contents)
     (package-install 'use-package))
 
   (eval-when-compile
+    (message "***** require use-package *****")
     (require 'use-package))
 
   ;; https://github.com/jwiegley/use-package
@@ -177,6 +180,7 @@ To update occasionally:
 
 ** Other
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (message "***** use-package org *****")
   (use-package org
     :load-path "~/.emacs.d/elisp/org-mode/lisp"  ;; redundant, at this point
     :ensure ob-ipython
@@ -209,6 +213,7 @@ To update occasionally:
 	    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
       ))
 
+  (message "***** use-package org-element *****")
   (use-package org-element
     :load-path "~/.emacs.d/elisp/org-mode/lisp")
 #+END_SRC
@@ -244,6 +249,7 @@ window, so I want org src to use the current window.
 ** Magit - nice git interface
 
 #+begin_src emacs-lisp :tangle yes
+  (message "***** use-package magit *****")
   (use-package magit
     :ensure t)
   (global-set-key (kbd "C-x g") 'magit-status)
@@ -256,6 +262,7 @@ window, so I want org src to use the current window.
 Display a more compact mode line
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (message "***** use-package smart-mode-line *****")
   (use-package smart-mode-line
     :ensure t)
 #+END_SRC
@@ -263,6 +270,7 @@ Display a more compact mode line
 #+RESULTS:
 ** parens and such
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (message "***** use-package smartparens *****")
   (use-package smartparens
     :ensure t
     :config
@@ -273,6 +281,7 @@ Display a more compact mode line
 #+END_SRC
 * helm
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (message "***** use-package helm *****")
   (use-package helm
     :ensure t
     :diminish helm-mode
@@ -323,6 +332,7 @@ aren't quite right.
   ;;   (if (ad-get-arg 0)
   ;;       ad-do-it
   ;;     nil))
+  (message "***** use-package color-theme *****")
   (use-package color-theme
     :ensure t)
   (use-package color-theme-solarized
