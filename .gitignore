@@ -10,3 +10,6 @@ ac-comphist.dat
 custom-settings.el
 elpa/archives/melpa/archive-contents
 elisp/scimax
+elpa/*
+emacs.el
+zunused/*
