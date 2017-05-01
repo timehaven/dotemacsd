@@ -317,7 +317,13 @@ Display a more compact mode line
 
 * TODO Python
 * Colors
-
+** kaolin
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package kaolin-theme 
+    :ensure t)
+  ;;(color-theme-kaolin)
+#+END_SRC
+** Sacha solarized
 Sacha says:
 
 #+BEGIN_QUOTE :tangle yes
@@ -350,7 +356,7 @@ aren't quite right.
     ;; (set-face-foreground 'org-todo "green")
     ;; (set-face-background 'org-todo "black")
     )
-  (eval-after-load 'color-theme (my/setup-color-theme))
+  ;;(eval-after-load 'color-theme (my/setup-color-theme))
 #+END_SRC
 
 #+BEGIN_QUOTE :tangle yes
