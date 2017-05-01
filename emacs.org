@@ -13,6 +13,8 @@ general great stuff.  She is wonderful.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key [home] 'move-beginning-of-line)
   (global-set-key [end] 'move-end-of-line)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
   (column-number-mode 1)
   (message "Hello, world!")
   (setq custom-file "~/.emacs.d/custom-settings.el")
