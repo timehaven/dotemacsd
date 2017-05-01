@@ -415,6 +415,14 @@ For historical reasons, until I change it:
         (fill-paragraph nil region)))
 #+END_SRC
 
+* Dashboard at startup
+https://github.com/rakanalh/emacs-dashboard
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook))
+#+END_SRC
 * Initial files to load
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (mapcar (lambda (path) (find-file path))
