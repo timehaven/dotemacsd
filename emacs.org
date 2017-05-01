@@ -188,11 +188,11 @@ To update occasionally:
     :ensure ob-ipython
     :config
     (progn
-    
+
       ;; Some of this stuff is for ob-ipython, scimax, etc.
       (setq org-startup-with-inline-images t)
       (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-    
+
       (org-babel-do-load-languages
        'org-babel-load-languages
        '(
@@ -207,12 +207,6 @@ To update occasionally:
 	 (shell . t)
 	 ;; (R . t)))
 	 ))
-
-      ;; (setq org-use-speed-commands t)  ;; Way cool!
-      ;; For example, to activate speed commands when the point is on any
-      ;; star at the beginning of the headline, you can do this:
-      (setq org-use-speed-commands
-	    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
       ))
 
   (message "***** use-package org-element *****")
@@ -246,6 +240,42 @@ window, so I want org src to use the current window.
           ("i" "#+index: ?" "#+index: ?")
           ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
 #+END_SRC
+
+** speed commands, src blocks
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (setq org-use-speed-commands t)  ;; Way cool!
+  ;; For example, to activate speed commands when the point is on any
+  ;; star at the beginning of the headline, you can do this:
+  (setq org-use-speed-commands
+	(lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+
+  (add-to-list 'org-speed-commands-user '("N" org-narrow-to-subtree))
+  (add-to-list 'org-speed-commands-user '("W" widen))
+
+  ;; Default speed commands already available:
+  ;;  F   org-next-block
+  ;;  B   org-previous-block
+  ;; But do not work when at front of src block like
+  ;;  #+BEGIN_SRC sh
+  ;; etc.
+  ;; So add 'F' and 'B' to speed keys when on src block.
+  ;;
+  ;; Basis of code from
+  ;; http://kitchingroup.cheme.cmu.edu/blog/category/orgmode/2/
+  (setq org-speed-commands-src-blocks
+	'(("F" . org-next-block)
+	  ("B" . org-previous-block)))
+
+  (defun org-speed-src-blocks (keys)
+    ;; (and point-at-beginning-of-line is-a-src-block)
+    (when (and (bolp) (looking-at org-babel-src-block-regexp))
+      (cdr (assoc keys org-speed-commands-src-blocks))))
+
+  (add-hook 'org-speed-command-hook 'org-speed-src-blocks)
+#+end_src
+
+#+RESULTS:
+| org-speed-src-blocks | org-speed-command-activate | org-babel-speed-command-activate |
 
 * External packages
 ** Magit - nice git interface
