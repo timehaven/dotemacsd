@@ -404,10 +404,10 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
     (let (templates-and-pos)
       (unless (and yas-expand-only-for-last-commands
                    (not (member last-command yas-expand-only-for-last-commands)))
-        (setq templates-and-pos (if field
+	(setq templates-and-pos (if field
                                     (save-restriction
                                       (narrow-to-region (yas--field-start field)
-                                                        (yas--field-end field))
+							(yas--field-end field))
                                       (yas--templates-for-key-at-point))
                                   (yas--templates-for-key-at-point))))
       (and templates-and-pos (first templates-and-pos))))
@@ -470,19 +470,6 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
 
 * TODO Python
 * Colors
-** org block faces
-Testing these with kaolin theme...need work.
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq org-src-block-faces '(("emacs-lisp" (:background "#363636"))
-			      ("ipython" (:background "#363636"))
-			      ("python" (:background "#363636"))))
-#+END_SRC
-** kaolin
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package kaolin-theme 
-    :ensure t)
-  ;;(color-theme-kaolin)
-#+END_SRC
 ** Sacha solarized
 Sacha says:
 
@@ -498,12 +485,11 @@ aren't quite right.
   ;;   (if (ad-get-arg 0)
   ;;       ad-do-it
   ;;     nil))
-  (message "***** use-package color-theme *****")
+  (message "***** use-package color-theme and solarized *****")
   (use-package color-theme
     :ensure t)
   (use-package color-theme-solarized
     :ensure t)
-
   (defun my/setup-color-theme ()
     (interactive)
     (color-theme-solarized-dark)
@@ -511,15 +497,15 @@ aren't quite right.
     ;; (set-face-background 'secondary-selection "lightblue")
     ;; (set-face-background 'font-lock-doc-face "black")
     ;; (set-face-foreground 'font-lock-doc-face "wheat")
-    ;;(set-face-background 'font-lock-string-face "")
-    ;;(set-face-background 'font-lock-string-face "black")
+    ;; (set-face-background 'font-lock-string-face "")
+    ;; (set-face-background 'font-lock-string-face "black")
     ;; (set-face-foreground 'org-todo "green")
     ;; (set-face-background 'org-todo "black")
     )
-  ;;(eval-after-load 'color-theme (my/setup-color-theme))
+  (eval-after-load 'color-theme (my/setup-color-theme))
 #+END_SRC
 
-#+BEGIN_QUOTE :tangle yes
+#+BEGIN_QUOTE :tangle no
 I sometimes need to switch to a lighter background for screenshots.
 For that, I use =color-theme-vim=.
 
@@ -539,6 +525,19 @@ NOTE:  not tangled!
      '(org-clock-overlay ((t (:background "SkyBlue4" :foreground "black"))))
      '(org-headline-done ((((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon" :strike-through t))))
      '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "cornflower blue"))))))
+#+END_SRC
+** org block faces
+Testing these with kaolin theme...need work.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (setq org-src-block-faces '(("emacs-lisp" (:background "#363636"))
+			      ("ipython" (:background "#363636"))
+			      ("python" (:background "#363636"))))
+#+END_SRC
+** kaolin
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package kaolin-theme 
+    :ensure t)
+  ;;(color-theme-kaolin)
 #+END_SRC
 
 * My keys
