@@ -13,10 +13,12 @@ general great stuff.  She is wonderful.
 #+BEGIN_SRC emacs-lisp :tangle yes
   (global-set-key [home] 'move-beginning-of-line)
   (global-set-key [end] 'move-end-of-line)
-  (menu-bar-mode -1)
+  (menu-bar-mode 1)  ;; -1 turns off
   (scroll-bar-mode -1)
   (column-number-mode 1)
   (message "Hello, world!")
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)  ;; auto-fill always on
+  (setq org-src-fontify-natively t) ;; fontify code blocks, I hope
   (setq custom-file "~/.emacs.d/custom-settings.el")
 #+END_SRC
 
@@ -262,8 +264,15 @@ window, so I want org src to use the current window.
   ;;
   ;; Basis of code from
   ;; http://kitchingroup.cheme.cmu.edu/blog/category/orgmode/2/
+  (defun my/org-next-block-centered ()
+    (interactive)
+    (org-next-block)
+    (recenter-top-bottom))
+
   (setq org-speed-commands-src-blocks
-	'(("F" . org-next-block)
+	'(
+	  ;;("f" . my/org-next-block-centered)
+	  ("F" . org-next-block)
 	  ("B" . org-previous-block)))
 
   (defun org-speed-src-blocks (keys)
@@ -277,6 +286,12 @@ window, so I want org src to use the current window.
 #+RESULTS:
 | org-speed-src-blocks | org-speed-command-activate | org-babel-speed-command-activate |
 
+** navigate src blocks
+C-f1 to go to start of block
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (define-key org-mode-map (kbd "<C-f1>")
+    'org-babel-goto-src-block-head) ;; (C-c C-v C-u)
+#+END_SRC
 * External packages
 ** Magit - nice git interface
 
@@ -311,6 +326,112 @@ Display a more compact mode line
       (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
       (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)))
 #+END_SRC
+** srspeedbar (speedbar in same frame)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (message "***** use-package sr-speedbar *****")
+  (use-package sr-speedbar
+    :ensure t)
+    ;; :config
+    ;; (progn
+    ;;   (require 'smartparens-config)
+    ;;   (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+    ;;   (add-hook 'emacs-lisp-mode-hook 'show-smartparens-mode)))
+#+END_SRC
+** writeroom mode (for concentrating)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (message "***** use-package writeroom-mode *****")
+  (use-package writeroom-mode
+    :ensure visual-fill-column
+    :ensure t)
+#+END_SRC
+** yas snippets (from Sacha)
+    #+begin_src emacs-lisp :tangle yes
+      (use-package yasnippet
+        :ensure t
+        :diminish yas-minor-mode
+        :init (yas-global-mode)
+        :config
+        (progn
+          (yas-global-mode)
+          ;; (add-hook 'hippie-expand-try-functions-list 'yas-hippie-try-expand)
+          (setq yas-key-syntaxes '("w_" "w_." "^ "))
+	  ;; Will be problem with yas upgrade...
+          (setq yas-installed-snippets-dir "~/.emacs.d/elpa/yasnippet-20170418.351/snippets")
+          (setq yas-expand-only-for-last-commands nil)
+          (yas-global-mode 1)
+          ;; (bind-key "\t" 'hippie-expand yas-minor-mode-map)
+          (add-to-list 'yas-prompt-functions 'shk-yas/helm-prompt)
+      ;;        (global-set-key (kbd "C-c y") (lambda () (interactive)
+      ;;                                         (yas/load-directory "~/elisp/snippets")))
+      ))
+#+end_src
+
+#+RESULTS:
+: t
+
+From http://emacswiki.org/emacs/Yasnippet
+#+begin_src emacs-lisp :tangle yes
+  (defun shk-yas/helm-prompt (prompt choices &optional display-fn)
+    "Use helm to select a snippet. Put this into `yas/prompt-functions.'"
+    (interactive)
+    (setq display-fn (or display-fn 'identity))
+    (if (require 'helm-config)
+        (let (tmpsource cands result rmap)
+          (setq cands (mapcar (lambda (x) (funcall display-fn x)) choices))
+          (setq rmap (mapcar (lambda (x) (cons (funcall display-fn x) x)) choices))
+          (setq tmpsource
+                (list
+                 (cons 'name prompt)
+                 (cons 'candidates cands)
+                 '(action . (("Expand" . (lambda (selection) selection))))
+                 ))
+          (setq result (helm-other-buffer '(tmpsource) "*helm-select-yasnippet"))
+          (if (null result)
+              (signal 'quit "user quit!")
+            (cdr (assoc result rmap))))
+      nil))
+#+end_src
+
+From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
+#+begin_src emacs-lisp :tangle no
+  (setq default-cursor-color "gray")
+  (setq yasnippet-can-fire-cursor-color "purple")
+
+  ;; It will test whether it can expand, if yes, cursor color -> green.
+  (defun yasnippet-can-fire-p (&optional field)
+    (interactive)
+    (setq yas--condition-cache-timestamp (current-time))
+    (let (templates-and-pos)
+      (unless (and yas-expand-only-for-last-commands
+                   (not (member last-command yas-expand-only-for-last-commands)))
+        (setq templates-and-pos (if field
+                                    (save-restriction
+                                      (narrow-to-region (yas--field-start field)
+                                                        (yas--field-end field))
+                                      (yas--templates-for-key-at-point))
+                                  (yas--templates-for-key-at-point))))
+      (and templates-and-pos (first templates-and-pos))))
+
+  (defun my/change-cursor-color-when-can-expand (&optional field)
+    (interactive)
+    (when (eq last-command 'self-insert-command)
+      (set-cursor-color (if (my/can-expand)
+                            yasnippet-can-fire-cursor-color
+                          default-cursor-color))))
+
+  (defun my/can-expand ()
+    "Return true if right after an expandable thing."
+    (or (abbrev--before-point) (yasnippet-can-fire-p)))
+
+                                          ; As pointed out by Dmitri, this will make sure it will update color when needed.
+  (remove-hook 'post-command-hook 'my/change-cursor-color-when-can-expand)
+
+  (defun my/insert-space-or-expand ()
+    "For binding to the SPC SPC keychord."
+    (interactive)
+    (condition-case nil (or (my/hippie-expand-maybe nil) (insert "  "))))
+#+end_src
+
 * helm
 #+BEGIN_SRC emacs-lisp :tangle yes
   (message "***** use-package helm *****")
@@ -349,6 +470,13 @@ Display a more compact mode line
 
 * TODO Python
 * Colors
+** org block faces
+Testing these with kaolin theme...need work.
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-src-block-faces '(("emacs-lisp" (:background "#363636"))
+			      ("ipython" (:background "#363636"))
+			      ("python" (:background "#363636"))))
+#+END_SRC
 ** kaolin
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package kaolin-theme 
