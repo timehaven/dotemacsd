@@ -84,6 +84,8 @@
 	 "~/.emacs.d/rw/rw_keys.el"
 	 "~/.emacs.d/emacs.org"
 	 "~/.emacs.d/init.el"
+	 "~/org/daily.org"
+	 "~/org/index.org"
 	 ))
 
 ;;; init.el ends here
