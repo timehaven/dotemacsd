@@ -69,6 +69,7 @@
 
 
 ;; Load the rest of it.
+;;(org-babel-load-file (concat this-dir "emacs_test.org"))
 (org-babel-load-file (concat this-dir "emacs.org"))
 ;;(org-babel-load-file "/Users/rwoodard/.emacs.d/emacs.org")
 

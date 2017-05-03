@@ -125,9 +125,9 @@ Lazy people like me never want to type "yes" when "y" will suffice.
   ;;  (unless t is after element to add).
   (add-to-list 'package-archives '("melpa stable" . "https://stable.melpa.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-  (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+  ;; (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
-  (add-to-list 'package-archive-priorities '("elpy"         . 4))
+  ;; (add-to-list 'package-archive-priorities '("elpy"         . 4))
   (add-to-list 'package-archive-priorities '("melpa"        . 3))
   (add-to-list 'package-archive-priorities '("melpa stable" . 2))
   (add-to-list 'package-archive-priorities '("gnu"          . 1))
@@ -201,6 +201,7 @@ To update occasionally:
 	 ;; (dot . t)
 	 ;;   (ditaa . t)
 	 (emacs-lisp . t)
+	 (python . t)
 	 (ipython . t)
 	 (sh . t)
 	 ;; (sqlite . t)
@@ -231,7 +232,7 @@ window, so I want org src to use the current window.
           ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE" "<quote>\n?\n</quote>")
           ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
           ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
-	 ("p" "#+BEGIN_SRC ipython\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
+	 ("p" "#+BEGIN_SRC ipython :session\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
           ;;("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
           ("l" "#+BEGIN_SRC emacs-lisp :tangle yes\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")
           ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
@@ -242,6 +243,10 @@ window, so I want org src to use the current window.
           ("i" "#+index: ?" "#+index: ?")
           ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
 #+END_SRC
+
+#+RESULTS:
+| s | #+BEGIN_SRC ? |
+
 
 ** speed commands, src blocks
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -272,8 +277,8 @@ window, so I want org src to use the current window.
   (setq org-speed-commands-src-blocks
 	'(
 	  ;;("f" . my/org-next-block-centered)
-	  ("F" . org-next-block)
-	  ("B" . org-previous-block)))
+	  ("F" . org-babel-next-src-block)
+	  ("B" . org-babel-previous-src-block)))
 
   (defun org-speed-src-blocks (keys)
     ;; (and point-at-beginning-of-line is-a-src-block)
@@ -469,6 +474,56 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
 #+RESULTS:
 
 * TODO Python
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (setq jupyter-console-exec (substitute-in-file-name
+			      "$HOME/local/miniconda3/envs/py36/bin/jupyter"))
+
+  ;; (setq python-shell-interpreter jupyter-console-exec
+  ;;       python-shell-interpreter-args "console --existing --simple-prompt")
+
+  ;; python-shell-interpreter-args "--simple-prompt")
+#+END_SRC
+
+#+RESULTS:
+: console --existing --simple-prompt
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(ob-ipython--launch-driver "ryan")
+(org-babel-ipython-initiate-session "ryan")
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session
+print('babba')
+plt.plot([1, 2,3 ])
+#+END_SRC
+#+RESULTS:
+:RESULTS:
+babba
+:END:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package elpy
+  ;;   :ensure t
+  ;;   :bind (:map elpy-mode-map
+  ;; 	      ([f12] . elpy-shell-send-region-or-buffer)))
+  ;; (elpy-enable)
+
+  ;; (setq elpy-rpc-backend "jedi")
+  ;; Use conda env in shell from which Emacs was started!
+
+  (setq ob-ipython-command (concat jupyter-console-exec " console --existing --simple-prompt"))
+
+  ;; see org-babel stuff for ipython in Org section above
+  ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
+  ;; Intermittent silliness!
+  ;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
+
+  (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
+  (require 'scimax-org-babel-ipython)
+#+END_SRC
 * Colors
 ** Sacha solarized
 Sacha says:
