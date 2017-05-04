@@ -213,10 +213,16 @@
     'sh-ansi-term-send-line-or-region-and-step)
 )
 
+
+;; The way to get this to work into a tmux session on a remote machine
+;; over ssh:  M-x term, then rename buffer from *term* to *shell*.
+;; Running M-x shell, cannot get remote tmux to take, error of:
+;;  "open terminal failed: terminal does not support clear"
 (defun my-org-keymap ()
   (interactive)
-  (define-key org-mode-map (kbd "<f12>")
+  (define-key org-mode-map (kbd "M-<f12>")
     'sh-send-line-or-region-and-step)
-  (define-key org-src-mode-map (kbd "<f12>")
+  (define-key org-src-mode-map (kbd "M-<f12>")
     'sh-send-line-or-region-and-step)
 )
+(my-org-keymap)

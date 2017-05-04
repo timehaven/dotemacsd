@@ -125,9 +125,9 @@ Lazy people like me never want to type "yes" when "y" will suffice.
   ;;  (unless t is after element to add).
   (add-to-list 'package-archives '("melpa stable" . "https://stable.melpa.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-  ;; (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+  (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
-  ;; (add-to-list 'package-archive-priorities '("elpy"         . 4))
+  (add-to-list 'package-archive-priorities '("elpy"         . 4))
   (add-to-list 'package-archive-priorities '("melpa"        . 3))
   (add-to-list 'package-archive-priorities '("melpa stable" . 2))
   (add-to-list 'package-archive-priorities '("gnu"          . 1))
@@ -212,10 +212,20 @@ To update occasionally:
 	 ))
       ))
 
+  (defun my-org-confirm-babel-evaluate (lang body)
+    (and
+    (not (string= lang "ipython"))
+    (not (string= lang "sh"))
+    (not (string= lang "emacs-lisp"))
+    ))  ; don't ask for these languages
+  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
   (message "***** use-package org-element *****")
   (use-package org-element
     :load-path "~/.emacs.d/elisp/org-mode/lisp")
 #+END_SRC
+
+#+RESULTS:
 
 Sacha doesn't want to get distracted by the same code in the other
 window, so I want org src to use the current window.
@@ -523,7 +533,19 @@ babba
 
   (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
   (require 'scimax-org-babel-ipython)
+
+  (use-package elpy
+    :ensure t
+    :bind (:map elpy-mode-map
+		([f12] . elpy-shell-send-region-or-buffer)))
+  (elpy-enable)
+
+
 #+END_SRC
+
+#+RESULTS:
+| elpy-rpc--disconnect |
+
 * Colors
 ** Sacha solarized
 Sacha says:
