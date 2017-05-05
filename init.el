@@ -88,4 +88,6 @@
 	 "~/org/index.org"
 	 ))
 
+;; Getting used to terms and shells.  This guy helped.
+(load (concat this-dir "terms_and_shells.el"))
 ;;; init.el ends here

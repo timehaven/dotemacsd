@@ -148,6 +148,8 @@
     (let (curbuff (current-buffer))
     (when (eq pname "shell")
       (shell))
+    (when (eq pname "linked-shell")  ;; assumes it exists
+      (shell))
     (when (eq pname "ansi-term")
       (ansi-term))
     (switch-to-buffer curbuff)
@@ -185,15 +187,18 @@
 
     (display-buffer (process-buffer proc) t)
 
+      (goto-char max)
+      (next-line)
     (when step
       (goto-char max)
       (next-line))
     )
   )
 
+;; Change name of shell or term or ansi-term to "linked-shell" to use this.
 (defun sh-send-line-or-region-and-step ()
   (interactive)
-  (sh-send-line-or-region "shell" t))
+  (sh-send-line-or-region "linked-shell" t))
 
 (defun sh-ansi-term-send-line-or-region-and-step ()
   (interactive)
@@ -205,13 +210,13 @@
   (pop-to-buffer (process-buffer (get-process "shell")) t))
 
 
-(defun my-org-keymap ()
-  (interactive)
-  (define-key org-mode-map (kbd "<f12>")
-    'sh-ansi-term-send-line-or-region-and-step)
-  (define-key org-src-mode-map (kbd "<f12>")
-    'sh-ansi-term-send-line-or-region-and-step)
-)
+;; (defun my-org-keymap ()
+;;   (interactive)
+;;   (define-key org-mode-map (kbd "<f12>")
+;;     'sh-ansi-term-send-line-or-region-and-step)
+;;   (define-key org-src-mode-map (kbd "<f12>")
+;;     'sh-ansi-term-send-line-or-region-and-step)
+;; )
 
 
 ;; The way to get this to work into a tmux session on a remote machine
@@ -226,3 +231,14 @@
     'sh-send-line-or-region-and-step)
 )
 (my-org-keymap)
+
+(defun my/make-linked-shell ()
+  (interactive)
+  (let ((curbuff (current-buffer))
+    (my/term-name "linked-shell"))
+    (term-ansi-make-term my/term-name "/bin/bash")
+    (switch-to-buffer-other-window my/term-name)
+  ))
+(my/make-linked-shell)
+(setq term-scroll-show-maximum-output t)
+(setq term-scroll-to-bottom-on-output t)

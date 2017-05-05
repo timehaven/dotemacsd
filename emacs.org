@@ -634,6 +634,9 @@ Add to
   (global-set-key (kbd "<f12>") 'eval-last-sexp)
 #+END_SRC
 
+#+RESULTS:
+: eval-last-sexp
+
 For historical reasons, until I change it:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
