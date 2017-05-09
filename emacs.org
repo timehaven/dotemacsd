@@ -868,23 +868,23 @@ https://github.com/rakanalh/emacs-dashboard
 * My keys
 ** Summary table
 
-|     | f                | meta            | shift                               | ctrl           | super | hyper |
-|-----+------------------+-----------------+-------------------------------------+----------------+-------+-------|
-| f1  | only             | speedbar        | info                                |                |       |       |
-| f2  | split v          | org ctl c ctl c | split h                             |                |       |       |
-| f3  | bury             | prev src block  |                                     |                |       |       |
-| f4  | kill             | new block above |                                     |                |       |       |
-| f5  | other buffer     |                 |                                     |                |       |       |
-| f6  | other window     |                 |                                     |                |       |       |
-| f7  | eshell           |                 |                                     |                |       |       |
-| f8  | buffers menu     |                 |                                     |                |       |       |
-| f9  |                  | new block below | beg of buffer                       |                |       |       |
-| f10 | find file        | org next block  | end of buffer                       | tmm menu       |       |       |
-| f11 | save-buffer      | org ctl c ctl c |                                     |                |       |       |
-| f12 | eval-last-sexp   | eval and step   |                                     | eval-last-sexp |       |       |
-|     | python send line |                 | org-edit-special, org-edit-src-exit |                |       |       |
-|     | sh send line     |                 |                                     |                |       |       |
-|-----+------------------+-----------------+-------------------------------------+----------------+-------+-------|
+|     | f                | meta            | shift                               | ctrl             | super | hyper |
+|-----+------------------+-----------------+-------------------------------------+------------------+-------+-------|
+| f1  | only             | speedbar        | info                                | go to this table |       |       |
+| f2  | split v          | org ctl c ctl c | split h                             |                  |       |       |
+| f3  | bury             | prev src block  |                                     |                  |       |       |
+| f4  | kill             | new block above |                                     |                  |       |       |
+| f5  | other buffer     |                 |                                     |                  |       |       |
+| f6  | other window     |                 |                                     |                  |       |       |
+| f7  | eshell           |                 |                                     |                  |       |       |
+| f8  | buffers menu     |                 |                                     |                  |       |       |
+| f9  |                  | new block below | beg of buffer                       |                  |       |       |
+| f10 | find file        | org next block  | end of buffer                       | tmm menu         |       |       |
+| f11 | save-buffer      | org ctl c ctl c |                                     |                  |       |       |
+| f12 | eval-last-sexp   | eval and step   |                                     | eval-last-sexp   |       |       |
+|     | python send line |                 | org-edit-special, org-edit-src-exit |                  |       |       |
+|     | sh send line     |                 |                                     |                  |       |       |
+|-----+------------------+-----------------+-------------------------------------+------------------+-------+-------|
 
 ** load
 

@@ -5,7 +5,7 @@
 ;; <f1> 4 i	info-other-window
 ;;
 ;; <f2>		2C-command
-;; <f2> 2		2C-two-columns
+;; <f2> 2		2C-two-c(goto-char (point-max))olumns
 ;; <f2> b		2C-associate-buffer
 ;; <f2> s		2C-split
 ;; <f2> <f2>	2C-two-columns
@@ -111,8 +111,19 @@
 (global-set-key [f10] 'helm-find-files)
 ;; (global-set-key [C-f10] 'info)
 (global-set-key [C-f10] 'tmm-menubar)
-(global-set-key [S-f9] 'beginning-of-buffer)
-(global-set-key [S-f10] 'end-of-buffer)
+;;(global-set-key [S-f9] 'beginning-of-buffer)
+
+(defun my/goto-beginning ()
+  (interactive)
+  (goto-char (point-min)))
+
+(defun my/goto-end ()
+  (interactive)
+  (goto-char (point-max)))
+
+(global-set-key [S-f9] 'my/goto-beginning)
+(global-set-key [S-f10] 'my/goto-end)
+;;(global-set-key [S-f10] 'end-of-buffer)  ;; weird deprecation msg at startup?
 ;; (global-set-key [S-C-f10] 'insert-kbd-macro)
 
 ;; OVERWRITE DEFAULT.
@@ -132,6 +143,12 @@
 ;; (global-set-key (kbd "<home>") 'move-beginning-of-line)
 ;; (global-set-key (kbd "<end>") 'move-end-of-line)
 
+
+(defun my/bookmark-keys ()
+  (interactive)
+  (bookmark-jump "keys"))
+(global-set-key [C-f1] 'my/bookmark-keys)
+	       
 ;;
 ;; I want to highlight some shell commands from some doc I am writing
 ;; and send it directly to a shell to test.  Simple, I would think.
