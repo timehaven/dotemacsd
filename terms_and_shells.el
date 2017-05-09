@@ -1,7 +1,8 @@
 ;; https://snarfed.org/why_i_run_shells_inside_emacs
 
 (defvar my-local-shells
-  '("*shell0*" "*shell1*" "*shell2*" "*shell3*" "*music*"))
+  '("*shell0*" "*shell1*"))
+;;  '("*shell0*" "*shell1*" "*shell2*" "*shell3*" "*music*"))
 (defvar my-remote-shells
   '("*snarfed*" "*heaven0*" "*heaven1*" "*heaven2*" "*heaven3*"))
 (defvar my-shells (append my-local-shells my-remote-shells))
@@ -101,7 +102,8 @@ comint-replace-by-expanded-history-before-point."
   "When I press enter, jump to the end of the *buffer*, instead of the end of
 the line, to capture multiline input. (This only has effect if
 `comint-eol-on-send' is non-nil."
-  (flet ((end-of-line () (end-of-buffer)))
+  ;;(flet ((end-of-line () (end-of-buffer)))
+  (cl-flet ((end-of-line () (end-of-buffer)))
     ad-do-it))
 
 ;; not sure why, but comint needs to be reloaded from the source (*not*
@@ -110,3 +112,41 @@ the line, to capture multiline input. (This only has effect if
 
 ;; for other code, e.g. emacsclient in TRAMP ssh shells and automatically
 ;; closing completions buffers, see the links above.
+
+
+;; run a few shells.
+(defun start-my-shells ()
+  (interactive)
+  (let ((default-directory "~")
+        ;; trick comint into thinking the current window is 82 columns, since it
+        ;; uses that to set the COLUMNS env var. otherwise it uses whatever the
+        ;; current window's width is, which could be anything.
+        (window-width (lambda () 82)))
+    (mapcar 'shell my-local-shells)
+
+    ;; https://snarfed.org/dotfiles/.emacs
+    ;; prompt to run this once at startup on mac os x
+    ;; (with-current-buffer "*shell0*"
+    ;;   (insert "/Users/ryan/src/misc/macosx_startup.sh"))
+    ;; (run-python (concat "/usr/local/bin/python -i " (getenv "HOME") "/.python"))
+    ;; (with-current-buffer "*Python*" (emacs-lock-mode))
+
+    ;; (async-shell-command
+    ;;  "godoc --http=:6060 --index -v --index_files=/usr/local/go/godoc_index"
+    ;;  "*godoc*")
+    ;; (with-current-buffer "*godoc*" (emacs-lock-mode))
+    ))
+
+;; (defadvice start-my-shells (after color-fringe-arrow activate)
+;;   "Color the marker arrow (for compilation, debugger, etc.) in the margin.
+;; Advice only because it breaks on emacs 23.2 if it runs directly
+;; in .emacs at startup. Looks like set-fringe-bitmap-face isn't
+;; defined while starting with --daemon, but works fine while
+;; starting normally. Grr."
+;;   (make-face 'blue-fringe-arrow)
+;;   (set-face-attribute 'blue-fringe-arrow nil :foreground "blue")
+;;   (if (>= emacs-major-version 23)
+;;       (set-fringe-bitmap-face 'right-triangle 'blue-fringe-arrow)))
+
+(when (or window-system (server-running-p))
+  (start-my-shells))

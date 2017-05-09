@@ -105,11 +105,6 @@ general great stuff.  She is wonderful.
     (setq user-mail-address "rwoodard@appnexus.com"))
 #+END_SRC
 
-** shell, term, etc.
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; I like zsh from non-emacs, but keep things simple within emacs.
-(setq explicit-shell-file-name "/bin/bash")
-#+END_SRC
 * package, use-package
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -739,7 +734,8 @@ babba
 :END:
 ** scimax, its version of ob-ipython
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq ob-ipython-command (concat jupyter-console-exec " console --existing --simple-prompt"))
+(setq my-jupyter-args " console --existing --simple-prompt")
+  (setq ob-ipython-command (concat jupyter-console-exec my-jupyter-args))
 
   ;; see org-babel stuff for ipython in Org section above
   ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
@@ -865,6 +861,13 @@ https://github.com/rakanalh/emacs-dashboard
   ;; 	 ))
 #+END_SRC
 
+* shell, term, etc.
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; I like zsh from non-emacs, but keep things simple within emacs.
+(setq explicit-shell-file-name "/bin/bash")
+#+END_SRC
+(add-to-list 'load-path "~/.emacs.d")
+(load-library "terms_and_shells")
 * My keys
 ** Summary table
 

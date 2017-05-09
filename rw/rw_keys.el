@@ -265,6 +265,57 @@
 ;; Running M-x shell, cannot get remote tmux to take, error of:
 ;;  "open terminal failed: terminal does not support clear"
 
+;;
+;; Very useful for eventual automation of calling terms.
+;;
+;; https://emacs.stackexchange.com/questions/18672/how-to-define-a-function-that-calls-a-console-process-using-ansi-term
+;;
+(defun my-jupyter-console ()
+  "Runs foo in a `term' buffer."
+  (interactive)
+  (require 'term)
+  (let* ((cmd jupyter-console-exec)  ;; defined in emacs.org
+         ;; (args my-jupyter-args)      ;; defined in emacs.org
+         (args "console --simple-prompt")  
+         (switches (split-string-and-unquote args))
+         (termbuf (apply 'make-term "jupyter console" cmd nil switches)))
+    (set-buffer termbuf)
+    (term-mode)
+    (term-char-mode)
+    (switch-to-buffer termbuf)))
+
+;; (defun my-jupyter-console ()
+;;   "Runs foo in a `term' buffer."
+;;   (interactive)
+;;   (require 'term)
+;;   (let* ((cmd jupyter-console-exec)  ;; defined in emacs.org
+;;          ;; (args my-jupyter-args)      ;; defined in emacs.org
+;;          (args "console --simple-prompt")  
+;;          (switches (split-string-and-unquote args))
+;;          (termbuf (apply ' (ansi-term "/bin/bash" "jupyter0")) cmd nil switches)))
+;;     (set-buffer termbuf)
+;;     (term-mode)
+;;     (term-char-mode)
+;;     (switch-to-buffer termbuf)))
+
+;; (defun ijulia-console ()
+;;   "Runs IJulia in a `term' buffer."
+;;   (interactive)
+;;   (require 'term)
+;;   (let* ((rawjversion (shell-command-to-string "julia --version"))
+;;          (jversion (replace-regexp-in-string " version \\([^.]*[.][^.]*\\).*\n$" "-\\1" rawjversion))
+;;          (cmd "ipython3")
+;;          (args (concat "console --kernel=" jversion))
+;;          (switches (split-string-and-unquote args))
+;;          (termbuf (apply 'make-term "IJulia Console" cmd nil switches)))
+;;     (set-buffer termbuf)
+;;     (term-mode)
+;;     (term-char-mode)
+;;     (switch-to-buffer termbuf)))
+
+(ansi-term "/bin/bash" "jupyter0")
+;; (global-set-key (kbd "C-c s j") 'my-jupyter-console)
+
 (defun my/make-linked-shell ()
   (interactive)
   (let ((curbuff (current-buffer))
