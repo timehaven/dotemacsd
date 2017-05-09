@@ -4,28 +4,25 @@
 
 * Notes, non elisp
 
-We dearly thank [[http://sachachua.com][Sacha Chua]] for many ideas from [[http://sachachua.com/dotemacs][this file]], vision and
+We dearly thank [[http://sachachua.com][Sacha Chua]] for many ideas from [[http://sachachua.com/dotemacs][th  (add-to-list 'load-path "~/.emacs.d/rw")
+  ;; (load-library "rw_funcs")
+  (load-library "rw_keys")
+is file]], vision and
 general great stuff.  She is wonderful.
 
 * No external package dependencies
 ** General setup, preferences
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (global-set-key [home] 'move-beginning-of-line)
-  (global-set-key [end] 'move-end-of-line)
-  (menu-bar-mode 1)  ;; -1 turns off
+  (menu-bar-mode 1)                                   ;; -1 turns off
   (scroll-bar-mode -1)
   (column-number-mode 1)
-  (message "Hello, world!")
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)  ;; auto-fill always on
-  (setq org-src-fontify-natively t) ;; fontify code blocks, I hope
-  (setq custom-file "~/.emacs.d/custom-settings.el")
-#+END_SRC
-
-Lazy people like me never want to type "yes" when "y" will suffice.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
   (fset 'yes-or-no-p 'y-or-n-p)
+  (setq org-src-fontify-natively t)                   ;; fontify code blocks, I hope
+  (global-set-key [end] 'move-end-of-line)
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)       ;; auto-fill always on
+  (global-set-key [home] 'move-beginning-of-line)
+  (setq custom-file "~/.emacs.d/custom-settings.el")
 #+END_SRC
 
 ** Machine, OS
@@ -113,7 +110,6 @@ Lazy people like me never want to type "yes" when "y" will suffice.
 ;; I like zsh from non-emacs, but keep things simple within emacs.
 (setq explicit-shell-file-name "/bin/bash")
 #+END_SRC
-* Cloned repos in ~/.emacs.d/elisp/
 * package, use-package
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -169,6 +165,242 @@ To update occasionally:
   git gc  # to clean things up, keep dir smaller
 #+END_SRC
 
+#+RESULTS:
+| commit  | 342f48f1584393e058c74a1b6b66996e45b7dd16 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | May                                  | 7                          |                       06:19:04 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | org                                      | src                                  | block                      |                        motion, | creation |     funcs | bound   | to      | f     | keys |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 18de91ffa8156b9ed92369fc4a63bf63884e7281 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Thu                                      | May                                  | 4                          |                       17:24:08 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | new                                      | shell,                               | terminal                   |                         helper |    stuff |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 46e7bc485384af665a285782bcf0658effbbc460 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Wed                                      | May                                  | 3                          |                       17:54:47 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | elpy                                     | and                                  | shell                      |                          speed | commands |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | d39e4052992387511cdf3d4cce80700277cee951 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Tue                                      | May                                  | 2                          |                       19:35:40 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | new                                      | files                                | at                         |                          start |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 9516790242de5495c13cb26fb4c760b078ba9e9a |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Tue                                      | May                                  | 2                          |                       19:26:34 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| More    | session                                  | and                                  | blah                       |                           work |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | d30fd36ccfa12d65e78bed24bc459dacdf162259 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | May                                  | 1                          |                       22:04:06 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Change  | colors                                   |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 2fe2800b2cc668285f3f4ed2b6f2dcabc33a9ca0 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | May                                  | 1                          |                       17:05:15 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| More    | speed                                    | command                              | src                        |                          block |   stuff, |       not | working |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | b7bfbfd45d180e88bb5ce099cbe7701ef798cec9 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | May                                  | 1                          |                       09:24:18 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | speed                                    | key                                  | for                        |                            src |  blocks, |     widen |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | f17280d12e4b71715f6c28c2aa19c7ed11764a24 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       22:27:05 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Remove  | menu                                     | and                                  | scroll                     |                           bars |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 9b1e35a0f775e3f21b78c3a9301e5d49c552b6e9 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Merge:  | 42bac8a                                  | a16d52b                              |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       22:19:49 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Merge   | branch                                   | 'master'                             | of                         | github.com:timehaven/dotemacsd |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 42bac8a9fddc6345b110cf53a8f32ad3d843d685 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       22:18:50 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Merge   | with                                     | home                                 |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | a16d52bbfaf1236569945edafc8618bdbac72b58 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       22:17:01 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | dashboard                                |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | a6773ab33a136f927ba4269b4eb4a25b4e8ba5d0 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       01:05:16 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Remove  | all                                      | elpa                                 | dependency                 |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 87ec75c72210fe5858e854f09ebe696f70c3d0a5 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       00:50:41 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Ignore  | more                                     | things                               |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | e835672daee20185a02cd567079767c11399334d |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       00:49:28 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Remove  | lots                                     | of                                   | elpa                       |                         things |     that |    should | not     | be      | saved |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 5d401f37a64d7217ae3aa2494d0afbe6d726c47d |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sun                                      | Apr                                  | 30                         |                       00:44:27 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Change  | to                                       | real                                 | init.el                    |                           that |    calls | emacs.org |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | dca75c1b8cbeb144381dae3039a2ca812f8ba990 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Fri                                      | Apr                                  | 28                         |                       16:27:08 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Make    | it                                       | better                               | each                       |                            day |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 9d045b8127882b33ca2852bb24b45a7f98e629af |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Fri                                      | Apr                                  | 28                         |                       09:15:30 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Improve | use-package                              | and                                  | auto                       |                           load |       of |     files | at      | startup |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 4860d94fbd83a609101682c7a962e69c3996f93c |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Thu                                      | Apr                                  | 27                         |                       17:18:42 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Tweak   |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | f8907ed1ab8542a03e86602ab40f1b543bf77836 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Wed                                      | Apr                                  | 26                         |                       23:08:48 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Fix     | helm-org                                 | interaction                          |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 63a5efef12874610781edc7e14616d3fbf7838ae |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Wed                                      | Apr                                  | 26                         |                       22:44:13 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Remove  | helm,                                    | it                                   | conflicts                  |                           with |   latest |       org | (for    | now)    |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 9392c221123e261ce32a3f9324b3368ec13726cd |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Wed                                      | Apr                                  | 26                         |                       17:56:28 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | helm                                     |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | ed05c134805e039b69b704e7ed0a75939ce5b2c0 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Wed                                      | Apr                                  | 26                         |                       07:49:59 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | *.pyc                                    | to                                   | .gitignore                 |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | cae6d4af8db9f318302b690a50afec616285a682 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Tue                                      | Apr                                  | 25                         |                       17:09:28 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Back    | to                                       | trying                               | out                        |                          jedi, |  improve |    python | src     | block   |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 3e2ac9e4e5d7d2da5e1b6dbac643cb617f071dcc |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Tue                                      | Apr                                  | 25                         |                       10:41:48 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | some                                     | file                                 | jumping,                   |                            org |   refile |     stuff |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 402bba2d36dbba3d270f2d4c151d6445effac7bb |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Tue                                      | Apr                                  | 25                         |                       08:47:05 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Remove  | jedi,                                    | add                                  | elpy,                      |                            try |       to |       get | org     | babel   | eval  | to   | work | (not | yet) |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 0bf2109a8f97d5cc768f87509f4b46b8587133c2 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       19:11:08 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | x                                        | frame                                | attributes                 |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | eaca996006d0b57713d9f325031d8b52a6dad23f |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       18:55:36 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Fix     | org                                      | info                                 | load                       |                         order, |      add |   initial | Python  |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | f2d2ec2592a8c7dc2bcc29304a0774ce48d13793 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       15:13:14 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Tweak   |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | b686e8351680e5a9160c3a6bb5776a2db99ed97b |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       15:00:15 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | tangle                                   | file                                 |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 77de9ed2a580b7ef0b0610936c02796df05dbf6f |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       13:44:15 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | some                                     | keys                                 | and                        |                         colors |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 4ccaf5b74dbbe5600e051d3c71643e4b67666d99 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <ryan@timehaven.org>       |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       13:31:35 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Install | on                                       | new                                  | machine                    |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 3a30bad5f58b66b78f4087c61f9dcdc9407e47e1 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | The                                      | Guest                                | <guest@john.timehaven.net> |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       13:07:54 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | magit                                    | options                              |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | f795e5b9b17617ec26d009fcdc1b786d26b565e3 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | The                                      | Guest                                | <guest@john.timehaven.net> |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       11:56:14 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Add     | new                                      | info                                 | path,                      |                          magit |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 7b8651ce7a4ab50f6cf07c58aad13aa9c873a41d |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | The                                      | Guest                                | <guest@john.timehaven.net> |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Mon                                      | Apr                                  | 24                         |                       10:03:23 |     2017 |      -700 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Use     | Sacha                                    | config                               | paradigm                   |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 8aede5f01a1a81eb6682fa4c2588b25c371581be |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Fri                                      | May                                  | 2                          |                       16:28:05 |     2014 |     +0000 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Tweak   | f5.                                      |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | cefa357cac928f943495bba5bdd7cd36ac332b95 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <rwoodard@appnexus.com>    |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Wed                                      | Apr                                  | 30                         |                       18:03:26 |     2014 |     +0000 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Cleaner | packaging.                               |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | fb9fe1039032c02f85e18ce78286e0bcfb629662 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | Ryan                                     | Woodard                              | <github@timehaven.org>     |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Sat                                      | Jan                                  | 11                         |                       02:30:30 |     2014 |     +0000 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Begin.  |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| commit  | 6890c28eb32693d716438466038e727c8f854d37 |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Author: | timehaven                                | <timehaven@users.noreply.github.com> |                            |                                |          |           |         |         |       |      |      |      |      |
+| Date:   | Fri                                      | Jan                                  | 10                         |                       09:59:31 |     2014 |      -800 |         |         |       |      |      |      |      |
+|         |                                          |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+| Initial | commit                                   |                                      |                            |                                |          |           |         |         |       |      |      |      |      |
+
 ** Version check
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -182,7 +414,7 @@ To update occasionally:
 (my/check-org)
 #+END_SRC
 
-** Other
+** use-package org, config babel load lang, ob-ipython, org element
 #+BEGIN_SRC emacs-lisp :tangle yes
   (message "***** use-package org *****")
   (use-package org
@@ -257,7 +489,6 @@ window, so I want org src to use the current window.
 #+RESULTS:
 | s | #+BEGIN_SRC ? |
 
-
 ** speed commands, src blocks
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (setq org-use-speed-commands t)  ;; Way cool!
@@ -301,12 +532,6 @@ window, so I want org src to use the current window.
 #+RESULTS:
 | org-speed-src-blocks | org-speed-command-activate | org-babel-speed-command-activate |
 
-** navigate src blocks
-C-f1 to go to start of block
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (define-key org-mode-map (kbd "<C-f1>")
-    'org-babel-goto-src-block-head) ;; (C-c C-v C-u)
-#+END_SRC
 * External packages
 ** Magit - nice git interface
 
@@ -385,6 +610,7 @@ Display a more compact mode line
 : t
 
 From http://emacswiki.org/emacs/Yasnippet
+
 #+begin_src emacs-lisp :tangle yes
   (defun shk-yas/helm-prompt (prompt choices &optional display-fn)
     "Use helm to select a snippet. Put this into `yas/prompt-functions.'"
@@ -408,6 +634,7 @@ From http://emacswiki.org/emacs/Yasnippet
 #+end_src
 
 From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
+
 #+begin_src emacs-lisp :tangle no
   (setq default-cursor-color "gray")
   (setq yasnippet-can-fire-cursor-color "purple")
@@ -483,7 +710,8 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
 
 #+RESULTS:
 
-* TODO Python
+* Python
+** Make jupyter default shell
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (setq jupyter-console-exec (substitute-in-file-name
@@ -495,35 +723,22 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
   ;; python-shell-interpreter-args "--simple-prompt")
 #+END_SRC
 
-#+RESULTS:
-: console --existing --simple-prompt
-
 #+BEGIN_SRC emacs-lisp :tangle no
 (ob-ipython--launch-driver "ryan")
 (org-babel-ipython-initiate-session "ryan")
 #+END_SRC
 
-#+RESULTS:
-
 #+BEGIN_SRC ipython :session
-print('babba')
-plt.plot([1, 2,3 ])
+  print('babba')
+  a = 'flathh'
+  #plt.plot([1, 2,3 ])
 #+END_SRC
 #+RESULTS:
 :RESULTS:
 babba
 :END:
-
+** scimax, its version of ob-ipython
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (use-package elpy
-  ;;   :ensure t
-  ;;   :bind (:map elpy-mode-map
-  ;; 	      ([f12] . elpy-shell-send-region-or-buffer)))
-  ;; (elpy-enable)
-
-  ;; (setq elpy-rpc-backend "jedi")
-  ;; Use conda env in shell from which Emacs was started!
-
   (setq ob-ipython-command (concat jupyter-console-exec " console --existing --simple-prompt"))
 
   ;; see org-babel stuff for ipython in Org section above
@@ -533,14 +748,16 @@ babba
 
   (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
   (require 'scimax-org-babel-ipython)
-
+#+END_SRC
+** elpy
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; (setq elpy-rpc-backend "jedi")
+  ;; Use conda env in shell from which Emacs was started!
   (use-package elpy
     :ensure t
     :bind (:map elpy-mode-map
 		([f12] . elpy-shell-send-region-or-buffer)))
   (elpy-enable)
-
-
 #+END_SRC
 
 #+RESULTS:
@@ -617,36 +834,6 @@ Testing these with kaolin theme...need work.
   ;;(color-theme-kaolin)
 #+END_SRC
 
-* My keys
-
-** Some old favorite keys of mine (rw)
-
-Add to
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (eval-after-load 'org
-  '(define-key org-src-mode-map (kbd "S-<f12>") 'org-edit-src-exit))
-  (eval-after-load 'org
-  '(define-key org-mode-map (kbd "S-<f12>") 'org-edit-special))
-  (eval-after-load 'org
-  '(define-key org-mode-map (kbd "<f12>") 'org-ctrl-c-ctrl-c))
-
-  (global-set-key (kbd "<f12>") 'eval-last-sexp)
-#+END_SRC
-
-#+RESULTS:
-: eval-last-sexp
-
-For historical reasons, until I change it:
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  ;; My stuff.
-  ;; Function keys
-  (add-to-list 'load-path "~/.emacs.d/rw")
-  ;; (load-library "rw_funcs")
-  (load-library "rw_keys")
-#+END_SRC
-
 * Utility functions
 ** unfill paragraph
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -677,3 +864,105 @@ https://github.com/rakanalh/emacs-dashboard
   ;; 	 "~/.emacs.d/emacs.org"
   ;; 	 ))
 #+END_SRC
+
+* My keys
+** Summary table
+
+|     | f                | meta            | shift                               | ctrl           | super | hyper |
+|-----+------------------+-----------------+-------------------------------------+----------------+-------+-------|
+| f1  | only             | speedbar        | info                                |                |       |       |
+| f2  | split v          | org ctl c ctl c | split h                             |                |       |       |
+| f3  | bury             | prev src block  |                                     |                |       |       |
+| f4  | kill             | new block above |                                     |                |       |       |
+| f5  | other buffer     |                 |                                     |                |       |       |
+| f6  | other window     |                 |                                     |                |       |       |
+| f7  | eshell           |                 |                                     |                |       |       |
+| f8  | buffers menu     |                 |                                     |                |       |       |
+| f9  |                  | new block below | beg of buffer                       |                |       |       |
+| f10 | find file        | org next block  | end of buffer                       | tmm menu       |       |       |
+| f11 | save-buffer      | org ctl c ctl c |                                     |                |       |       |
+| f12 | eval-last-sexp   | eval and step   |                                     | eval-last-sexp |       |       |
+|     | python send line |                 | org-edit-special, org-edit-src-exit |                |       |       |
+|     | sh send line     |                 |                                     |                |       |       |
+|-----+------------------+-----------------+-------------------------------------+----------------+-------+-------|
+
+** load
+
+#+BEGIN_SRC emacs-lisp :tangle no
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; My stuff.
+  ;; Function keys
+  (add-to-list 'load-path "~/.emacs.d/rw")
+  ;; (load-library "rw_funcs")
+  (load-library "rw_keys")
+#+END_SRC
+
+** notes, wishlist on org src block mode mapping
+  
+*** eval
+
+**** lines
+
+***** TODO F1, F12 eval single line, stay
+  
+***** TODO C-F1, C-F12  eval single line, step to next
+
+ elpy-shell-send-current-statement (<C-return>)
+ (define-key org-src-mode-map (kbd "M-<f12>")
+ 'sh-send-line-or-region-and-step)
+
+***** TODO M-F1, M-F12, eval single line, open new blank line below
+  
+**** blocks
+
+***** F2, F11, eval block, stay
+Built-in function =org-ctrl-c-ctrl-c= does the trick.
+***** TODO C-F2, C-F11, eval block, step to next block
+  
+***** TODO M-F2, M-F11, eval block, create same new one below
+  
+*** motion
+  
+**** blocks
+  
+Use F3, F10 to get to heading of this or next block, then normal keys
+to navigate from there (F, B, n, p).
+
+***** F3, F10, go to top of this/previous, next block
+
+go to top of this src block, or previous if at top
+(C-c C-v C-u)
+ (define-key org-mode-map (kbd "<f3>") 'org-previous-block)
+ (define-key org-mode-map (kbd "<f3>") 'org-babel-goto-src-block-head)
+  
+ F10
+ go to top of next block
+ (define-key org-mode-map (kbd "<f10>") 'org-next-block)
+  
+*** creation
+***** F4, F9, create new block above, below; same as current
+**** blocks  
+
+F4
+new block, same as, above
+(define-key org-mode-map (kbd "<f4>") 'insert-new-block-same-as-current)
+  
+F9
+new block, same as, below
+(define-key org-mode-map (kbd "<f9>") 'insert-new-block-same-as-current-below)
+
+** help
+  consp((src-block (:language "ipython" :switches nil :parameters
+  ":session" :begin 33927 :end 33986 :number-lines nil
+  :preserve-indent nil :retain-labels t :use-labels t :label-fmt nil
+  :value "print(\"In ipyB!\")\n" :post-blank 2 :post-affiliated 33927
+  :parent nil)))
+** navigate src blocks
+C-f1 to go to start of block
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (define-key org-mode-map (kbd "<C-f1>")
+    'org-babel-goto-src-block-head) ;; (C-c C-v C-u)
+#+END_SRC
+

@@ -101,7 +101,7 @@
 ;;(global-set-key [f8] 'ido-switch-buffer) ;; See all buffers summary
 ;;(global-set-key [f8] 'list-buffers) ;; See all buffers summary
 (global-set-key [f8] 'helm-mini)
-(global-set-key [C-f8] 'bs-show-one-window)
+;;(global-set-key [C-f8] 'bs-show-one-window)
 
 
 
@@ -110,7 +110,7 @@
 ;; (global-set-key [f10] 'ido-find-file)
 (global-set-key [f10] 'helm-find-files)
 ;; (global-set-key [C-f10] 'info)
-(global-set-key [M-f10] 'tmm-menubar)
+(global-set-key [C-f10] 'tmm-menubar)
 (global-set-key [S-f9] 'beginning-of-buffer)
 (global-set-key [S-f10] 'end-of-buffer)
 ;; (global-set-key [S-C-f10] 'insert-kbd-macro)
@@ -118,9 +118,11 @@
 ;; OVERWRITE DEFAULT.
 (global-set-key [f11] 'save-buffer)
 
-(global-set-key [f12] 'eval-region) ;; lisp
+;; (global-set-key [f12] 'eval-region) ;; lisp
 (global-set-key [C-f12] 'eval-last-sexp) ;; lisp
-(global-set-key [S-f12] 'speedbar-get-focus)
+;; (global-set-key [S-f12] 'speedbar-get-focus)
+(global-set-key [M-f1] 'sr-speedbar-toggle)
+
 ;; awesomeness from http://www.emacswiki.org/emacs/ToolBar and tool-bar+.el
 ;;(global-set-key [S-C-f12] 'show-tool-bar-for-one-command)
 
@@ -142,21 +144,41 @@
 ;; Return appropriate process based on ansi-term or shell
 (defun my/get-proc (pname)
 
+  ;; return process pname if it exists, else nil
   (setq proc (get-process pname))
+  (if proc (message "%s %s" "Found existing" pname))
 
+  ;; if proc is nil, do the following
   (unless proc
+
+    ;; save current
     (let (curbuff (current-buffer))
-    (when (eq pname "shell")
-      (shell))
-    (when (eq pname "linked-shell")  ;; assumes it exists
-      (shell))
-    (when (eq pname "ansi-term")
-      (ansi-term))
-    (switch-to-buffer curbuff)
-    (setq proc (get-process pname))))
 
-    proc)
+      (message "Saved current buffer: %s." curbuff)
 
+      ;; create desired 
+      (when (eq pname "shell")
+	(message "making shell")
+	(shell))
+      (when (eq pname "linked-shell")
+	(my/make-linked-shell))
+      (when (eq pname "ansi-term")
+	(message "ansi-term")
+	(ansi-term))
+      (message "Made new proc from %s." pname)
+
+      ;; return to current
+      (switch-to-buffer curbuff)
+      (message "Switched back to curbuff.")
+
+      ;; save new proc
+      (setq proc (get-process pname))))
+
+  ;; return the appropriate process
+  proc)
+(my/get-proc "linked-shell")
+(my/get-proc "shell")
+(my/get-proc "ansi-term")
 
 (defun sh-send-line-or-region (pname &optional step)
 
@@ -187,8 +209,6 @@
 
     (display-buffer (process-buffer proc) t)
 
-      (goto-char max)
-      (next-line)
     (when step
       (goto-char max)
       (next-line))
@@ -196,6 +216,10 @@
   )
 
 ;; Change name of shell or term or ansi-term to "linked-shell" to use this.
+(defun sh-send-line-or-region-and-not-step ()
+  (interactive)
+  (sh-send-line-or-region "linked-shell" nil))
+
 (defun sh-send-line-or-region-and-step ()
   (interactive)
   (sh-send-line-or-region "linked-shell" t))
@@ -223,14 +247,6 @@
 ;; over ssh:  M-x term, then rename buffer from *term* to *shell*.
 ;; Running M-x shell, cannot get remote tmux to take, error of:
 ;;  "open terminal failed: terminal does not support clear"
-(defun my-org-keymap ()
-  (interactive)
-  (define-key org-mode-map (kbd "M-<f12>")
-    'sh-send-line-or-region-and-step)
-  (define-key org-src-mode-map (kbd "M-<f12>")
-    'sh-send-line-or-region-and-step)
-)
-(my-org-keymap)
 
 (defun my/make-linked-shell ()
   (interactive)
@@ -239,6 +255,100 @@
     (term-ansi-make-term my/term-name "/bin/bash")
     (switch-to-buffer-other-window my/term-name)
   ))
-(my/make-linked-shell)
+;; (my/make-linked-shell)
 (setq term-scroll-show-maximum-output t)
 (setq term-scroll-to-bottom-on-output t)
+
+
+;; (add-to-list 'load-path "~/.emacs.d/rw")
+;; (load-library "rw_keys")
+(load-library "rw_org_src_block_functions")
+
+
+(defun my-org-keymap ()
+  (interactive)
+  ;; org src block mode mapping
+  ;;
+  ;; F1, F12
+  ;; eval single line, stay
+  ;;
+  ;; M-F1, M-F12
+  ;; eval single line, step
+  ;; elpy-shell-send-current-statement (<C-return>)
+  ;; (define-key org-src-mode-map (kbd "M-<f12>")
+  ;;   'sh-send-line-or-region-and-step)
+  ;;
+  ;; F2, F11
+  ;; eval block, stay
+  (define-key org-mode-map (kbd "<M-f2>") 'org-ctrl-c-ctrl-c)
+  (define-key org-mode-map (kbd "<M-f11>") 'org-ctrl-c-ctrl-c)
+
+  ;; S-F2, S-F11
+  ;; eval block, step to next block
+  ;;
+  ;; M-F2, M-F11
+  ;; eval block, create same new one below
+  ;;
+  ;;
+  ;;
+  ;; Block motion
+  ;;
+  ;; Use F3, F10 to get to heading of this or next block, then normal
+  ;; keys to navigate from there (F, B, n, p)
+  ;;
+  ;; F3
+  ;; go to top of this src block, or previous if at top
+  ;; (C-c C-v C-u)
+  (define-key org-mode-map (kbd "<M-f3>") 'org-previous-block)
+  ;;(define-key org-mode-map (kbd "<f3>") 'org-babel-goto-src-block-head)
+  ;;  
+  ;;
+  ;; F10
+  ;; go to top of next block
+  (define-key org-mode-map (kbd "<M-f10>") 'org-next-block)
+  ;;
+  ;;
+  ;; Block creation
+  ;;
+  ;; F4
+  ;; new block, same as, above
+  (define-key org-mode-map (kbd "<M-f4>") 'insert-new-block-same-as-current)
+  ;;
+  ;; F9
+  ;; new block, same as, below
+  (define-key org-mode-map (kbd "<M-f9>") 'insert-new-block-same-as-current-below)
+
+
+  ;;(my-org-keymap)
+  (define-key org-mode-map (kbd "<f12>") 'python-shell-send-line)
+  ;; f1 and f12 do same things...
+  ;; eval and do not step
+  ;; (define-key org-mode-map (kbd "<f1>")
+  ;;   'sh-send-line-or-region-and-not-step)
+  ;; (define-key org-src-mode-map (kbd "<f1>")
+  ;;   'sh-send-line-or-region-and-not-step)
+  (define-key org-mode-map (kbd "<f12>")
+    'sh-send-line-or-region-and-not-step)
+  ;; (define-key org-src-mode-map (kbd "<f12>")
+  ;;   'sh-send-line-or-region-and-not-step)
+
+
+;; eval and step
+  ;; (define-key org-mode-map (kbd "M-<f1>")
+  ;;   'sh-send-line-or-region-and-step)
+  ;; (define-key org-src-mode-map (kbd "M-<f1>")
+  ;;   'sh-send-line-or-region-and-step)
+  (define-key org-mode-map (kbd "M-<f12>")
+    'sh-send-line-or-region-and-step)
+  (define-key org-src-mode-map (kbd "M-<f12>")
+    'sh-send-line-or-region-and-step)
+
+  (eval-after-load 'org
+  '(define-key org-src-mode-map (kbd "S-<f12>") 'org-edit-src-exit))
+  (eval-after-load 'org
+  '(define-key org-mode-map (kbd "S-<f12>") 'org-edit-special))
+
+  
+
+  )
+(my-org-keymap)
