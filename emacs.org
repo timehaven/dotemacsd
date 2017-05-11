@@ -2,12 +2,24 @@
 #+OPTIONS: toc:4 h:4
 #+STARTUP: lognoterefile
 
+* Remember 
+- indirect buffers!
+- http://angg.twu.net/emacs.html#eev
+- ergoemacs http://ergoemacs.org/emacs/emacs_best_keyboard.html
+- https://thepointsguy.com/2016/02/5-things-to-know-global-entry/
+- https://github.com/nteract/sidecar
+- https://ptgriffiths.wordpress.com/2017/02/05/jupyter-notebook-emacsipython-and-vimipython-integration/
+- https://snarfed.org/dotfiles/.emacs
+- https://github.com/zbskii/misc/blob/master/.emacs.d/init.el (Brett)
+- http://www.howardism.org/
+- https://github.com/winterTTr/ace-jump-mode
+- http://doc.rix.si/cce/cce.html
+- http://www.splode.com/~friedman/software/emacs-lisp/
+
+
 * Notes, non elisp
 
-We dearly thank [[http://sachachua.com][Sacha Chua]] for many ideas from [[http://sachachua.com/dotemacs][th  (add-to-list 'load-path "~/.emacs.d/rw")
-  ;; (load-library "rw_funcs")
-  (load-library "rw_keys")
-is file]], vision and
+We dearly thank [[http://sachachua.com][Sacha Chua]] for many ideas from [[http://sachachua.com/dotemacs][this file]], vision and
 general great stuff.  She is wonderful.
 
 * No external package dependencies
@@ -19,9 +31,7 @@ general great stuff.  She is wonderful.
   (column-number-mode 1)
   (fset 'yes-or-no-p 'y-or-n-p)
   (setq org-src-fontify-natively t)                   ;; fontify code blocks, I hope
-  (global-set-key [end] 'move-end-of-line)
   (add-hook 'text-mode-hook 'turn-on-auto-fill)       ;; auto-fill always on
-  (global-set-key [home] 'move-beginning-of-line)
   (setq custom-file "~/.emacs.d/custom-settings.el")
 #+END_SRC
 
@@ -153,6 +163,13 @@ general great stuff.  She is wonderful.
 #+END_SRC
 
 To update occasionally:
+
+#+BEGIN_SRC sh nil
+  ls
+#+END_SRC
+
+#+RESULTS:
+: /Users/rwoodard/.emacs.d
 
 #+BEGIN_SRC sh
   cd $HOME/elisp/org-mode && make up2
@@ -411,6 +428,51 @@ To update occasionally:
 
 ** use-package org, config babel load lang, ob-ipython, org element
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (setq jupyter-console-exec (substitute-in-file-name
+			      "$HOME/local/miniconda3/envs/py36/bin/jupyter"))
+  (message "***** use-package ob-ipython *****")
+  (use-package ob-ipython
+    :ensure t
+    :config
+    (setq ob-ipython-command jupyter-console-exec)
+    (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
+#+END_SRC
+
+#+BEGIN_SRC ipython :session
+print("Hello, world!")
+a = 5
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+Hello, world!
+:END:
+
+#+BEGIN_SRC ipython :session
+  %matplotlib inline
+  import matplotlib.pyplot as plt
+  import numpy as np
+#+END_SRC
+
+#+BEGIN_SRC ipython :session
+  %matplotlib osx
+  import matplotlib.pyplot as plt
+  import numpy as np
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+:END:
+
+#+BEGIN_SRC ipython :session :results output drawer
+plt.plot([1, 2, 3])  
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+:END:
+
+#+BEGIN_SRC emacs-lisp :tangle yes
   (message "***** use-package org *****")
   (use-package org
     :load-path "~/.emacs.d/elisp/org-mode/lisp"  ;; redundant, at this point
@@ -469,7 +531,7 @@ window, so I want org src to use the current window.
           ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE" "<quote>\n?\n</quote>")
           ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
           ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
-	 ("p" "#+BEGIN_SRC ipython :session\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
+	 ("p" "#+BEGIN_SRC ipython :session :async t\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
           ;;("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
           ("l" "#+BEGIN_SRC emacs-lisp :tangle yes\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")
           ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
@@ -527,6 +589,19 @@ window, so I want org src to use the current window.
 #+RESULTS:
 | org-speed-src-blocks | org-speed-command-activate | org-babel-speed-command-activate |
 
+** skinning, looking good
+http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-hide-emphasis-markers t)
+  (font-lock-add-keywords 'org-mode
+			  '(("^ +\\([-*]\\) "
+			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (use-package org-bullets
+    :ensure t
+    :config
+    (progn
+      (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
+#+END_SRC
 * External packages
 ** Magit - nice git interface
 
@@ -707,7 +782,7 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
 
 * Python
 ** Make jupyter default shell
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 
   (setq jupyter-console-exec (substitute-in-file-name
 			      "$HOME/local/miniconda3/envs/py36/bin/jupyter"))
@@ -723,28 +798,74 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
 (org-babel-ipython-initiate-session "ryan")
 #+END_SRC
 
-#+BEGIN_SRC ipython :session
+#+BEGIN_SRC ipython :session :async t
   print('babba')
   a = 'flathh'
+  import time
+  time.sleep(5)
+  print('hi there')
   #plt.plot([1, 2,3 ])
 #+END_SRC
+
 #+RESULTS:
 :RESULTS:
 babba
+hi there
 :END:
+
+
 ** scimax, its version of ob-ipython
+
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq my-jupyter-args " console --existing --simple-prompt")
-  (setq ob-ipython-command (concat jupyter-console-exec my-jupyter-args))
+  ;; (setq my-jupyter-args " console --existing --simple-prompt")
+    ;; (setq my-jupyter-args " console --simple-prompt")
+    ;; (setq ob-ipython-command (concat jupyter-console-exec my-jupyter-args))
+      ;;(setq ob-ipython-command jupyter-console-exec)
 
-  ;; see org-babel stuff for ipython in Org section above
-  ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
-  ;; Intermittent silliness!
-  ;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
+    ;; see org-babel stuff for ipython in Org section above
+    ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
+    ;; Intermittent silliness!
+    ;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
 
-  (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
+    ;; (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
+    ;; (require 'scimax-org-babel-ipython)
+
+;; Provides functions for working with files
+(use-package f)
+
+;; Functions for working with strings
+(use-package s)
+
+(use-package cl)
+(use-package cl-lib)
+
+
+  (load-file "/Users/rwoodard/.emacs.d/elisp/scimax/scimax-org-babel-ipython.el")
   (require 'scimax-org-babel-ipython)
+
+  ;; (message "***** use-package scimax-org-babel-ipython *****")
+  ;; (use-package scimax-org-babel-ipython
+  ;;   :load-path "~/.emacs.d/elisp/scimax"
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
+
 #+END_SRC
+
+#+BEGIN_SRC ipython :session :results output drawer
+a = 79302
+print(a)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+79302
+:END:
+
+#+BEGIN_SRC ipython :session
+print('hi')
+#+END_SRC
+
 ** elpy
 #+BEGIN_SRC emacs-lisp :tangle no
   ;; (setq elpy-rpc-backend "jedi")
@@ -760,6 +881,19 @@ babba
 | elpy-rpc--disconnect |
 
 * Colors
+** material
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package material-theme
+    :ensure ;TODO: 
+    :config
+    ;;(load-theme 'material-light t)
+    (load-theme 'material t)
+    )
+#+END_SRC
+
+#+RESULTS:
+: t
+
 ** Sacha solarized
 Sacha says:
 
@@ -770,7 +904,7 @@ though, so we define some advice to make it work. Some things still
 aren't quite right.
 #+END_QUOTE
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; (defadvice color-theme-alist (around sacha activate)
   ;;   (if (ad-get-arg 0)
   ;;       ad-do-it
@@ -868,93 +1002,317 @@ https://github.com/rakanalh/emacs-dashboard
 #+END_SRC
 (add-to-list 'load-path "~/.emacs.d")
 (load-library "terms_and_shells")
-* My keys
+* My function key bindings
 ** Summary table
+*** old
 
-|     | f                | meta            | shift                               | ctrl             | super | hyper |
-|-----+------------------+-----------------+-------------------------------------+------------------+-------+-------|
-| f1  | only             | speedbar        | info                                | go to this table |       |       |
-| f2  | split v          | org ctl c ctl c | split h                             |                  |       |       |
-| f3  | bury             | prev src block  |                                     |                  |       |       |
-| f4  | kill             | new block above |                                     |                  |       |       |
-| f5  | other buffer     |                 |                                     |                  |       |       |
-| f6  | other window     |                 |                                     |                  |       |       |
-| f7  | eshell           |                 |                                     |                  |       |       |
-| f8  | buffers menu     |                 |                                     |                  |       |       |
-| f9  |                  | new block below | beg of buffer                       |                  |       |       |
-| f10 | find file        | org next block  | end of buffer                       | tmm menu         |       |       |
-| f11 | save-buffer      | org ctl c ctl c |                                     |                  |       |       |
-| f12 | eval-last-sexp   | eval and step   |                                     | eval-last-sexp   |       |       |
-|     | python send line |                 | org-edit-special, org-edit-src-exit |                  |       |       |
-|     | sh send line     |                 |                                     |                  |       |       |
-|-----+------------------+-----------------+-------------------------------------+------------------+-------+-------|
+|     | f                | shift                               | meta            | ctrl             | super | hyper |
+|-----+------------------+-------------------------------------+-----------------+------------------+-------+-------|
+| f1  | only             | info                                | speedbar        | go to this table |       |       |
+| f2  | split v          | split h                             | org ctl c ctl c |                  |       |       |
+| f3  | bury             |                                     | prev src block  |                  |       |       |
+| f4  | kill             |                                     | new block above |                  |       |       |
+| f5  | other buffer     |                                     |                 |                  |       |       |
+| f6  | other window     |                                     |                 |                  |       |       |
+| f7  | eshell           |                                     |                 |                  |       |       |
+| f8  | buffers menu     |                                     |                 |                  |       |       |
+| f9  |                  | beg of buffer                       | new block below |                  |       |       |
+| f10 | find file        | end of buffer                       | org next block  | tmm menu         |       |       |
+| f11 | save-buffer      |                                     | org ctl c ctl c |                  |       |       |
+| f12 | eval-last-sexp   |                                     | eval and step   | eval-last-sexp   |       |       |
+|     | python send line | org-edit-special, org-edit-src-exit |                 |                  |       |       |
+|     | sh send line     |                                     |                 |                  |       |       |
+|-----+------------------+-------------------------------------+-----------------+------------------+-------+-------|
 
-** load
+*** current
 
-#+BEGIN_SRC emacs-lisp :tangle no
-#+END_SRC
+Global
 
+|     | f                           | shift                         | meta             | ctrl           |
+|-----+-----------------------------+-------------------------------+------------------+----------------|
+| f1  | only window                 | kill window                   | go to this table |                |
+| f2  | split vertical (top/bottom) | split horizontal (left/right) |                  |                |
+| f3  | bury buffer                 | kill buffer                   |                  |                |
+| f4  |                             |                               |                  |                |
+| f5  | other buffer                | browse url                    |                  |                |
+| f6  | other window                | other window, reverse         |                  |                |
+| f7  |                             | [python?  eshell?  shell?]    |                  |                |
+| f8  | buffers menu                | speedbar toggle               | tmm menu         | info           |
+| f9  |                             | beg of buffer                 |                  |                |
+| f10 |                             | end of buffer                 |                  |                |
+| f11 | save-buffer                 | find file                     |                  |                |
+| f12 |                             |                               |                  | eval-last-sexp |
+|-----+-----------------------------+-------------------------------+------------------+----------------|
+
+org, org-src
+
+|     | f                                         | shift               | meta                       | ctrl |
+|-----+-------------------------------------------+---------------------+----------------------------+------|
+| f1  |                                           |                     |                            |      |
+| f2  |                                           |                     |                            |      |
+| f3  |                                           |                     |                            |      |
+| f4  | org C-c C-c                               | C-c C-c, next block | org C-c C-c c, new block   |      |
+| f5  |                                           |                     |                            |      |
+| f6  |                                           |                     |                            |      |
+| f7  |                                           |                     |                            |      |
+| f8  |                                           |                     |                            |      |
+| f9  | prev src block                            |                     | new block above            |      |
+| f10 | next src block                            |                     | new block below            |      |
+| f11 |                                           |                     |                            |      |
+| f12 | (org, org src, el) eval line              | f12 then step       | org:     org-edit-special  |      |
+|     | (org, org src, py) python send line       |                     | org src: org-edit-src-exit |      |
+|     | (org, org src, sh) org src, sh: send line |                     |                            |      |
+|-----+-------------------------------------------+---------------------+----------------------------+------|
+
+** code
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; My stuff.
-  ;; Function keys
-  (add-to-list 'load-path "~/.emacs.d/rw")
-  ;; (load-library "rw_funcs")
-  (load-library "rw_keys")
+;; See examples at bottom of this file of ways to set keys.
+
+;; Global.
+
+(global-set-key [end]
+		'move-end-of-line)
+(global-set-key [home]
+		'move-beginning-of-line)
+(global-set-key (kbd "s-s")
+		'isearch-forward)  ;; Mac command key
+(global-set-key (kbd "s-r")
+		'isearch-backward)  ;; Mac command key
+
+(add-hook 'isearch-mode-hook
+	  (lambda ()
+
+	    (define-key isearch-mode-map (kbd "s-s")
+		'isearch-repeat-forward)
+	    (define-key isearch-mode-map (kbd "s-r")
+		'isearch-repeat-backward)
+		))
+
+;; Make only one window.
+(global-set-key [f1]
+		'delete-other-windows)
+
+;; Make this window go away.
+(global-set-key [S-f1]
+		'delete-window)
+
+;; Go to table of key bindings.
+(global-set-key [M-f1] 
+		(lambda ()
+		  (interactive)
+		  (bookmark-jump "keys")
+		  (recenter-top-bottom 1)))
+
+;; Split window in half (top and bottom).
+(global-set-key [f2]
+		(lambda ()
+		  (interactive)
+		  (split-window-vertically)
+		  (other-window 1)))
+
+;; Split window in half (left and right).
+(global-set-key [S-f2]
+		(lambda ()
+		  (interactive)
+		  (split-window-horizontally)
+		  (other-window 1)))
+
+;; Bury buffer.
+(global-set-key [f3]
+		'bury-buffer)
+
+;; Kill buffer (require two key presses since it's a kill).
+(global-set-key [S-f3]
+		'kill-buffer)
+
+;; Switch to most recent buffer.
+(global-set-key [f5]
+		(lambda ()
+		  (interactive)
+		  (switch-to-buffer nil)))
+
+;; JFGI
+(global-set-key [S-f5]
+		'browse-url)
+
+;; Go to next window.
+(global-set-key [f6] 
+		(lambda ()
+		  (interactive)
+		  (other-window 1)))
+
+;; Go to previous window.
+(global-set-key [S-f6] 
+		(lambda ()
+		  (interactive)
+		  (other-window -1)))
+
+;; helm version of buffers.
+(global-set-key [f8]
+		'helm-mini)
+
+;; speedbar
+(global-set-key [S-f8]
+		'sr-speedbar-toggle)
+
+;; menu that a mouse would find.
+(global-set-key [M-f8]
+		'tmm-menubar)
+
+;; Info!
+(global-set-key [C-f8]
+		'info)
+
+;; Top and bottom of buffer.
+(global-set-key [S-f9]
+		'beginning-of-buffer)
+
+(global-set-key [S-f10]
+		'end-of-buffer)
+
+(global-set-key [f10]
+		'helm-find-files)
+
+(global-set-key [f11]
+		'save-buffer)
+
+(global-set-key [C-f12]
+		'eval-last-sexp)
+
+
+
+(add-hook 'org-mode-hook
+	  (lambda ()
+
+	    (define-key org-mode-map [f4]
+	      'org-ctrl-c-ctrl-c)
+
+	    (define-key org-mode-map [f9]
+	      'org-previous-block)
+
+	    (define-key org-mode-map [f10]
+	      'org-next-block)
+
+	    (define-key org-mode-map [M-f9]
+	      'insert-new-block-same-as-current)
+
+	    (define-key org-mode-map [M-f10]
+	      'insert-new-block-same-as-current-below)
+	    
+	    (define-key org-mode-map [S-f4]
+		(lambda ()
+		  (interactive)
+		  (org-ctrl-c-ctrl-c)
+		  (org-next-block)))
+	    
+	    (define-key org-mode-map [M-f4]
+		(lambda ()
+		  (interactive)
+		  (org-ctrl-c-ctrl-c)
+		  (insert-new-block-same-as-current-below)))
+
+	    (define-key org-mode-map [M-f12]
+	      'org-edit-special)
+	    
+	    ))
+
+
+(add-hook 'org-src-mode-hook
+	  (lambda ()
+
+	    (define-key org-src-mode-map [M-f12]
+	      'org-edit-src-exit)
+	    
+	    ))
+
+
+(defun my/eval-line (mode-specific-eval)
+  "Send entire current line to sh, elisp, python or whatever."
+  (let ((start (line-beginning-position))
+	(end (line-end-position)))
+    (funcall mode-specific-eval start end)))
+
+
+(add-hook 'sh-mode-hook
+	  (lambda()
+
+	    (define-key sh-mode-map [f12]
+	      (lambda ()
+		(interactive)
+		(my/eval-line 'sh-execute-region)))
+	    
+	    (define-key sh-mode-map [S-f12]
+	      (lambda ()
+		(interactive)
+		(my/eval-line 'sh-execute-region)
+		(end-of-line)
+		(newline-and-indent)))
+
+	    ))
+
+
+(add-hook 'python-mode-hook
+	  (lambda()
+
+	    (define-key python-mode-map [f12]
+	      (lambda ()
+		(interactive)
+		(my/eval-line 'python-shell-send-region)))
+	    
+	    (define-key python-mode-map [S-f12]
+	      (lambda ()
+		(interactive)
+		(my/eval-line 'python-shell-send-region)
+		(end-of-line)
+		(newline-and-indent)))
+
+	    ))
+
+
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda()
+	    
+	    (define-key emacs-lisp-mode-map [f12]
+	      (lambda ()
+		(interactive)
+		(my/eval-line 'eval-region)))
+	    
+	    ))
+
+
+
+;; Cool things in term mode.
+;;
+;; ‘C-c C-l’
+;; ‘C-c C-o’
+
+
+;;;;
+;;
+;; Examples.
+;;
+;; From Info, examples of ways to set global keys:
+;;
+;; (global-set-key (kbd "C-c y") 'clipboard-yank)
+;; (global-set-key (kbd "C-M-q") 'query-replace)
+;; (global-set-key (kbd "<f5>") 'flyspell-mode)
+;; (global-set-key (kbd "C-<f5>") 'linum-mode)
+;; (global-set-key (kbd "C-<right>") 'forward-sentence)
+;; (global-set-key (kbd "<mouse-2>") 'mouse-save-then-kill)
+
+;; (global-set-key "\C-x\M-l" 'make-symbolic-link)
+
+;; <TAB>
+;; (global-set-key "\C-x\t" 'indent-rigidly)
+
+;; (global-set-key [?\C-=] 'make-symbolic-link)
+;; (global-set-key [?\M-\C-=] 'make-symbolic-link)
+;; (global-set-key [?\H-a] 'make-symbolic-link)
+;; (global-set-key [f7] 'make-symbolic-link)
+;; (global-set-key [C-mouse-1] 'make-symbolic-link)
+
+;; (global-set-key [?\C-z ?\M-l] 'make-symbolic-link)
 #+END_SRC
-
-** notes, wishlist on org src block mode mapping
-  
-*** eval
-
-**** lines
-
-***** TODO F1, F12 eval single line, stay
-  
-***** TODO C-F1, C-F12  eval single line, step to next
-
- elpy-shell-send-current-statement (<C-return>)
- (define-key org-src-mode-map (kbd "M-<f12>")
- 'sh-send-line-or-region-and-step)
-
-***** TODO M-F1, M-F12, eval single line, open new blank line below
-  
-**** blocks
-
-***** F2, F11, eval block, stay
-Built-in function =org-ctrl-c-ctrl-c= does the trick.
-***** TODO C-F2, C-F11, eval block, step to next block
-  
-***** TODO M-F2, M-F11, eval block, create same new one below
-  
-*** motion
-  
-**** blocks
-  
-Use F3, F10 to get to heading of this or next block, then normal keys
-to navigate from there (F, B, n, p).
-
-***** F3, F10, go to top of this/previous, next block
-
-go to top of this src block, or previous if at top
-(C-c C-v C-u)
- (define-key org-mode-map (kbd "<f3>") 'org-previous-block)
- (define-key org-mode-map (kbd "<f3>") 'org-babel-goto-src-block-head)
-  
- F10
- go to top of next block
- (define-key org-mode-map (kbd "<f10>") 'org-next-block)
-  
-*** creation
-***** F4, F9, create new block above, below; same as current
-**** blocks  
-
-F4
-new block, same as, above
-(define-key org-mode-map (kbd "<f4>") 'insert-new-block-same-as-current)
-  
-F9
-new block, same as, below
-(define-key org-mode-map (kbd "<f9>") 'insert-new-block-same-as-current-below)
 
 ** help
   consp((src-block (:language "ipython" :switches nil :parameters
@@ -962,10 +1320,4 @@ new block, same as, below
   :preserve-indent nil :retain-labels t :use-labels t :label-fmt nil
   :value "print(\"In ipyB!\")\n" :post-blank 2 :post-affiliated 33927
   :parent nil)))
-** navigate src blocks
-C-f1 to go to start of block
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (define-key org-mode-map (kbd "<C-f1>")
-    'org-babel-goto-src-block-head) ;; (C-c C-v C-u)
-#+END_SRC
 

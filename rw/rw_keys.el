@@ -63,34 +63,8 @@
 ;; https://www.google.com/search?q=advantage+pro+kinesis+mac+linux+keys&oq=advantage+pro+kinesis+mac+linux+keys&aqs=chrome..69i57.15589j0j7&sourceid=chrome&es_sm=91&ie=UTF-8#q=advantage+pro+kinesis+mac+linux
 
 
-;; OVERWRITE DEFAULT.
-(global-set-key [f1] 'delete-other-windows)
-(global-set-key [S-f1] 'info)
 
-;; OVERWRITE DEFAULT.
-(fset 'smart-split-vertical
-   [?\C-x ?2 ?\C-x ?o ?\C-x ?b return])
-(fset 'smart-split-horizontal
-   [?\C-x ?3 ?\C-x ?o ?\C-x ?b return])
-(global-set-key [f2] 'smart-split-vertical)
-(global-set-key [S-f2] 'smart-split-horizontal)
-
-;; OVERWRITE DEFAULT.
-(global-set-key [f3] 'bury-buffer)
-
-;; OVERWRITE DEFAULT.
-;;(global-set-key [f4] 'delete-window)
-;; I find that I use kill-buffer more than delete-window.
-(global-set-key [f4] 'kill-buffer)
-
-(fset 'f5new
-   "\C-xb\C-m")
-(global-set-key [f5] 'f5new) ;; Switch to previous buffer
-;;(global-set-key [f5] [?\C-x ?b return]) ;; Switch to previous buffer
-
-(global-set-key [f6] 'other-window)
-
-(global-set-key [f7] 'eshell)
+;; (global-set-key [f7] 'eshell)
 ;; (global-set-key [f7] 'split-esh1)
 ;; (global-set-key [C-f7] 'split-ipy1)
 ;; (global-set-key [M-f7] 'split-term1)
@@ -100,7 +74,7 @@
 
 ;;(global-set-key [f8] 'ido-switch-buffer) ;; See all buffers summary
 ;;(global-set-key [f8] 'list-buffers) ;; See all buffers summary
-(global-set-key [f8] 'helm-mini)
+
 ;;(global-set-key [C-f8] 'bs-show-one-window)
 
 
@@ -108,31 +82,14 @@
 ;; default f10 is menu. New way of the world: do not overwrite.
 ;;(global-set-key [f10] 'find-file-at-point)
 ;; (global-set-key [f10] 'ido-find-file)
-(global-set-key [f10] 'helm-find-files)
 ;; (global-set-key [C-f10] 'info)
-(global-set-key [C-f10] 'tmm-menubar)
 ;;(global-set-key [S-f9] 'beginning-of-buffer)
 
-(defun my/goto-beginning ()
-  (interactive)
-  (goto-char (point-min)))
-
-(defun my/goto-end ()
-  (interactive)
-  (goto-char (point-max)))
-
-(global-set-key [S-f9] 'my/goto-beginning)
-(global-set-key [S-f10] 'my/goto-end)
-;;(global-set-key [S-f10] 'end-of-buffer)  ;; weird deprecation msg at startup?
-;; (global-set-key [S-C-f10] 'insert-kbd-macro)
-
 ;; OVERWRITE DEFAULT.
-(global-set-key [f11] 'save-buffer)
 
 ;; (global-set-key [f12] 'eval-region) ;; lisp
 (global-set-key [C-f12] 'eval-last-sexp) ;; lisp
 ;; (global-set-key [S-f12] 'speedbar-get-focus)
-(global-set-key [M-f1] 'sr-speedbar-toggle)
 
 ;; awesomeness from http://www.emacswiki.org/emacs/ToolBar and tool-bar+.el
 ;;(global-set-key [S-C-f12] 'show-tool-bar-for-one-command)
@@ -143,11 +100,6 @@
 ;; (global-set-key (kbd "<home>") 'move-beginning-of-line)
 ;; (global-set-key (kbd "<end>") 'move-end-of-line)
 
-
-(defun my/bookmark-keys ()
-  (interactive)
-  (bookmark-jump "keys"))
-(global-set-key [C-f1] 'my/bookmark-keys)
 	       
 ;;
 ;; I want to highlight some shell commands from some doc I am writing
@@ -313,7 +265,7 @@
 ;;     (term-char-mode)
 ;;     (switch-to-buffer termbuf)))
 
-(ansi-term "/bin/bash" "jupyter0")
+;; (ansi-term "/bin/bash" "jupyter0")
 ;; (global-set-key (kbd "C-c s j") 'my-jupyter-console)
 
 (defun my/make-linked-shell ()
@@ -367,13 +319,13 @@
   ;; F3
   ;; go to top of this src block, or previous if at top
   ;; (C-c C-v C-u)
-  (define-key org-mode-map (kbd "<M-f3>") 'org-previous-block)
+  ;;(define-key org-mode-map (kbd "<M-f3>") 'org-previous-block)
   ;;(define-key org-mode-map (kbd "<f3>") 'org-babel-goto-src-block-head)
   ;;  
   ;;
   ;; F10
   ;; go to top of next block
-  (define-key org-mode-map (kbd "<M-f10>") 'org-next-block)
+  ;;(define-key org-mode-map (kbd "<M-f10>") 'org-next-block)
   ;;
   ;;
   ;; Block creation
