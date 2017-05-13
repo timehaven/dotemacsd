@@ -1170,7 +1170,7 @@ org, org-src
 (global-set-key [S-f10]
 		'end-of-buffer)
 
-(global-set-key [f10]
+(global-set-key [S-f11]
 		'helm-find-files)
 
 (global-set-key [f11]
@@ -1245,8 +1245,8 @@ org, org-src
 	      (lambda ()
 		(interactive)
 		(my/eval-line 'sh-execute-region)
-		(end-of-line)
-		(newline-and-indent)))
+		(next-line)
+		(end-of-line)))
 
 	    ))
 
@@ -1263,8 +1263,8 @@ org, org-src
 	      (lambda ()
 		(interactive)
 		(my/eval-line 'python-shell-send-region)
-		(end-of-line)
-		(newline-and-indent)))
+		(next-line)
+		(end-of-line)))
 
 	    ))
 
