@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-05-10 Wed 21:17 -->
+<!-- 2017-05-12 Fri 20:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ryan Woodard's Emacs configuration</title>
@@ -256,81 +256,81 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org22b3049">1. Remember</a></li>
-<li><a href="#org28e0f86">2. Notes, non elisp</a></li>
-<li><a href="#orgada172f">3. No external package dependencies</a>
+<li><a href="#org7672411">1. Remember</a></li>
+<li><a href="#org4b65707">2. Notes, non elisp</a></li>
+<li><a href="#org338e773">3. No external package dependencies</a>
 <ul>
-<li><a href="#org50487fc">3.1. General setup, preferences</a></li>
-<li><a href="#org99ed6c7">3.2. Machine, OS</a></li>
-<li><a href="#org4aa43a7">3.3. Emacs version</a></li>
-<li><a href="#org43e615f">3.4. Friendly greeting</a></li>
-<li><a href="#orgc373395">3.5. Frame size, font (no colors yet).</a></li>
-<li><a href="#org7b1f040">3.6. Who am I?</a></li>
+<li><a href="#org68c5244">3.1. General setup, preferences</a></li>
+<li><a href="#orge50aeda">3.2. Machine, OS</a></li>
+<li><a href="#org5871ae3">3.3. Emacs version</a></li>
+<li><a href="#org92e6468">3.4. Friendly greeting</a></li>
+<li><a href="#org58d4735">3.5. Frame size, font (no colors yet).</a></li>
+<li><a href="#org248451c">3.6. Who am I?</a></li>
 </ul>
 </li>
-<li><a href="#org23cad62">4. package, use-package</a></li>
-<li><a href="#org47def83">5. org</a>
+<li><a href="#orge94472f">4. package, use-package</a></li>
+<li><a href="#orgd4a6af1">5. org</a>
 <ul>
-<li><a href="#org433181c">5.1. Install Emacs, org-mode source and needed packages on debian-based</a></li>
-<li><a href="#orga61e7da">5.2. Version check</a></li>
-<li><a href="#org8793fc6">5.3. use-package org, config babel load lang, ob-ipython, org element</a></li>
-<li><a href="#org915446f">5.4. org mode structure templates (<code>&lt;s</code> things)</a></li>
-<li><a href="#org772dd3a">5.5. speed commands, src blocks</a></li>
-<li><a href="#org5eeae2e">5.6. skinning, looking good</a></li>
+<li><a href="#org2f4b44c">5.1. Install Emacs, org-mode source and needed packages on debian-based</a></li>
+<li><a href="#orgabdcd1a">5.2. Version check</a></li>
+<li><a href="#org739d3ec">5.3. use-package org, config babel load lang, ob-ipython, org element</a></li>
+<li><a href="#org6169adf">5.4. org mode structure templates (<code>&lt;s</code> things)</a></li>
+<li><a href="#orgb7e895b">5.5. speed commands, src blocks</a></li>
+<li><a href="#orgb3b72fb">5.6. skinning, looking good</a></li>
 </ul>
 </li>
-<li><a href="#org345a087">6. External packages</a>
+<li><a href="#orgd801fe6">6. External packages</a>
 <ul>
-<li><a href="#org222e080">6.1. Magit - nice git interface</a></li>
-<li><a href="#orgcb19045">6.2. Mode line format</a></li>
-<li><a href="#org632f1c9">6.3. parens and such</a></li>
-<li><a href="#org0937aa9">6.4. srspeedbar (speedbar in same frame)</a></li>
-<li><a href="#org7102769">6.5. writeroom mode (for concentrating)</a></li>
-<li><a href="#orgfc996b4">6.6. yas snippets (from Sacha)</a></li>
+<li><a href="#org5a0e320">6.1. Magit - nice git interface</a></li>
+<li><a href="#orgd72e1ef">6.2. Mode line format</a></li>
+<li><a href="#org24fe7dc">6.3. parens and such</a></li>
+<li><a href="#org6c65bc6">6.4. srspeedbar (speedbar in same frame)</a></li>
+<li><a href="#orgfb4322b">6.5. writeroom mode (for concentrating)</a></li>
+<li><a href="#orgfcda83d">6.6. yas snippets (from Sacha)</a></li>
 </ul>
 </li>
-<li><a href="#orgf581247">7. helm</a></li>
-<li><a href="#orgc71d81b">8. Python</a>
+<li><a href="#orgcc3ce7c">7. helm</a></li>
+<li><a href="#orgde609ea">8. Python</a>
 <ul>
-<li><a href="#org3feba14">8.1. Make jupyter default shell</a></li>
-<li><a href="#org8037d11">8.2. scimax, its version of ob-ipython</a></li>
-<li><a href="#org38cc182">8.3. elpy</a></li>
+<li><a href="#org5a6c5dd">8.1. Make jupyter default shell</a></li>
+<li><a href="#orge3bf7af">8.2. scimax, its version of ob-ipython</a></li>
+<li><a href="#org7f56526">8.3. elpy</a></li>
 </ul>
 </li>
-<li><a href="#orgb77d135">9. Colors</a>
+<li><a href="#orgdd34d3e">9. Colors</a>
 <ul>
-<li><a href="#orga003863">9.1. material</a></li>
-<li><a href="#org38c3f09">9.2. Sacha solarized</a></li>
-<li><a href="#org998d2df">9.3. org block faces</a></li>
-<li><a href="#org3faa183">9.4. kaolin</a></li>
+<li><a href="#orge8c009b">9.1. material</a></li>
+<li><a href="#orgf4bd49c">9.2. Sacha solarized</a></li>
+<li><a href="#orgfb320f4">9.3. org block faces</a></li>
+<li><a href="#org73a5ccc">9.4. kaolin</a></li>
 </ul>
 </li>
-<li><a href="#org4c080f9">10. Utility functions</a>
+<li><a href="#orgd588b07">10. Utility functions</a>
 <ul>
-<li><a href="#org44a6802">10.1. unfill paragraph</a></li>
+<li><a href="#orgdcf0d7d">10.1. unfill paragraph</a></li>
 </ul>
 </li>
-<li><a href="#org33f1ebe">11. Dashboard at startup</a></li>
-<li><a href="#orgf3bbbde">12. Initial files to load</a></li>
-<li><a href="#org970ff08">13. shell, term, etc.</a></li>
-<li><a href="#org3ee203a">14. My function key bindings</a>
+<li><a href="#orgb0e1b95">11. Dashboard at startup</a></li>
+<li><a href="#org94e5b05">12. Initial files to load</a></li>
+<li><a href="#org6b8b9cf">13. shell, term, etc.</a></li>
+<li><a href="#orgaa1cfef">14. My function key bindings</a>
 <ul>
-<li><a href="#org97eff84">14.1. Summary table</a>
+<li><a href="#org9f3807e">14.1. Summary table</a>
 <ul>
-<li><a href="#org64ce37e">14.1.1. old</a></li>
-<li><a href="#orga77d46b">14.1.2. current</a></li>
+<li><a href="#org7976be6">14.1.1. old</a></li>
+<li><a href="#org0ba5aa4">14.1.2. current</a></li>
 </ul>
 </li>
-<li><a href="#org1f8684c">14.2. code</a></li>
-<li><a href="#org2054508">14.3. help</a></li>
+<li><a href="#org588a8d0">14.2. code</a></li>
+<li><a href="#org07369e6">14.3. help</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org22b3049" class="outline-2">
-<h2 id="org22b3049"><span class="section-number-2">1</span> Remember</h2>
+<div id="outline-container-org7672411" class="outline-2">
+<h2 id="org7672411"><span class="section-number-2">1</span> Remember</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>indirect buffers!</li>
@@ -350,8 +350,8 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org28e0f86" class="outline-2">
-<h2 id="org28e0f86"><span class="section-number-2">2</span> Notes, non elisp</h2>
+<div id="outline-container-org4b65707" class="outline-2">
+<h2 id="org4b65707"><span class="section-number-2">2</span> Notes, non elisp</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We dearly thank <a href="http://sachachua.com">Sacha Chua</a> for many ideas from <a href="http://sachachua.com/dotemacs">this file</a>, vision and
@@ -360,12 +360,12 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-orgada172f" class="outline-2">
-<h2 id="orgada172f"><span class="section-number-2">3</span> No external package dependencies</h2>
+<div id="outline-container-org338e773" class="outline-2">
+<h2 id="org338e773"><span class="section-number-2">3</span> No external package dependencies</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org50487fc" class="outline-3">
-<h3 id="org50487fc"><span class="section-number-3">3.1</span> General setup, preferences</h3>
+<div id="outline-container-org68c5244" class="outline-3">
+<h3 id="org68c5244"><span class="section-number-3">3.1</span> General setup, preferences</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(menu-bar-mode 1)                                   <span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">-1 turns off</span>
@@ -380,8 +380,8 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-org99ed6c7" class="outline-3">
-<h3 id="org99ed6c7"><span class="section-number-3">3.2</span> Machine, OS</h3>
+<div id="outline-container-orge50aeda" class="outline-3">
+<h3 id="orge50aeda"><span class="section-number-3">3.2</span> Machine, OS</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">check OS type</span>
@@ -401,8 +401,8 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-org4aa43a7" class="outline-3">
-<h3 id="org4aa43a7"><span class="section-number-3">3.3</span> Emacs version</h3>
+<div id="outline-container-org5871ae3" class="outline-3">
+<h3 id="org5871ae3"><span class="section-number-3">3.3</span> Emacs version</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">check emacs version</span>
@@ -415,8 +415,8 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-org43e615f" class="outline-3">
-<h3 id="org43e615f"><span class="section-number-3">3.4</span> Friendly greeting</h3>
+<div id="outline-container-org92e6468" class="outline-3">
+<h3 id="org92e6468"><span class="section-number-3">3.4</span> Friendly greeting</h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(message <span style="color: #9ccc65;">"Spinning up %s@%s using %s"</span>
@@ -429,8 +429,8 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-orgc373395" class="outline-3">
-<h3 id="orgc373395"><span class="section-number-3">3.5</span> Frame size, font (no colors yet).</h3>
+<div id="outline-container-org58d4735" class="outline-3">
+<h3 id="org58d4735"><span class="section-number-3">3.5</span> Frame size, font (no colors yet).</h3>
 <div class="outline-text-3" id="text-3-5">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;;  </span><span style="color: #b0bec5;">t for a termcap frame (a character-only terminal),</span>
@@ -466,8 +466,8 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-org7b1f040" class="outline-3">
-<h3 id="org7b1f040"><span class="section-number-3">3.6</span> Who am I?</h3>
+<div id="outline-container-org248451c" class="outline-3">
+<h3 id="org248451c"><span class="section-number-3">3.6</span> Who am I?</h3>
 <div class="outline-text-3" id="text-3-6">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">setq</span> user-full-name <span style="color: #9ccc65;">"Ryan Woodard"</span>)
@@ -481,8 +481,8 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-org23cad62" class="outline-2">
-<h2 id="org23cad62"><span class="section-number-2">4</span> package, use-package</h2>
+<div id="outline-container-orge94472f" class="outline-2">
+<h2 id="orge94472f"><span class="section-number-2">4</span> package, use-package</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">require</span> '<span style="color: #8bc34a;">package</span>)
@@ -519,12 +519,12 @@ general great stuff.  She is wonderful.
 </div>
 </div>
 
-<div id="outline-container-org47def83" class="outline-2">
-<h2 id="org47def83"><span class="section-number-2">5</span> org</h2>
+<div id="outline-container-orgd4a6af1" class="outline-2">
+<h2 id="orgd4a6af1"><span class="section-number-2">5</span> org</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org433181c" class="outline-3">
-<h3 id="org433181c"><span class="section-number-3">5.1</span> Install Emacs, org-mode source and needed packages on debian-based</h3>
+<div id="outline-container-org2f4b44c" class="outline-3">
+<h3 id="org2f4b44c"><span class="section-number-3">5.1</span> Install Emacs, org-mode source and needed packages on debian-based</h3>
 <div class="outline-text-3" id="text-5-1">
 <div class="org-src-container">
 <pre><code class="src src-sh">sudo apt-get install emacs25-common-non-dfsg install-info <span style="color: #9ccc65;">\</span>
@@ -553,8 +553,8 @@ git gc  <span style="color: #b0bec5;"># </span><span style="color: #b0bec5;">to 
 </div>
 </div>
 
-<div id="outline-container-orga61e7da" class="outline-3">
-<h3 id="orga61e7da"><span class="section-number-3">5.2</span> Version check</h3>
+<div id="outline-container-orgabdcd1a" class="outline-3">
+<h3 id="orgabdcd1a"><span class="section-number-3">5.2</span> Version check</h3>
 <div class="outline-text-3" id="text-5-2">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">defun</span> <span style="color: #84ffff;">my/check-org</span> ()
@@ -570,8 +570,8 @@ git gc  <span style="color: #b0bec5;"># </span><span style="color: #b0bec5;">to 
 </div>
 </div>
 
-<div id="outline-container-org8793fc6" class="outline-3">
-<h3 id="org8793fc6"><span class="section-number-3">5.3</span> use-package org, config babel load lang, ob-ipython, org element</h3>
+<div id="outline-container-org739d3ec" class="outline-3">
+<h3 id="org739d3ec"><span class="section-number-3">5.3</span> use-package org, config babel load lang, ob-ipython, org element</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">setq</span> jupyter-console-exec (substitute-in-file-name
@@ -610,8 +610,14 @@ Hello, world!
 </div>
 
 <div class="org-src-container">
-<pre><code class="src src-ipython">plt.plot([1, 2, 3])  
+<pre><code class="src src-ipython">plt.plot([1, 2, 3, 19])  
 </code></pre>
+</div>
+
+
+<div class="figure">
+<p><img src="ipython-inline-images/ob-ipython-1dc9420b30573f4901319ae47c5105da.png" alt="ob-ipython-1dc9420b30573f4901319ae47c5105da.png" />
+</p>
 </div>
 
 <div class="org-src-container">
@@ -669,8 +675,8 @@ window, so I want org src to use the current window.
 </div>
 </div>
 
-<div id="outline-container-org915446f" class="outline-3">
-<h3 id="org915446f"><span class="section-number-3">5.4</span> org mode structure templates (<code>&lt;s</code> things)</h3>
+<div id="outline-container-org6169adf" class="outline-3">
+<h3 id="org6169adf"><span class="section-number-3">5.4</span> org mode structure templates (<code>&lt;s</code> things)</h3>
 <div class="outline-text-3" id="text-5-4">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">setq</span> org-structure-template-alist
@@ -694,8 +700,8 @@ window, so I want org src to use the current window.
 </div>
 </div>
 
-<div id="outline-container-org772dd3a" class="outline-3">
-<h3 id="org772dd3a"><span class="section-number-3">5.5</span> speed commands, src blocks</h3>
+<div id="outline-container-orgb7e895b" class="outline-3">
+<h3 id="orgb7e895b"><span class="section-number-3">5.5</span> speed commands, src blocks</h3>
 <div class="outline-text-3" id="text-5-5">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">(setq org-use-speed-commands t)  ;; Way cool!</span>
@@ -739,8 +745,8 @@ window, so I want org src to use the current window.
 </div>
 </div>
 
-<div id="outline-container-org5eeae2e" class="outline-3">
-<h3 id="org5eeae2e"><span class="section-number-3">5.6</span> skinning, looking good</h3>
+<div id="outline-container-orgb3b72fb" class="outline-3">
+<h3 id="orgb3b72fb"><span class="section-number-3">5.6</span> skinning, looking good</h3>
 <div class="outline-text-3" id="text-5-6">
 <p>
 <a href="http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html">http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html</a>
@@ -760,12 +766,12 @@ window, so I want org src to use the current window.
 </div>
 </div>
 </div>
-<div id="outline-container-org345a087" class="outline-2">
-<h2 id="org345a087"><span class="section-number-2">6</span> External packages</h2>
+<div id="outline-container-orgd801fe6" class="outline-2">
+<h2 id="orgd801fe6"><span class="section-number-2">6</span> External packages</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org222e080" class="outline-3">
-<h3 id="org222e080"><span class="section-number-3">6.1</span> Magit - nice git interface</h3>
+<div id="outline-container-org5a0e320" class="outline-3">
+<h3 id="org5a0e320"><span class="section-number-3">6.1</span> Magit - nice git interface</h3>
 <div class="outline-text-3" id="text-6-1">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(message <span style="color: #9ccc65;">"***** use-package magit *****"</span>)
@@ -779,8 +785,8 @@ window, so I want org src to use the current window.
 </div>
 </div>
 
-<div id="outline-container-orgcb19045" class="outline-3">
-<h3 id="orgcb19045"><span class="section-number-3">6.2</span> Mode line format</h3>
+<div id="outline-container-orgd72e1ef" class="outline-3">
+<h3 id="orgd72e1ef"><span class="section-number-3">6.2</span> Mode line format</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 Display a more compact mode line
@@ -794,8 +800,8 @@ Display a more compact mode line
 </div>
 </div>
 </div>
-<div id="outline-container-org632f1c9" class="outline-3">
-<h3 id="org632f1c9"><span class="section-number-3">6.3</span> parens and such</h3>
+<div id="outline-container-org24fe7dc" class="outline-3">
+<h3 id="org24fe7dc"><span class="section-number-3">6.3</span> parens and such</h3>
 <div class="outline-text-3" id="text-6-3">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(message <span style="color: #9ccc65;">"***** use-package smartparens *****"</span>)
@@ -810,8 +816,8 @@ Display a more compact mode line
 </div>
 </div>
 </div>
-<div id="outline-container-org0937aa9" class="outline-3">
-<h3 id="org0937aa9"><span class="section-number-3">6.4</span> srspeedbar (speedbar in same frame)</h3>
+<div id="outline-container-org6c65bc6" class="outline-3">
+<h3 id="org6c65bc6"><span class="section-number-3">6.4</span> srspeedbar (speedbar in same frame)</h3>
 <div class="outline-text-3" id="text-6-4">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(message <span style="color: #9ccc65;">"***** use-package sr-speedbar *****"</span>)
@@ -826,8 +832,8 @@ Display a more compact mode line
 </div>
 </div>
 </div>
-<div id="outline-container-org7102769" class="outline-3">
-<h3 id="org7102769"><span class="section-number-3">6.5</span> writeroom mode (for concentrating)</h3>
+<div id="outline-container-orgfb4322b" class="outline-3">
+<h3 id="orgfb4322b"><span class="section-number-3">6.5</span> writeroom mode (for concentrating)</h3>
 <div class="outline-text-3" id="text-6-5">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(message <span style="color: #9ccc65;">"***** use-package writeroom-mode *****"</span>)
@@ -838,8 +844,8 @@ Display a more compact mode line
 </div>
 </div>
 </div>
-<div id="outline-container-orgfc996b4" class="outline-3">
-<h3 id="orgfc996b4"><span class="section-number-3">6.6</span> yas snippets (from Sacha)</h3>
+<div id="outline-container-orgfcda83d" class="outline-3">
+<h3 id="orgfcda83d"><span class="section-number-3">6.6</span> yas snippets (from Sacha)</h3>
 <div class="outline-text-3" id="text-6-6">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">use-package</span> <span style="color: #8bc34a;">yasnippet</span>
@@ -937,8 +943,8 @@ From <a href="https://github.com/pcmantz/elisp/blob/master/my-bindings.el">https
 </div>
 </div>
 
-<div id="outline-container-orgf581247" class="outline-2">
-<h2 id="orgf581247"><span class="section-number-2">7</span> helm</h2>
+<div id="outline-container-orgcc3ce7c" class="outline-2">
+<h2 id="orgcc3ce7c"><span class="section-number-2">7</span> helm</h2>
 <div class="outline-text-2" id="text-7">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(message <span style="color: #9ccc65;">"***** use-package helm *****"</span>)
@@ -976,12 +982,12 @@ From <a href="https://github.com/pcmantz/elisp/blob/master/my-bindings.el">https
 </div>
 </div>
 
-<div id="outline-container-orgc71d81b" class="outline-2">
-<h2 id="orgc71d81b"><span class="section-number-2">8</span> Python</h2>
+<div id="outline-container-orgde609ea" class="outline-2">
+<h2 id="orgde609ea"><span class="section-number-2">8</span> Python</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org3feba14" class="outline-3">
-<h3 id="org3feba14"><span class="section-number-3">8.1</span> Make jupyter default shell</h3>
+<div id="outline-container-org5a6c5dd" class="outline-3">
+<h3 id="org5a6c5dd"><span class="section-number-3">8.1</span> Make jupyter default shell</h3>
 <div class="outline-text-3" id="text-8-1">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">setq</span> jupyter-console-exec (substitute-in-file-name
@@ -1005,21 +1011,21 @@ From <a href="https://github.com/pcmantz/elisp/blob/master/my-bindings.el">https
 <span style="color: #ffcc80;">a</span> = <span style="color: #9ccc65;">'flathh'</span>
 <span style="color: #fff59d;">import</span> time
 time.sleep(5)
-<span style="color: #fff59d;">print</span>(<span style="color: #9ccc65;">'hi there'</span>)
+<span style="color: #fff59d;">print</span>(<span style="color: #9ccc65;">'hi there, you'</span>)
 <span style="color: #b0bec5;">#</span><span style="color: #b0bec5;">plt.plot([1, 2,3 ])</span>
 </code></pre>
 </div>
 
 <p>
 babba
-hi there
+hi there, you
 </p>
 </div>
 </div>
 
 
-<div id="outline-container-org8037d11" class="outline-3">
-<h3 id="org8037d11"><span class="section-number-3">8.2</span> scimax, its version of ob-ipython</h3>
+<div id="outline-container-orge3bf7af" class="outline-3">
+<h3 id="orge3bf7af"><span class="section-number-3">8.2</span> scimax, its version of ob-ipython</h3>
 <div class="outline-text-3" id="text-8-2">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">  <span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">(setq my-jupyter-args " console --existing --simple-prompt")</span>
@@ -1075,8 +1081,8 @@ hi there
 </div>
 </div>
 
-<div id="outline-container-org38cc182" class="outline-3">
-<h3 id="org38cc182"><span class="section-number-3">8.3</span> elpy</h3>
+<div id="outline-container-org7f56526" class="outline-3">
+<h3 id="org7f56526"><span class="section-number-3">8.3</span> elpy</h3>
 <div class="outline-text-3" id="text-8-3">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">(setq elpy-rpc-backend "jedi")</span>
@@ -1092,12 +1098,12 @@ hi there
 </div>
 </div>
 
-<div id="outline-container-orgb77d135" class="outline-2">
-<h2 id="orgb77d135"><span class="section-number-2">9</span> Colors</h2>
+<div id="outline-container-orgdd34d3e" class="outline-2">
+<h2 id="orgdd34d3e"><span class="section-number-2">9</span> Colors</h2>
 <div class="outline-text-2" id="text-9">
 </div>
-<div id="outline-container-orga003863" class="outline-3">
-<h3 id="orga003863"><span class="section-number-3">9.1</span> material</h3>
+<div id="outline-container-orge8c009b" class="outline-3">
+<h3 id="orge8c009b"><span class="section-number-3">9.1</span> material</h3>
 <div class="outline-text-3" id="text-9-1">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">use-package</span> <span style="color: #8bc34a;">material-theme</span>
@@ -1111,8 +1117,8 @@ hi there
 </div>
 </div>
 
-<div id="outline-container-org38c3f09" class="outline-3">
-<h3 id="org38c3f09"><span class="section-number-3">9.2</span> Sacha solarized</h3>
+<div id="outline-container-orgf4bd49c" class="outline-3">
+<h3 id="orgf4bd49c"><span class="section-number-3">9.2</span> Sacha solarized</h3>
 <div class="outline-text-3" id="text-9-2">
 <p>
 Sacha says:
@@ -1183,8 +1189,8 @@ NOTE:  not tangled!
 </div>
 </div>
 </div>
-<div id="outline-container-org998d2df" class="outline-3">
-<h3 id="org998d2df"><span class="section-number-3">9.3</span> org block faces</h3>
+<div id="outline-container-orgfb320f4" class="outline-3">
+<h3 id="orgfb320f4"><span class="section-number-3">9.3</span> org block faces</h3>
 <div class="outline-text-3" id="text-9-3">
 <p>
 Testing these with kaolin theme&#x2026;need work.
@@ -1197,8 +1203,8 @@ Testing these with kaolin theme&#x2026;need work.
 </div>
 </div>
 </div>
-<div id="outline-container-org3faa183" class="outline-3">
-<h3 id="org3faa183"><span class="section-number-3">9.4</span> kaolin</h3>
+<div id="outline-container-org73a5ccc" class="outline-3">
+<h3 id="org73a5ccc"><span class="section-number-3">9.4</span> kaolin</h3>
 <div class="outline-text-3" id="text-9-4">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp">(<span style="color: #fff59d;">use-package</span> <span style="color: #8bc34a;">kaolin-theme</span> 
@@ -1210,12 +1216,12 @@ Testing these with kaolin theme&#x2026;need work.
 </div>
 </div>
 
-<div id="outline-container-org4c080f9" class="outline-2">
-<h2 id="org4c080f9"><span class="section-number-2">10</span> Utility functions</h2>
+<div id="outline-container-orgd588b07" class="outline-2">
+<h2 id="orgd588b07"><span class="section-number-2">10</span> Utility functions</h2>
 <div class="outline-text-2" id="text-10">
 </div>
-<div id="outline-container-org44a6802" class="outline-3">
-<h3 id="org44a6802"><span class="section-number-3">10.1</span> unfill paragraph</h3>
+<div id="outline-container-orgdcf0d7d" class="outline-3">
+<h3 id="orgdcf0d7d"><span class="section-number-3">10.1</span> unfill paragraph</h3>
 <div class="outline-text-3" id="text-10-1">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;;; </span><span style="color: #b0bec5;">Stefan Monnier &lt;foo at acm.org&gt;. It is the opposite of fill-paragraph</span>
@@ -1232,8 +1238,8 @@ Testing these with kaolin theme&#x2026;need work.
 </div>
 </div>
 
-<div id="outline-container-org33f1ebe" class="outline-2">
-<h2 id="org33f1ebe"><span class="section-number-2">11</span> Dashboard at startup</h2>
+<div id="outline-container-orgb0e1b95" class="outline-2">
+<h2 id="orgb0e1b95"><span class="section-number-2">11</span> Dashboard at startup</h2>
 <div class="outline-text-2" id="text-11">
 <p>
 <a href="https://github.com/rakanalh/emacs-dashboard">https://github.com/rakanalh/emacs-dashboard</a>
@@ -1247,8 +1253,8 @@ Testing these with kaolin theme&#x2026;need work.
 </div>
 </div>
 </div>
-<div id="outline-container-orgf3bbbde" class="outline-2">
-<h2 id="orgf3bbbde"><span class="section-number-2">12</span> Initial files to load</h2>
+<div id="outline-container-org94e5b05" class="outline-2">
+<h2 id="org94e5b05"><span class="section-number-2">12</span> Initial files to load</h2>
 <div class="outline-text-2" id="text-12">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">(mapcar (lambda (path) (find-file path))</span>
@@ -1262,8 +1268,8 @@ Testing these with kaolin theme&#x2026;need work.
 </div>
 </div>
 
-<div id="outline-container-org970ff08" class="outline-2">
-<h2 id="org970ff08"><span class="section-number-2">13</span> shell, term, etc.</h2>
+<div id="outline-container-org6b8b9cf" class="outline-2">
+<h2 id="org6b8b9cf"><span class="section-number-2">13</span> shell, term, etc.</h2>
 <div class="outline-text-2" id="text-13">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">I like zsh from non-emacs, but keep things simple within emacs.</span>
@@ -1276,16 +1282,16 @@ Testing these with kaolin theme&#x2026;need work.
 </p>
 </div>
 </div>
-<div id="outline-container-org3ee203a" class="outline-2">
-<h2 id="org3ee203a"><span class="section-number-2">14</span> My function key bindings</h2>
+<div id="outline-container-orgaa1cfef" class="outline-2">
+<h2 id="orgaa1cfef"><span class="section-number-2">14</span> My function key bindings</h2>
 <div class="outline-text-2" id="text-14">
 </div>
-<div id="outline-container-org97eff84" class="outline-3">
-<h3 id="org97eff84"><span class="section-number-3">14.1</span> Summary table</h3>
+<div id="outline-container-org9f3807e" class="outline-3">
+<h3 id="org9f3807e"><span class="section-number-3">14.1</span> Summary table</h3>
 <div class="outline-text-3" id="text-14-1">
 </div>
-<div id="outline-container-org64ce37e" class="outline-4">
-<h4 id="org64ce37e"><span class="section-number-4">14.1.1</span> old</h4>
+<div id="outline-container-org7976be6" class="outline-4">
+<h4 id="org7976be6"><span class="section-number-4">14.1.1</span> old</h4>
 <div class="outline-text-4" id="text-14-1-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1461,8 +1467,8 @@ Testing these with kaolin theme&#x2026;need work.
 </div>
 </div>
 
-<div id="outline-container-orga77d46b" class="outline-4">
-<h4 id="orga77d46b"><span class="section-number-4">14.1.2</span> current</h4>
+<div id="outline-container-org0ba5aa4" class="outline-4">
+<h4 id="org0ba5aa4"><span class="section-number-4">14.1.2</span> current</h4>
 <div class="outline-text-4" id="text-14-1-2">
 <p>
 Global
@@ -1735,8 +1741,8 @@ org, org-src
 </div>
 </div>
 
-<div id="outline-container-org1f8684c" class="outline-3">
-<h3 id="org1f8684c"><span class="section-number-3">14.2</span> code</h3>
+<div id="outline-container-org588a8d0" class="outline-3">
+<h3 id="org588a8d0"><span class="section-number-3">14.2</span> code</h3>
 <div class="outline-text-3" id="text-14-2">
 <div class="org-src-container">
 <pre><code class="src src-emacs-lisp"><span style="color: #b0bec5;">;; </span><span style="color: #b0bec5;">See examples at bottom of this file of ways to set keys.</span>
@@ -1843,7 +1849,7 @@ org, org-src
 (global-set-key [S-f10]
                 'end-of-buffer)
 
-(global-set-key [f10]
+(global-set-key [S-f11]
                 'helm-find-files)
 
 (global-set-key [f11]
@@ -1918,8 +1924,8 @@ org, org-src
               (<span style="color: #fff59d;">lambda</span> ()
                 (<span style="color: #fff59d;">interactive</span>)
                 (my/eval-line 'sh-execute-region)
-                (end-of-line)
-                (newline-and-indent)))
+                (next-line)
+                (end-of-line)))
 
             ))
 
@@ -1936,8 +1942,8 @@ org, org-src
               (<span style="color: #fff59d;">lambda</span> ()
                 (<span style="color: #fff59d;">interactive</span>)
                 (my/eval-line 'python-shell-send-region)
-                (end-of-line)
-                (newline-and-indent)))
+                (next-line)
+                (end-of-line)))
 
             ))
 
@@ -1990,8 +1996,8 @@ org, org-src
 </div>
 </div>
 
-<div id="outline-container-org2054508" class="outline-3">
-<h3 id="org2054508"><span class="section-number-3">14.3</span> help</h3>
+<div id="outline-container-org07369e6" class="outline-3">
+<h3 id="org07369e6"><span class="section-number-3">14.3</span> help</h3>
 <div class="outline-text-3" id="text-14-3">
 <p>
 consp((src-block (:language "ipython" :switches nil :parameters
@@ -2006,7 +2012,7 @@ consp((src-block (:language "ipython" :switches nil :parameters
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Ryan Woodard</p>
-<p class="date">Created: 2017-05-10 Wed 21:17</p>
+<p class="date">Created: 2017-05-12 Fri 20:32</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
