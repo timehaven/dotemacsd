@@ -97,7 +97,8 @@ general great stuff.  She is wonderful.
     ;; Macbook built-in display.
     (when (eq window-system 'ns)
       ;; On Mac, use Command-t to bring up font menu.
-      (set-face-attribute 'default nil :height 220)
+      (set-face-attribute 'default nil :height 180)
+      ;;(set-face-attribute 'default nil :height 220)
       ;;(set-face-attribute 'default nil :height 240)
       (add-to-list 'initial-frame-alist '(height . 33))
       (add-to-list 'initial-frame-alist '(width . 80))
@@ -465,11 +466,12 @@ Hello, world!
 :END:
 
 #+BEGIN_SRC ipython :session :results output drawer
-plt.plot([1, 2, 3])  
+plt.plot([1, 2, 3, 19])  
 #+END_SRC
 
 #+RESULTS:
 :RESULTS:
+[[file:ipython-inline-images/ob-ipython-1dc9420b30573f4901319ae47c5105da.png]]
 :END:
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -602,6 +604,126 @@ http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html
     (progn
       (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
 #+END_SRC
+** capture
+
+One day:
+https://blog.aaronbieber.com/2016/11/24/org-capture-from-anywhere-on-your-mac.html
+
+See my [[//Users/rwoodard/.emacs.d_mac_20170426/rw/rw_org.el][older stuff]].
+
+Wow.  [[http://doc.norang.ca/org-mode.html][Great .org setup]]
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (require 'org)  ;; In init.el.
+  (setq org-directory "~/org")
+
+  (setq org-default-notes-file (concat org-directory "/capture.org"))
+
+  ;; Recommendations, I like.
+  (add-hook 'org-mode-hook 'turn-on-font-lock)
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  ;;(global-set-key "\C-cb" 'org-iswitchb)
+
+
+  ;; Start file like following if not .org extension.
+  ;;     MY PROJECTS    -*- mode: org; -*-
+
+
+  ;; fontify code in code blocks
+  (setq org-src-fontify-natively t)
+
+
+  ;; timestamp when DONE
+  ;; http://superuser.com/questions/678766/how-to-automatically-timestamp-org-mode-todo-status-other-than-done
+  (setq org-log-done t)
+
+
+  ;; Clean view:  hide multi-stars.
+  (setq org-startup-indented t)
+
+
+  ;; (ido-mode)
+  ;; (setq org-completion-use-ido t)
+
+
+  ;; Try not to fuck up unknowingly.
+  (setq org-catch-invisible-edits 'error)
+
+
+  ;; Sparse trees rock.
+  ;; C-c /
+
+
+  ;;
+  ;; capture & refile
+  ;;
+  (setq org-refile-use-outline-path 'file)
+
+
+  (defun paths-that-exist (paths)
+    (delq nil
+	  (mapcar (lambda (path) (and (file-exists-p path) path)) paths)))
+
+  (defun prepend-org-dir (paths)
+    (mapcar (lambda (path) (concat org-directory "/" path)) paths)
+    )
+
+  (setq my-org-refile-targets
+	(paths-that-exist
+	 (prepend-org-dir
+	  '(
+	    "projects.org"
+	    "gtd.org"
+	    "blah.org"
+	    ))))
+  (setq org-refile-targets '((my-org-refile-targets . (:maxlevel . 6))))
+
+
+
+  (setq org-capture-templates
+	'(
+
+	  ("t" "Todo" entry
+	   (file+headline "~/org/todo.org" "Tasks")
+	   "* TODO %?\n  %i\n  %a")
+
+	  ("j" "Journal" entry 
+	   (file+datetree "~/org/journal.org")
+	   "* %?\nEntered on %U\n  %i\n  %a")
+
+	  ("l" "A link, for reading later." entry
+	   (file+headline "links.org" "URL reading List")
+	   "* %:description\n%u\n\n%c\n\n%i"
+	   :empty-lines 1)
+
+	  ("b" "bullshittery" entry (file "~/org/bullshittery.org")
+	   "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+	
+	))
+
+  ;; From
+  ;; http://doc.norang.ca/org-mode.html#CaptureTemplates
+  ;; (setq org-capture-templates
+  ;;       (quote (("t" "todo" entry (file "~/git/org/refile.org")
+  ;;                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+  ;;               ("r" "respond" entry (file "~/git/org/refile.org")
+  ;;                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+  ;;               ("n" "note" entry (file "~/git/org/refile.org")
+  ;;                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+  ;;               ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
+  ;;                "* %?\n%U\n" :clock-in t :clock-resume t)
+  ;;               ("w" "org-protocol" entry (file "~/git/org/refile.org")
+  ;;                "* TODO Review %c\n%U\n" :immediate-finish t)
+  ;;               ("m" "Meeting" entry (file "~/git/org/refile.org")
+  ;;                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+  ;;               ("p" "Phone call" entry (file "~/git/org/refile.org")
+  ;;                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+  ;;               ("h" "Habit" entry (file "~/git/org/refile.org")
+  ;;                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+#+END_SRC
+
 * External packages
 ** Magit - nice git interface
 
@@ -803,14 +925,14 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
   a = 'flathh'
   import time
   time.sleep(5)
-  print('hi there')
+  print('hi there, you')
   #plt.plot([1, 2,3 ])
 #+END_SRC
 
 #+RESULTS:
 :RESULTS:
 babba
-hi there
+hi there, you
 :END:
 
 
@@ -1064,6 +1186,149 @@ org, org-src
 |     | (org, org src, py) python send line       |                     | org src: org-edit-src-exit |      |
 |     | (org, org src, sh) org src, sh: send line |                     |                            |      |
 |-----+-------------------------------------------+---------------------+----------------------------+------|
+** defun functions
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun move-to-end-of-src-block-and-results-plus-line ()
+  "Do what the name says."
+
+  ;; Define type of, start and end of block.
+  ;; Declare that location will be used.
+  (let* ((src (org-element-context))
+	 (start (org-element-property :begin src))
+	 (end (org-element-property :end src))
+	 location)
+
+    (goto-char start)
+
+    ;; Set location to be beginning of results: section, if there is
+    ;; one, otherwise nil.
+    (setq location (org-babel-where-is-src-block-result nil nil))
+
+    (if (not location)
+
+	;; If there is *not* a results: section, go to end of current
+	;; src block.
+	(goto-char end)
+
+      ;; If there is a results: section, go to the beginning of it.	
+      (goto-char location)
+
+      ;; Now go to end of that results: section.
+      (goto-char (org-element-property :end (org-element-context))))
+
+    ;; Two blank lines after end.
+    ;;(insert "blah\n\nblah")
+
+    ) ;; let
+  )
+
+
+(defun insert-block-same-as-current (el)
+  "docstring"
+  (let* ((language (org-element-property :language el))
+	 (parameters (org-element-property :parameters el)))
+    (beginning-of-line)
+    (insert (format "#+BEGIN_SRC %s %s
+
+#+END_SRC\n\n" language parameters)))
+  (previous-line)
+  (previous-line)
+  (previous-line)
+  )
+
+
+(defun move-and-insert-new-block (below)
+  "Do two things with one call."
+  ;; Find out if we need to go up or down.
+
+  (let* ((el (org-element-context)))
+
+    (if below
+
+	(move-to-end-of-src-block-and-results-plus-line)
+
+      (org-babel-goto-src-block-head)
+
+      ) ;; if below
+
+    (insert-block-same-as-current el)
+    )
+  )
+
+
+(defun insert-new-block-same-as-current (&optional below)
+  "Insert a src block above the current point.
+	  With prefix arg BELOW, insert it below the current point."
+
+  (interactive "P")
+
+  (cond
+
+   ((org-in-src-block-p)
+
+    ;; If we are in a src block, do this stuff.
+    (move-and-insert-new-block below))
+
+   ) ;; cond
+
+  ) ;; defun
+
+(defun insert-new-block-same-as-current-below ()
+  (interactive)
+  (insert-new-block-same-as-current t))
+
+
+(defun select-current-line ()
+  "Select the current line"
+  (interactive)
+  (end-of-line) ; move to end of line
+  (set-mark (line-beginning-position)))
+
+
+(defun python-shell-send-line ()
+  "docstring"
+  (interactive)
+  ;;(select-current-line)
+  (let ((start (line-beginning-position))
+  	(end (line-end-position)))
+    (python-shell-send-region start end))  ;; part of python mode
+  )
+
+;;
+;; from
+;; https://emacs.stackexchange.com/questions/24190/send-orgmode-sh-babel-block-to-eshell-term-in-emacs
+;; needs
+;; https://github.com/metaperl/shell-current-directory/blob/master/shell-current-directory.el
+;;
+
+;; (use-package shell-current-directory
+;;   :bind ("M-S" . shell-current-directory)
+;;   :config (load-file (expand-file-name "shell.el"
+;; 				       user-emacs-directory)))
+
+
+;; (defun kdm/sh-send-line-or-region () 
+;;   (interactive)
+;;   (if (use-region-p) 
+;;       (append-to-buffer (get-buffer (directory-shell-buffer-name)) (mark)(point))
+;;     (let (p1 p2)
+;;       (setq p1 (line-beginning-position))
+;;       (setq p2 (line-end-position))
+;;       (append-to-buffer (get-buffer (directory-shell-buffer-name)) p1 p2)
+;;       ))
+;;   (let (b)
+;;     (setq b (get-buffer (current-buffer)))
+;;     (switch-to-buffer-other-window (get-buffer (directory-shell-buffer-name)))
+;;     (execute-kbd-macro "\C-m")
+;;     (switch-to-buffer-other-window b)
+;;     )
+;;   )
+
+;; (global-set-key "\M-s" 'kdm/sh-send-line-or-region)
+#+END_SRC
+
+#+RESULTS:
+: python-shell-send-line
 
 ** code
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1196,6 +1461,9 @@ org, org-src
 
 	      (define-key org-mode-map [M-f9]
 		'insert-new-block-same-as-current)
+
+	      (define-key org-mode-map [C-f9]
+		'outline-show-all)
 
 	      (define-key org-mode-map [M-f10]
 		'insert-new-block-same-as-current-below)
