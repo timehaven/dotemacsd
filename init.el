@@ -22,7 +22,7 @@
 (tool-bar-mode -1)
 
 
-(setq this-dir (file-name-directory (or (buffer-file-name) load-file-name)))
+(setq my/emacs-dotd-dir (file-name-directory (or (buffer-file-name) load-file-name)))
 
 
 ;;;;;
@@ -35,7 +35,7 @@
 (let*
 
     ;; local vars
-    ((org-src-dir (concat this-dir "elisp/org-mode/"))
+    ((org-src-dir (concat my/emacs-dotd-dir "elisp/org-mode/"))
      (org-doc-dir (concat org-src-dir "doc")))
 
   ;; code that uses the local vars
@@ -69,25 +69,23 @@
 
 
 ;; Load the rest of it.
-;;(org-babel-load-file (concat this-dir "emacs_test.org"))
-(org-babel-load-file (concat this-dir "emacs.org"))
+;;(org-babel-load-file (concat my/emacs-dotd-dir "emacs_test.org"))
+(org-babel-load-file (concat my/emacs-dotd-dir "emacs.org"))
 ;;(org-babel-load-file "/Users/rwoodard/.emacs.d/emacs.org")
 
-;; Works to org-babel-load-file all *.org files in this-dir.
-;;(mapc #'org-babel-load-file (directory-files this-dir t "\\.org$"))
+;; Works to org-babel-load-file all *.org files in my/emacs-dotd-dir.
+;;(mapc #'org-babel-load-file (directory-files my/emacs-dotd-dir t "\\.org$"))
 
 
 ;; Initial files to load
 (mapcar (lambda (path) (find-file path))
 	(list 
 	 "~/.emacs.d/zunused/ryan.org"
-	 "~/.emacs.d/rw/rw_keys.el"
+	 "~/.emacs.d/my-lisp/rw_keys.el"
 	 "~/.emacs.d/emacs.org"
 	 "~/.emacs.d/init.el"
 	 "~/org/daily.org"
 	 "~/org/index.org"
 	 ))
 
-;; Getting used to terms and shells.  This guy helped.
-(load (concat this-dir "terms_and_shells.el"))
 ;;; init.el ends here
