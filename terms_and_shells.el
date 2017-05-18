@@ -148,5 +148,5 @@ the line, to capture multiline input. (This only has effect if
 ;;   (if (>= emacs-major-version 23)
 ;;       (set-fringe-bitmap-face 'right-triangle 'blue-fringe-arrow)))
 
-(when (or window-system (server-running-p))
-  (start-my-shells))
+;; (when (or window-system (server-running-p))
+;;   (start-my-shells))

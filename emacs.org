@@ -2,6 +2,16 @@
 #+OPTIONS: toc:4 h:4
 #+STARTUP: lognoterefile
 
+To ensure =bash= is used within emacs (not zsh, which I use in shells):
+
+- In iterm, do *not* =source activate py36= because I do not want the
+  prompt PS1 to change.
+- In iterm, =/bin/bash -l=
+- Now =source activate py36=
+- Start emacs via =/Applications/Emacs\ 2.app/Contents/MacOS/Emacs --debug-init=
+
+Enjoy.
+
 * Remember 
 - indirect buffers!
 - http://angg.twu.net/emacs.html#eev
@@ -1118,12 +1128,15 @@ https://github.com/rakanalh/emacs-dashboard
 #+END_SRC
 
 * shell, term, etc.
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; I like zsh from non-emacs, but keep things simple within emacs.
 (setq explicit-shell-file-name "/bin/bash")
-#+END_SRC
+
 (add-to-list 'load-path "~/.emacs.d")
 (load-library "terms_and_shells")
+#+END_SRC
+
 * My function key bindings
 ** Summary table
 *** old
@@ -1337,220 +1350,259 @@ org, org-src
   ;; Global.
 
   (global-set-key [end]
-		  'move-end-of-line)
+                  'move-end-of-line)
   (global-set-key [home]
-		  'move-beginning-of-line)
+                  'move-beginning-of-line)
   (global-set-key (kbd "s-s")
-		  'isearch-forward)  ;; Mac command key
+                  'isearch-forward)  ;; Mac command key
   (global-set-key (kbd "s-r")
-		  'isearch-backward)  ;; Mac command key
+                  'isearch-backward)  ;; Mac command key
 
   (add-hook 'isearch-mode-hook
-	    (lambda ()
+            (lambda ()
 
-	      (define-key isearch-mode-map (kbd "s-s")
-		  'isearch-repeat-forward)
-	      (define-key isearch-mode-map (kbd "s-r")
-		  'isearch-repeat-backward)
-		  ))
+              (define-key isearch-mode-map (kbd "s-s")
+                  'isearch-repeat-forward)
+              (define-key isearch-mode-map (kbd "s-r")
+                  'isearch-repeat-backward)
+                  ))
 
   ;; Make only one window.
   (global-set-key [f1]
-		  'delete-other-windows)
+                  'delete-other-windows)
 
   ;; Make this window go away.
   (global-set-key [S-f1]
-		  'delete-window)
+                  'delete-window)
 
   ;; Go to table of key bindings.
   (global-set-key [M-f1] 
-		  (lambda ()
-		    (interactive)
-		    (bookmark-jump "keys")
-		    (recenter-top-bottom 1)))
+                  (lambda ()
+                    (interactive)
+                    (bookmark-jump "keys")
+                    (recenter-top-bottom 1)))
 
   ;; Split window in half (top and bottom).
   (global-set-key [f2]
-		  (lambda ()
-		    (interactive)
-		    (split-window-vertically)
-		    (other-window 1)))
+                  (lambda ()
+                    (interactive)
+                    (split-window-vertically)
+                    (other-window 1)))
 
   ;; Split window in half (left and right).
   (global-set-key [S-f2]
-		  (lambda ()
-		    (interactive)
-		    (split-window-horizontally)
-		    (other-window 1)))
+                  (lambda ()
+                    (interactive)
+                    (split-window-horizontally)
+                    (other-window 1)))
 
   ;; Bury buffer.
   (global-set-key [f3]
-		  'bury-buffer)
+                  'bury-buffer)
 
   ;; Kill buffer (require two key presses since it's a kill).
   (global-set-key [S-f3]
-		  'kill-buffer)
+                  'kill-buffer)
 
   ;; Switch to most recent buffer.
   (global-set-key [f5]
-		  (lambda ()
-		    (interactive)
-		    (switch-to-buffer nil)))
+                  (lambda ()
+                    (interactive)
+                    (switch-to-buffer nil)))
 
   ;; JFGI
   (global-set-key [S-f5]
-		  'browse-url)
+                  'browse-url)
 
   ;; Go to next window.
   (global-set-key [f6] 
-		  (lambda ()
-		    (interactive)
-		    (other-window 1)))
+                  (lambda ()
+                    (interactive)
+                    (other-window 1)))
 
   ;; Go to previous window.
   (global-set-key [S-f6] 
-		  (lambda ()
-		    (interactive)
-		    (other-window -1)))
+                  (lambda ()
+                    (interactive)
+                    (other-window -1)))
 
   ;; helm version of buffers.
   (global-set-key [f8]
-		  'helm-mini)
+                  'helm-mini)
 
   ;; speedbar
   (global-set-key [S-f8]
-		  'sr-speedbar-toggle)
+                  'sr-speedbar-toggle)
 
   ;; menu that a mouse would find.
   (global-set-key [M-f8]
-		  'tmm-menubar)
+                  'tmm-menubar)
 
   ;; Info!
   (global-set-key [C-f8]
-		  'info)
+                  'info)
 
   ;; Top and bottom of buffer.
   (global-set-key [S-f9]
-		  'beginning-of-buffer)
+                  'beginning-of-buffer)
 
   (global-set-key [S-f10]
-		  'end-of-buffer)
+                  'end-of-buffer)
 
   (global-set-key [S-f11]
-		  'helm-find-files)
+                  'helm-find-files)
 
   (global-set-key [f11]
-		  'save-buffer)
+                  'save-buffer)
 
   (global-set-key [C-f12]
-		  'eval-last-sexp)
+                  'eval-last-sexp)
 
 
 
   (add-hook 'org-mode-hook
-	    (lambda ()
+            (lambda ()
 
-	      (define-key org-mode-map [f4]
-		'org-ctrl-c-ctrl-c)
+              (define-key org-mode-map [f4]
+                'org-ctrl-c-ctrl-c)
 
-	      (define-key org-mode-map [f9]
-		'org-previous-block)
+              (define-key org-mode-map [f9]
+                'org-previous-block)
 
-	      (define-key org-mode-map [f10]
-		'org-next-block)
+              (define-key org-mode-map [f10]
+                'org-next-block)
 
-	      (define-key org-mode-map [M-f9]
-		'insert-new-block-same-as-current)
+              (define-key org-mode-map [M-f9]
+                'insert-new-block-same-as-current)
 
-	      (define-key org-mode-map [C-f9]
-		'outline-show-all)
+              (define-key org-mode-map [C-f9]
+                'outline-show-all)
 
-	      (define-key org-mode-map [M-f10]
-		'insert-new-block-same-as-current-below)
-	    
-	      (define-key org-mode-map [S-f4]
-		  (lambda ()
-		    (interactive)
-		    (org-ctrl-c-ctrl-c)
-		    (org-next-block)))
-	    
-	      (define-key org-mode-map [M-f4]
-		  (lambda ()
-		    (interactive)
-		    (org-ctrl-c-ctrl-c)
-		    (insert-new-block-same-as-current-below)))
+              (define-key org-mode-map [M-f10]
+                'insert-new-block-same-as-current-below)
 
-	      (define-key org-mode-map [M-f12]
-		'org-edit-special)
-	    
-	      ))
+              (define-key org-mode-map [S-f4]
+                  (lambda ()
+                    (interactive)
+                    (org-ctrl-c-ctrl-c)
+                    (org-next-block)))
+
+              (define-key org-mode-map [M-f4]
+                  (lambda ()
+                    (interactive)
+                    (org-ctrl-c-ctrl-c)
+                    (insert-new-block-same-as-current-below)))
+
+              (define-key org-mode-map [M-f12]
+                'org-edit-special)
+
+              ))
 
 
   (add-hook 'org-src-mode-hook
-	    (lambda ()
+            (lambda ()
 
-	      ;; C-c C-c, standard Python mode, no elpy
-	      (define-key org-src-mode-map [f4]
-		'python-shell-send-buffer)
+              ;; C-c C-c, standard Python mode, no elpy
+              (define-key org-src-mode-map [f4]
+                'python-shell-send-buffer)
 
-	      (define-key org-src-mode-map [M-f12]
-		'org-edit-src-exit)
-	    
-	      ))
+              (define-key org-src-mode-map [M-f12]
+                'org-edit-src-exit)
+
+              ))
 
 
   (defun my/eval-line (mode-specific-eval)
     "Send entire current line to sh, elisp, python or whatever."
     (let ((start (line-beginning-position))
-	  (end (line-end-position)))
+          (end (line-end-position)))
       (funcall mode-specific-eval start end)))
 
 
   (add-hook 'sh-mode-hook
-	    (lambda()
+            (lambda()
 
-	      (define-key sh-mode-map [f12]
-		(lambda ()
-		  (interactive)
-		  (my/eval-line 'sh-execute-region)))
-	    
-	      (define-key sh-mode-map [S-f12]
-		(lambda ()
-		  (interactive)
-		  (my/eval-line 'sh-execute-region)
-		  (next-line)
-		  (end-of-line)))
+              (define-key sh-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (let (b)
+                    (setq b (get-buffer (current-buffer)))
+                    (sh-send-line-or-region-and-step)
+                    (goto-char (point-max))
+                    (switch-to-buffer-other-window b)
+                  )))
 
-	      ))
+
+              (define-key sh-mode-map [S-f12]
+                (lambda ()
+                  (interactive)
+                  (let (b)
+                    (setq b (get-buffer (current-buffer)))
+                    (sh-send-line-or-region-and-step)
+                    (goto-char (point-max))
+                    (switch-to-buffer-other-window b)
+                    (next-line)
+                    (end-of-line))))
+
+              ))
+
+
+  ;; Piggybacking on sh-mode to send to spark-shell.
+  (add-hook 'scala-mode-hook
+            (lambda()
+
+              (define-key scala-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (let (b)
+                    (setq b (get-buffer (current-buffer)))
+                    (sh-send-line-or-region-and-step)
+                    (goto-char (point-max))
+                    (switch-to-buffer-other-window b)
+                  )))
+
+
+              (define-key scala-mode-map [S-f12]
+                (lambda ()
+                  (interactive)
+                  (let (b)
+                    (setq b (get-buffer (current-buffer)))
+                    (sh-send-line-or-region-and-step)
+                    (goto-char (point-max))
+                    (switch-to-buffer-other-window b)
+                    (next-line)
+                    (end-of-line))))
+
+              ))
 
 
   (add-hook 'python-mode-hook
-	    (lambda()
+            (lambda()
 
-	      (define-key python-mode-map [f12]
-		(lambda ()
-		  (interactive)
-		  (my/eval-line 'python-shell-send-region)))
-	    
-	      (define-key python-mode-map [S-f12]
-		(lambda ()
-		  (interactive)
-		  (my/eval-line 'python-shell-send-region)
-		  (next-line)
-		  (end-of-line)))
+              (define-key python-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (my/eval-line 'python-shell-send-region)))
 
-	      ))
+              (define-key python-mode-map [S-f12]
+                (lambda ()
+                  (interactive)
+                  (my/eval-line 'python-shell-send-region)
+                  (next-line)
+                  (end-of-line)))
+
+              ))
 
 
   (add-hook 'emacs-lisp-mode-hook
-	    (lambda()
-	    
-	      (define-key emacs-lisp-mode-map [f12]
-		(lambda ()
-		  (interactive)
-		  (my/eval-line 'eval-region)))
-	    
-	      ))
+            (lambda()
+
+              (define-key emacs-lisp-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (my/eval-line 'eval-region)))
+
+              ))
 
 
 
