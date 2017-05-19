@@ -735,6 +735,14 @@ Wow.  [[http://doc.norang.ca/org-mode.html][Great .org setup]]
   ;;                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 #+END_SRC
 
+** todo stats
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq org-todo-keywords
+        '((sequence "TODO" "STARTED(!)" "DONE(!)")))
+       ;; (setq org-todo-keywords
+       ;;   '((sequence "TODO" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED")))
+
+#+END_SRC
 * External packages
 ** Magit - nice git interface
 
