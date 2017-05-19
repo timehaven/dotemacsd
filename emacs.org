@@ -1032,49 +1032,69 @@ print('hi')
     (progn
       ;; (load-theme 'material-light t)
       (defvar after-load-theme-hook nil
-	"Hook run after a color theme is loaded using `load-theme'.")
+        "Hook run after a color theme is loaded using `load-theme'.")
       (defadvice load-theme (after run-after-load-theme-hook activate)
-	"Run `after-load-theme-hook'."
-	(run-hooks 'after-load-theme-hook))
+        "Run `after-load-theme-hook'."
+        (run-hooks 'after-load-theme-hook))
       (defun customize-material ()
-	"Customize material theme"
-	(let ((class '((class color) (min-colors 89)))
-	      (header-color (if (or window-system truecolor) "#455A64" "#5f5f5f")))
-	  (if ((message "message" format-args)ember 'material custom-enabled-themes)
-	      (custom-theme-set-faces
-	       'material
+        "Customize material theme"
+        (let ((class '((class color) (min-colors 89)))
+              (header-color (if (or window-system truecolor) "#455A64" "#5f5f5f")))
+          (if (member 'material custom-enabled-themes)
+               (custom-theme-set-faces
+                'material
 
-	       ;; ~/.emacs.d/elpa/material-theme-20160908.1538/material-theme.el
-	       '(org-block ((t (:foreground "#F8F8F0" :background "#171717"))))
-	       `(org-level-1 ((,class (:inherit outline-1))))
-	       `(org-level-2 ((,class (:inherit outline-2))))
-	       `(org-level-3 ((,class (:inherit outline-3))))
-	       `(org-level-4 ((,class (:inherit outline-4))))
-	     
-	       ))))
-      (add-hook 'after-load-theme-hook 'customize-material)
-      (load-theme 'material t)))
+                ;; ~/.emacs.d/elpa/material-theme-20160908.1538/material-theme.el
+                '(org-block ((t (:foreground "#F8F8F0" :background "#171717"))))
+                `(org-level-1 ((,class (:inherit outline-1))))
+                `(org-level-2 ((,class (:inherit outline-2))))
+                `(org-level-3 ((,class (:inherit outline-3))))
+                `(org-level-4 ((,class (:inherit outline-4))))
 
-  ;; (with-eval-after-load "ample-theme"
-  ;;   (custom-theme-set-faces
-  ;;    'ample
-  ;;    '(default ((t (:foreground "#bdbdb3" :background "gray15"))))
-  ;;    '(font-lock-keyword-face ((t (:foreground "#818053"))))))
+                ))))
+        (add-hook 'after-load-theme-hook 'customize-material)
+        (load-theme 'material t)))
 
-  ;; Things I might want to change:
-     ;; `(org-block ((,class (:foreground ,green :background ,far-background))))
-     ;; `(org-block-background ((,t (:background ,far-background))))
-     ;; `(org-level-1 ((,class (:inherit outline-1
-     ;;                       :background ,header-color
-     ;;                       :weight bold
-     ;;                       :box (:style released-button)
-     ;;                       :height 1.3))))
-     ;; `(org-level-2 ((,class (:inherit outline-2
-     ;;                                :background ,"#35575b"
-     ;;                                :box (:style released-button)
-     ;;                       :height 1.2))))
-     ;; `(org-level-3 ((,class (:inherit outline-3 :height 1.1))))
-     ;; `(org-level-4 ((,class (:inherit outline-4 :height 1.0))))
+
+  ;; (use-package monokai-theme
+  ;;   :ensure t
+  ;;   :config
+  ;;   (progn
+  ;;     (defvar after-load-theme-hook nil
+  ;;       "Hook run after a color theme is loaded using `load-theme'.")
+  ;;     (defadvice load-theme (after run-after-load-theme-hook activate)
+  ;;       "Run `after-load-theme-hook'."
+  ;;       (run-hooks 'after-load-theme-hook))
+  ;;     (defun customize-monokai ()
+  ;;       "Customize monokai theme"
+  ;;       (if (member 'monokai custom-enabled-themes)
+  ;;           (custom-theme-set-faces
+  ;;            'monokai
+  ;;            '(org-block ((t (:foreground "#F8F8F0" :background "#171717")))))))
+  ;;     (add-hook 'after-load-theme-hook 'customize-monokai)))
+
+
+
+    ;; (with-eval-after-load "ample-theme"
+    ;;   (custom-theme-set-faces
+    ;;    'ample
+    ;;    '(default ((t (:foreground "#bdbdb3" :background "gray15"))))
+    ;;    '(font-lock-keyword-face ((t (:foreground "#818053"))))))
+
+    ;; Things I might want to change:
+       ;; `(org-block ((,class (:foreground ,green :background ,far-background))))
+       ;; `(org-block-background ((,t (:background ,far-background))))
+       ;; `(org-level-1 ((,class (:inherit outline-1
+       ;;                       :background ,header-color
+       ;;                       :weight bold
+       ;;                       :box (:style released-button)
+       ;;                       :height 1.3))))
+       ;; `(org-level-2 ((,class (:inherit outline-2
+       ;;                                :background ,"#35575b"
+       ;;                                :box (:style released-button)
+       ;;                       :height 1.2))))
+       ;; `(org-level-3 ((,class (:inherit outline-3 :height 1.1))))
+       ;; `(org-level-4 ((,class (:inherit outline-4 :height 1.0))))
 #+END_SRC
 
 #+RESULTS:
