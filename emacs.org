@@ -1116,6 +1116,7 @@ https://github.com/rakanalh/emacs-dashboard
     :config
     (dashboard-setup-startup-hook))
 #+END_SRC
+
 * Initial files to load
 #+BEGIN_SRC emacs-lisp :tangle yes
   ;; (mapcar (lambda (path) (find-file path))
@@ -1200,204 +1201,250 @@ org, org-src
 |-----+-------------------------------------------+---------------------+----------------------------+------|
 ** defun functions
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (defun my/sh-send-line-or-region (&optional step)
+    (defun my/sh-send-line-or-region (&optional step)
 
-    (interactive ())
+      (interactive ())
 
-    (let
+      (let
 
-        ((proc my/target-proc)
-         pbuf min max command)
+          ((proc my/target-proc)
+           pbuf min max command)
 
-      (setq pbuff (process-buffer proc))
+        (setq pbuff (process-buffer proc))
 
+        (if (use-region-p)
+            (setq min (region-beginning)
+                  max (region-end))
+          (setq min (point-at-bol)
+                max (point-at-eol)))
+
+        (setq command (concat (buffer-substring min max) "\n"))
+
+        (with-current-buffer pbuff
+          (goto-char (process-mark proc))
+          (insert command)
+          (move-marker (process-mark proc) (point))
+          ;(move-marker (process-mark proc) (end-of-buffer))
+          )  ;;pop-to-buffer does not work with save-current-buffer -- bug?
+
+        (process-send-string proc command)
+        ;;(comint-send-string proc command)
+
+        ;;(display-buffer (process-buffer proc) t)
+
+        (when step
+          (goto-char max)
+          (next-line))
+        )
+      )
+
+
+    (defun my/sh-send-line-or-region-2 (&optional step)
+
+      (interactive ())
+
+      (let
+
+          ((proc my/target-proc)
+           pbuf min max command)
+
+        (setq pbuff (process-buffer proc))
+
+        (if (use-region-p)
+            (setq min (region-beginning)
+                  max (region-end))
+          (setq min (point-at-bol)
+                max (point-at-eol)))
+
+        (setq command (concat (buffer-substring min max) "\n"))
+        (message command)
+
+        ;; (with-current-buffer pbuff
+        ;;   (goto-char (process-mark proc))
+        ;;   (insert command)
+        ;;   (move-marker (process-mark proc) (point))
+        ;;   ;(move-marker (process-mark proc) (end-of-buffer))
+        ;;   )  ;;pop-to-buffer does not work with save-current-buffer -- bug?
+
+        ;; Would be cool locally but cannot send across network, as the
+        ;; following function wants to create a temp file in
+        ;; /var/folders/blah..., which is trying to do so ~locally~ but
+        ;; is needed remotely!  So back to one line at a time.
+        (python-shell-send-string command proc)
+      
+        ;;(process-send-string proc "%cpaste\n")
+        ;;(process-send-string proc command)
+        ;;(comint-send-string proc command)
+
+        ;;(display-buffer (process-buffer proc) t)
+
+        (when step
+          (goto-char max)
+          (next-line))
+        )
+      )
+
+    (defun my/org-babel-src-block-lang ()
+      (interactive)
+      (let ((src (org-element-context)))
+             (org-element-property :language src)))
+
+
+
+    (defun my/org-babel-send-line-of-src-block ()
+      (interactive)
+      (let ((my/lang (my/org-babel-src-block-lang)))
+
+        (when (equal my/lang "sh")
+          (my/sh-send-line-or-region))
+
+        (when (equal my/lang "emacs-lisp")
+          (my/eval-line 'eval-region))
+
+        (when (equal my/lang "ipython")
+          (my/python-shell-send-line-or-region))
+
+        ))
+
+
+    (defun move-to-end-of-src-block-and-results-plus-line ()
+      "Do what the name says."
+
+      ;; Define type of, start and end of block.
+      ;; Declare that location will be used.
+      (let* ((src (org-element-context))
+             (start (org-element-property :begin src))
+             (end (org-element-property :end src))
+             location)
+
+        (goto-char start)
+
+        ;; Set location to be beginning of results: section, if there is
+        ;; one, otherwise nil.
+        (setq location (org-babel-where-is-src-block-result nil nil))
+
+        (if (not location)
+
+            ;; If there is *not* a results: section, go to end of current
+            ;; src block.
+            (goto-char end)
+
+          ;; If there is a results: section, go to the beginning of it.	
+          (goto-char location)
+
+          ;; Now go to end of that results: section.
+          (goto-char (org-element-property :end (org-element-context))))
+
+        ;; Two blank lines after end.
+        ;;(insert "blah\n\nblah")
+
+        ) ;; let
+      )
+
+
+    (defun insert-block-same-as-current (el)
+      "docstring"
+      (let* ((language (org-element-property :language el))
+             (parameters (org-element-property :parameters el)))
+        (beginning-of-line)
+        (insert (format "#+BEGIN_SRC %s %s
+
+    ,#+" "END_SRC\n\n" language parameters)))
+      (previous-line)
+      (previous-line)
+      (previous-line)
+      )
+
+
+    (defun move-and-insert-new-block (below)
+      "Do two things with one call."
+      ;; Find out if we need to go up or down.
+
+      (let* ((el (org-element-context)))
+
+        (if below
+
+            (move-to-end-of-src-block-and-results-plus-line)
+
+          (org-babel-goto-src-block-head)
+
+          ) ;; if below
+
+        (insert-block-same-as-current el)
+        )
+      )
+
+
+    (defun insert-new-block-same-as-current (&optional below)
+      "Insert a src block above the current point.
+              With prefix arg BELOW, insert it below the current point."
+
+      (interactive "P")
+
+      (cond
+
+       ((org-in-src-block-p)
+
+        ;; If we are in a src block, do this stuff.
+        (move-and-insert-new-block below))
+
+       ) ;; cond
+
+      ) ;; defun
+
+    (defun insert-new-block-same-as-current-below ()
+      (interactive)
+      (insert-new-block-same-as-current t))
+
+
+    (defun select-current-line ()
+      "Select the current line"
+      (interactive)
+      (end-of-line) ; move to end of line
+      (set-mark (line-beginning-position)))
+
+    (defun my/python-shell-send-line-or-region ()
+      "docstring"
+      (interactive)
       (if (use-region-p)
-          (setq min (region-beginning)
-                max (region-end))
-        (setq min (point-at-bol)
-              max (point-at-eol)))
-
-      (setq command (concat (buffer-substring min max) "\n"))
-
-      (with-current-buffer pbuff
-        (goto-char (process-mark proc))
-        (insert command)
-        (move-marker (process-mark proc) (point))
-        )  ;;pop-to-buffer does not work with save-current-buffer -- bug?
-
-      ;;(process-send-string proc command)
-      (comint-send-string proc command)
-
-      ;;(display-buffer (process-buffer proc) t)
-
-      (when step
-        (goto-char max)
-        (next-line))
-      )
-    )
+          (python-shell-send-region  ;; This function is built-in to python-mode.
+           (region-beginning) (region-end))
+        ;; else
+        (python-shell-send-region
+         (line-beginning-position) (line-end-position))))
 
 
-  (defun my/org-babel-src-block-lang ()
-    (interactive)
-    (let ((src (org-element-context)))
-           (org-element-property :language src)))
+    ;;
+    ;; from
+    ;; https://emacs.stackexchange.com/questions/24190/send-orgmode-sh-babel-block-to-eshell-term-in-emacs
+    ;; needs
+    ;; https://github.com/metaperl/shell-current-directory/blob/master/shell-current-directory.el
+    ;;
+
+    ;; (use-package shell-current-directory
+    ;;   :bind ("M-S" . shell-current-directory)
+    ;;   :config (load-file (expand-file-name "shell.el"
+    ;; 				       user-emacs-directory)))
 
 
+    ;; (defun kdm/sh-send-line-or-region () 
+    ;;   (interactive)
+    ;;   (if (use-region-p) 
+    ;;       (append-to-buffer (get-buffer (directory-shell-buffer-name)) (mark)(point))
+    ;;     (let (p1 p2)
+    ;;       (setq p1 (line-beginning-position))
+    ;;       (setq p2 (line-end-position))
+    ;;       (append-to-buffer (get-buffer (directory-shell-buffer-name)) p1 p2)
+    ;;       ))
+    ;;   (let (b)
+    ;;     (setq b (get-buffer (current-buffer)))
+    ;;     (switch-to-buffer-other-window (get-buffer (directory-shell-buffer-name)))
+    ;;     (execute-kbd-macro "\C-m")
+    ;;     (switch-to-buffer-other-window b)
+    ;;     )
+    ;;   )
 
-  (defun my/org-babel-send-line-of-src-block ()
-    (interactive)
-    (let ((my/lang (my/org-babel-src-block-lang)))
-
-      (when (equal my/lang "sh")
-        (my/sh-send-line-or-region))
-
-      (when (equal my/lang "emacs-lisp")
-        (my/eval-line 'eval-region))
-
-      (when (equal my/lang "ipython")
-        (python-shell-send-line))
-
-      ))
-
-
-  (defun move-to-end-of-src-block-and-results-plus-line ()
-    "Do what the name says."
-
-    ;; Define type of, start and end of block.
-    ;; Declare that location will be used.
-    (let* ((src (org-element-context))
-           (start (org-element-property :begin src))
-           (end (org-element-property :end src))
-           location)
-
-      (goto-char start)
-
-      ;; Set location to be beginning of results: section, if there is
-      ;; one, otherwise nil.
-      (setq location (org-babel-where-is-src-block-result nil nil))
-
-      (if (not location)
-
-          ;; If there is *not* a results: section, go to end of current
-          ;; src block.
-          (goto-char end)
-
-        ;; If there is a results: section, go to the beginning of it.	
-        (goto-char location)
-
-        ;; Now go to end of that results: section.
-        (goto-char (org-element-property :end (org-element-context))))
-
-      ;; Two blank lines after end.
-      ;;(insert "blah\n\nblah")
-
-      ) ;; let
-    )
-
-
-  (defun insert-block-same-as-current (el)
-    "docstring"
-    (let* ((language (org-element-property :language el))
-           (parameters (org-element-property :parameters el)))
-      (beginning-of-line)
-      (insert (format "#+BEGIN_SRC %s %s
-
-  ,#+" "END_SRC\n\n" language parameters)))
-    (previous-line)
-    (previous-line)
-    (previous-line)
-    )
-
-
-  (defun move-and-insert-new-block (below)
-    "Do two things with one call."
-    ;; Find out if we need to go up or down.
-
-    (let* ((el (org-element-context)))
-
-      (if below
-
-          (move-to-end-of-src-block-and-results-plus-line)
-
-        (org-babel-goto-src-block-head)
-
-        ) ;; if below
-
-      (insert-block-same-as-current el)
-      )
-    )
-
-
-  (defun insert-new-block-same-as-current (&optional below)
-    "Insert a src block above the current point.
-            With prefix arg BELOW, insert it below the current point."
-
-    (interactive "P")
-
-    (cond
-
-     ((org-in-src-block-p)
-
-      ;; If we are in a src block, do this stuff.
-      (move-and-insert-new-block below))
-
-     ) ;; cond
-
-    ) ;; defun
-
-  (defun insert-new-block-same-as-current-below ()
-    (interactive)
-    (insert-new-block-same-as-current t))
-
-
-  (defun select-current-line ()
-    "Select the current line"
-    (interactive)
-    (end-of-line) ; move to end of line
-    (set-mark (line-beginning-position)))
-
-
-  (defun python-shell-send-line ()
-    "docstring"
-    (interactive)
-    ;;(select-current-line)
-    (let ((start (line-beginning-position))
-          (end (line-end-position)))
-      (python-shell-send-region start end))  ;; part of python mode
-    )
-
-
-  ;;
-  ;; from
-  ;; https://emacs.stackexchange.com/questions/24190/send-orgmode-sh-babel-block-to-eshell-term-in-emacs
-  ;; needs
-  ;; https://github.com/metaperl/shell-current-directory/blob/master/shell-current-directory.el
-  ;;
-
-  ;; (use-package shell-current-directory
-  ;;   :bind ("M-S" . shell-current-directory)
-  ;;   :config (load-file (expand-file-name "shell.el"
-  ;; 				       user-emacs-directory)))
-
-
-  ;; (defun kdm/sh-send-line-or-region () 
-  ;;   (interactive)
-  ;;   (if (use-region-p) 
-  ;;       (append-to-buffer (get-buffer (directory-shell-buffer-name)) (mark)(point))
-  ;;     (let (p1 p2)
-  ;;       (setq p1 (line-beginning-position))
-  ;;       (setq p2 (line-end-position))
-  ;;       (append-to-buffer (get-buffer (directory-shell-buffer-name)) p1 p2)
-  ;;       ))
-  ;;   (let (b)
-  ;;     (setq b (get-buffer (current-buffer)))
-  ;;     (switch-to-buffer-other-window (get-buffer (directory-shell-buffer-name)))
-  ;;     (execute-kbd-macro "\C-m")
-  ;;     (switch-to-buffer-other-window b)
-  ;;     )
-  ;;   )
-
-  ;; (global-set-key "\M-s" 'kdm/sh-send-line-or-region)
+    ;; (global-set-key "\M-s" 'kdm/sh-send-line-or-region)
 #+END_SRC
 
 #+RESULTS:
@@ -1405,337 +1452,353 @@ org, org-src
 
 ** code
 #+BEGIN_SRC emacs-lisp :tangle yes
-      ;; See examples at bottom of this file of ways to set keys.
+  ;; See examples at bottom of this file of ways to set keys.
 
-      ;; Global.
+  ;; Global.
 
-      (global-set-key [end]
-                      'move-end-of-line)
-      (global-set-key [home]
-                      'move-beginning-of-line)
-      (global-set-key (kbd "s-s")
-                      'isearch-forward)  ;; Mac command key
-      (global-set-key (kbd "s-r")
-                      'isearch-backward)  ;; Mac command key
+  (global-set-key [end]
+                  'move-end-of-line)
+  (global-set-key [home]
+                  'move-beginning-of-line)
+  (global-set-key (kbd "s-s")
+                  'isearch-forward)  ;; Mac command key
+  (global-set-key (kbd "s-r")
+                  'isearch-backward)  ;; Mac command key
 
-      (add-hook 'isearch-mode-hook
+  (add-hook 'isearch-mode-hook
+            (lambda ()
+
+              (define-key isearch-mode-map (kbd "s-s")
+                  'isearch-repeat-forward)
+              (define-key isearch-mode-map (kbd "s-r")
+                  'isearch-repeat-backward)
+                  ))
+
+  ;; Make only one window.
+  (global-set-key [f1]
+                  'delete-other-windows)
+
+  ;; Make this window go away.
+  (global-set-key [S-f1]
+                  'delete-window)
+
+  ;; Go to table of key bindings.
+  (global-set-key [M-f1] 
+                  (lambda ()
+                    (interactive)
+                    (bookmark-jump "keys")
+                    (recenter-top-bottom 1)))
+
+  ;; Split window in half (top and bottom).
+  (global-set-key [f2]
+                  (lambda ()
+                    (interactive)
+                    (split-window-vertically)
+                    (other-window 1)))
+
+  ;; Split window in half (left and right).
+  (global-set-key [S-f2]
+                  (lambda ()
+                    (interactive)
+                    (split-window-horizontally)
+                    (other-window 1)))
+
+  ;; Bury buffer.
+  (global-set-key [f3]
+                  'bury-buffer)
+
+  ;; Kill buffer (require two key presses since it's a kill).
+  (global-set-key [S-f3]
+                  'kill-buffer)
+
+  ;; Set target buffer for sending commands to
+  (global-set-key [C-f4]
+                  (lambda ()
+                    (interactive)
+                    (setq my/target-proc (get-buffer-process (current-buffer)))
+                    (message (concat "New my/target-proc is " (buffer-name)))
+                    ))
+
+  ;; Switch to most recent buffer.
+  (global-set-key [f5]
+                  (lambda ()
+                    (interactive)
+                    (switch-to-buffer nil)))
+
+  ;; JFGI
+  (global-set-key [S-f5]
+                  'browse-url)
+
+  ;; Go to next window.
+  (global-set-key [f6] 
+                  (lambda ()
+                    (interactive)
+                    (other-window 1)))
+
+  ;; Go to previous window.
+  (global-set-key [S-f6] 
+                  (lambda ()
+                    (interactive)
+                    (other-window -1)))
+
+  ;; helm version of buffers.
+  (global-set-key [f8]
+                  'helm-mini)
+
+  ;; speedbar
+  (global-set-key [S-f8]
+                  'sr-speedbar-toggle)
+
+  ;; menu that a mouse would find.
+  (global-set-key [M-f8]
+                  'tmm-menubar)
+
+  ;; Info!
+  (global-set-key [C-f8]
+                  'info)
+
+  ;; Top and bottom of buffer.
+  (global-set-key [S-f9]
+                  'beginning-of-buffer)
+
+  (global-set-key [S-f10]
+                  (lambda ()
+                    (interactive)
+                    (goto-char (point-max))))
+
+  (global-set-key [S-f11]
+                  'helm-find-files)
+
+  (global-set-key [f11]
+                  'save-buffer)
+
+  (global-set-key [C-f12]
+                  'eval-last-sexp)
+
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+
+              (define-key org-mode-map [M-f3]
+                'org-babel-remove-result-one-or-many)
+
+              ;; Remove all results in buffer...dangerous!  But can undo!
+              (define-key org-mode-map [C-f3]
                 (lambda ()
+                  (interactive)
+                  (org-babel-remove-result-one-or-many t)))
 
-                  (define-key isearch-mode-map (kbd "s-s")
-                      'isearch-repeat-forward)
-                  (define-key isearch-mode-map (kbd "s-r")
-                      'isearch-repeat-backward)
-                      ))
+              (define-key org-mode-map [f4]
+                'org-ctrl-c-ctrl-c)
 
-      ;; Make only one window.
-      (global-set-key [f1]
-                      'delete-other-windows)
+              (define-key org-mode-map [f9]
+                'org-previous-block)
 
-      ;; Make this window go away.
-      (global-set-key [S-f1]
-                      'delete-window)
+              (define-key org-mode-map [f10]
+                'org-next-block)
 
-      ;; Go to table of key bindings.
-      (global-set-key [M-f1] 
-                      (lambda ()
-                        (interactive)
-                        (bookmark-jump "keys")
-                        (recenter-top-bottom 1)))
+              ;; Toggle hide of all results.
+              (define-key org-mode-map [S-f9]
+                'org-babel-hide-result-toggle)
 
-      ;; Split window in half (top and bottom).
-      (global-set-key [f2]
-                      (lambda ()
-                        (interactive)
-                        (split-window-vertically)
-                        (other-window 1)))
-
-      ;; Split window in half (left and right).
-      (global-set-key [S-f2]
-                      (lambda ()
-                        (interactive)
-                        (split-window-horizontally)
-                        (other-window 1)))
-
-      ;; Bury buffer.
-      (global-set-key [f3]
-                      'bury-buffer)
-
-      ;; Kill buffer (require two key presses since it's a kill).
-      (global-set-key [S-f3]
-                      'kill-buffer)
-
-      ;; Set target buffer for sending commands to
-      (global-set-key [C-f4]
-                      (lambda ()
-                        (interactive)
-                        (setq my/target-proc (get-buffer-process (current-buffer)))
-                        (message (concat "New my/target-proc is " (buffer-name)))
-                        ))
-
-      ;; Switch to most recent buffer.
-      (global-set-key [f5]
-                      (lambda ()
-                        (interactive)
-                        (switch-to-buffer nil)))
-
-      ;; JFGI
-      (global-set-key [S-f5]
-                      'browse-url)
-
-      ;; Go to next window.
-      (global-set-key [f6] 
-                      (lambda ()
-                        (interactive)
-                        (other-window 1)))
-
-      ;; Go to previous window.
-      (global-set-key [S-f6] 
-                      (lambda ()
-                        (interactive)
-                        (other-window -1)))
-
-      ;; helm version of buffers.
-      (global-set-key [f8]
-                      'helm-mini)
-
-      ;; speedbar
-      (global-set-key [S-f8]
-                      'sr-speedbar-toggle)
-
-      ;; menu that a mouse would find.
-      (global-set-key [M-f8]
-                      'tmm-menubar)
-
-      ;; Info!
-      (global-set-key [C-f8]
-                      'info)
-
-      ;; Top and bottom of buffer.
-      (global-set-key [S-f9]
-                      'beginning-of-buffer)
-
-      (global-set-key [S-f10]
-                      (lambda ()
-                        (interactive)
-                        (goto-char (point-max))))
-
-      (global-set-key [S-f11]
-                      'helm-find-files)
-
-      (global-set-key [f11]
-                      'save-buffer)
-
-      (global-set-key [C-f12]
-                      'eval-last-sexp)
-
-
-      (add-hook 'org-mode-hook
+              ;; Go to results section of current block.
+              (define-key org-mode-map [S-f10]
                 (lambda ()
+                  (interactive)
+                  (let ((location (org-babel-where-is-src-block-result)))
+                    (when location
+                        (goto-char location)))))
 
-                  (define-key org-mode-map [M-f3]
-                    'org-babel-remove-result-one-or-many)
+              (define-key org-mode-map [M-f9]
+                'insert-new-block-same-as-current)
 
-                  ;; Remove all results in buffer...dangerous!  But can undo!
-                  (define-key org-mode-map [C-f3]
-                    (lambda ()
-                      (interactive)
-                      (org-babel-remove-result-one-or-many t)))
+              (define-key org-mode-map [C-f9]
+                'outline-show-all)
 
-                  (define-key org-mode-map [f4]
-                    'org-ctrl-c-ctrl-c)
+              (define-key org-mode-map [M-f10]
+                'insert-new-block-same-as-current-below)
 
-                  (define-key org-mode-map [f9]
-                    'org-previous-block)
+              (define-key org-mode-map [S-f4]
+                  (lambda ()
+                    (interactive)
+                    (org-ctrl-c-ctrl-c)
+                    (org-next-block)))
 
-                  (define-key org-mode-map [f10]
-                    'org-next-block)
-
-                  ;; Toggle hide of all results.
-                  (define-key org-mode-map [S-f9]
-                    'org-babel-hide-result-toggle)
-	    
-                  ;; Go to results section of current block.
-                  (define-key org-mode-map [S-f10]
-                    (lambda ()
-                      (interactive)
-                      (let ((location (org-babel-where-is-src-block-result)))
-                        (when location
-                            (goto-char location)))))
-	    
-                  (define-key org-mode-map [M-f9]
-                    'insert-new-block-same-as-current)
-
-                  (define-key org-mode-map [C-f9]
-                    'outline-show-all)
-
-                  (define-key org-mode-map [M-f10]
-                    'insert-new-block-same-as-current-below)
-
-                  (define-key org-mode-map [S-f4]
-                      (lambda ()
-                        (interactive)
-                        (org-ctrl-c-ctrl-c)
-                        (org-next-block)))
-
-                  (define-key org-mode-map [M-f4]
-                      (lambda ()
-                        (interactive)
-                        (org-ctrl-c-ctrl-c)
-                        (insert-new-block-same-as-current-below)))
-
-		
-                  (define-key org-mode-map [f12]
-                    'my/org-babel-send-line-of-src-block)
+              (define-key org-mode-map [M-f4]
+                  (lambda ()
+                    (interactive)
+                    (org-ctrl-c-ctrl-c)
+                    (insert-new-block-same-as-current-below)))
 
 
-                  (define-key org-mode-map [M-f12]
-                    'org-edit-special)
-
-                  ))
+              (define-key org-mode-map [f12]
+                'my/org-babel-send-line-of-src-block)
 
 
-      (add-hook 'org-src-mode-hook
+              (define-key org-mode-map [M-f12]
+                'org-edit-special)
+
+              ))
+
+
+  (add-hook 'org-src-mode-hook
+            (lambda ()
+
+              ;; C-c C-c, standard Python mode, no elpy
+              (define-key org-src-mode-map [f4]
+                'python-shell-send-buffer)
+
+              (define-key org-src-mode-map [M-f12]
+                'org-edit-src-exit)
+
+              ))
+
+
+  (add-hook 'sh-mode-hook
+            (lambda()
+
+              (define-key sh-mode-map [f12]
                 (lambda ()
-
-                  ;; C-c C-c, standard Python mode, no elpy
-                  (define-key org-src-mode-map [f4]
-                    'python-shell-send-buffer)
-
-                  (define-key org-src-mode-map [M-f12]
-                    'org-edit-src-exit)
-
+                  (interactive)
+                  (my/sh-send-line-or-region)
                   ))
 
 
-      (add-hook 'sh-mode-hook
-                (lambda()
+              (define-key sh-mode-map [S-f12]
+                (lambda ()
+                  (interactive)
+                  (my/sh-send-line-or-region t)
+                  ))
 
-                  (define-key sh-mode-map [f12]
-                    (lambda ()
-                      (interactive)
-                      (my/sh-send-line-or-region)
-                      ))
-
-
-                  (define-key sh-mode-map [S-f12]
-                    (lambda ()
-                      (interactive)
-                      (my/sh-send-line-or-region t)
-                      ))
-
-                  ;; (define-key sh-mode-map [f12]
-                  ;;   (lambda ()
-                  ;;     (interactive)
-                  ;;     (let (b)
-                  ;;       (setq b (get-buffer (current-buffer)))
-                  ;;       (sh-send-line-or-region-and-step)
-                  ;;       (goto-char (point-max))
-                  ;;       (switch-to-buffer-other-window b)
-                  ;;     )))
+              ;; (define-key sh-mode-map [f12]
+              ;;   (lambda ()
+              ;;     (interactive)
+              ;;     (let (b)
+              ;;       (setq b (get-buffer (current-buffer)))
+              ;;       (sh-send-line-or-region-and-step)
+              ;;       (goto-char (point-max))
+              ;;       (switch-to-buffer-other-window b)
+              ;;     )))
 
 
-                  ;; (define-key sh-mode-map [S-f12]
-                  ;;   (lambda ()
-                  ;;     (interactive)
-                  ;;     (let (b)
-                  ;;       (setq b (get-buffer (current-buffer)))
-                  ;;       (sh-send-line-or-region-and-step)
-                  ;;       (goto-char (point-max))
-                  ;;       (switch-to-buffer-other-window b)
-                  ;;       (next-line)
-                  ;;       (end-of-line))))
+              ;; (define-key sh-mode-map [S-f12]
+              ;;   (lambda ()
+              ;;     (interactive)
+              ;;     (let (b)
+              ;;       (setq b (get-buffer (current-buffer)))
+              ;;       (sh-send-line-or-region-and-step)
+              ;;       (goto-char (point-max))
+              ;;       (switch-to-buffer-other-window b)
+              ;;       (next-line)
+              ;;       (end-of-line))))
 
+              ))
+
+
+  ;; Piggybacking on sh-mode to send to spark-shell.
+  (add-hook 'scala-mode-hook
+            (lambda()
+
+              (define-key scala-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (my/sh-send-line-or-region)
                   ))
 
 
-      ;; Piggybacking on sh-mode to send to spark-shell.
-      (add-hook 'scala-mode-hook
-                (lambda()
+              (define-key scala-mode-map [S-f12]
+                (lambda ()
+                  (interactive)
+                  (my/sh-send-line-or-region t)
+                  ))
 
-                  (define-key scala-mode-map [f12]
-                    (lambda ()
-                      (interactive)
-                      (my/sh-send-line-or-region)
-                      ))
+              ))
 
 
-                  (define-key scala-mode-map [S-f12]
-                    (lambda ()
-                      (interactive)
-                      (my/sh-send-line-or-region t)
-                      ))
+  (defun my/eval-line (mode-specific-eval)
+    "Send entire current line to sh, elisp, python or whatever."
+    (let ((start (line-beginning-position))
+          (end (line-end-position)))
+      (funcall mode-specific-eval start end)))
 
+
+  (add-hook 'python-mode-hook
+            (lambda()
+
+              (define-key python-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (my/eval-line 'python-shell-send-region)))
+
+              (define-key python-mode-map [S-f12]
+                (lambda ()
+                  (interactive)
+                  (my/eval-line 'python-shell-send-region)
+                  (next-line)
+                  (end-of-line)))
+
+
+              ;; Sometimes this is useful, like over ssh to BARE.
+              (define-key python-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (my/sh-send-line-or-region)
                   ))
 
 
-      (defun my/eval-line (mode-specific-eval)
-        "Send entire current line to sh, elisp, python or whatever."
-        (let ((start (line-beginning-position))
-              (end (line-end-position)))
-          (funcall mode-specific-eval start end)))
-
-
-      (add-hook 'python-mode-hook
-                (lambda()
-
-                  (define-key python-mode-map [f12]
-                    (lambda ()
-                      (interactive)
-                      (my/eval-line 'python-shell-send-region)))
-
-                  (define-key python-mode-map [S-f12]
-                    (lambda ()
-                      (interactive)
-                      (my/eval-line 'python-shell-send-region)
-                      (next-line)
-                      (end-of-line)))
-
+              (define-key python-mode-map [S-f12]
+                (lambda ()
+                  (interactive)
+                  (my/sh-send-line-or-region t)
                   ))
 
 
-      (add-hook 'emacs-lisp-mode-hook
-                (lambda()
-
-                  (define-key emacs-lisp-mode-map [f12]
-                    (lambda ()
-                      (interactive)
-                      (my/eval-line 'eval-region)))
-
-                  ))
+              ))
 
 
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda()
 
-      ;; Cool things in term mode.
-      ;;
-      ;; ‘C-c C-l’
-      ;; ‘C-c C-o’
+              (define-key emacs-lisp-mode-map [f12]
+                (lambda ()
+                  (interactive)
+                  (my/eval-line 'eval-region)))
+
+              ))
 
 
-      ;;;;
-      ;;
-      ;; Examples.
-      ;;
-      ;; From Info, examples of ways to set global keys:
-      ;;
-      ;; (global-set-key (kbd "C-c y") 'clipboard-yank)
-      ;; (global-set-key (kbd "C-M-q") 'query-replace)
-      ;; (global-set-key (kbd "<f5>") 'flyspell-mode)
-      ;; (global-set-key (kbd "C-<f5>") 'linum-mode)
-      ;; (global-set-key (kbd "C-<right>") 'forward-sentence)
-      ;; (global-set-key (kbd "<mouse-2>") 'mouse-save-then-kill)
 
-      ;; (global-set-key "\C-x\M-l" 'make-symbolic-link)
+  ;; Cool things in term mode.
+  ;;
+  ;; ‘C-c C-l’
+  ;; ‘C-c C-o’
 
-      ;; <TAB>
-      ;; (global-set-key "\C-x\t" 'indent-rigidly)
 
-      ;; (global-set-key [?\C-=] 'make-symbolic-link)
-      ;; (global-set-key [?\M-\C-=] 'make-symbolic-link)
-      ;; (global-set-key [?\H-a] 'make-symbolic-link)
-      ;; (global-set-key [f7] 'make-symbolic-link)
-      ;; (global-set-key [C-mouse-1] 'make-symbolic-link)
+  ;;;;
+  ;;
+  ;; Examples.
+  ;;
+  ;; From Info, examples of ways to set global keys:
+  ;;
+  ;; (global-set-key (kbd "C-c y") 'clipboard-yank)
+  ;; (global-set-key (kbd "C-M-q") 'query-replace)
+  ;; (global-set-key (kbd "<f5>") 'flyspell-mode)
+  ;; (global-set-key (kbd "C-<f5>") 'linum-mode)
+  ;; (global-set-key (kbd "C-<right>") 'forward-sentence)
+  ;; (global-set-key (kbd "<mouse-2>") 'mouse-save-then-kill)
 
-      ;; (global-set-key [?\C-z ?\M-l] 'make-symbolic-link)
+  ;; (global-set-key "\C-x\M-l" 'make-symbolic-link)
+
+  ;; <TAB>
+  ;; (global-set-key "\C-x\t" 'indent-rigidly)
+
+  ;; (global-set-key [?\C-=] 'make-symbolic-link)
+  ;; (global-set-key [?\M-\C-=] 'make-symbolic-link)
+  ;; (global-set-key [?\H-a] 'make-symbolic-link)
+  ;; (global-set-key [f7] 'make-symbolic-link)
+  ;; (global-set-key [C-mouse-1] 'make-symbolic-link)
+
+  ;; (global-set-key [?\C-z ?\M-l] 'make-symbolic-link)
 #+END_SRC
 
 ** help
