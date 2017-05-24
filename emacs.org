@@ -438,6 +438,7 @@ To update occasionally:
 #+END_SRC
 
 ** use-package org, config babel load lang, ob-ipython, org element
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq jupyter-console-exec (substitute-in-file-name
 			      "$HOME/local/miniconda3/envs/py36/bin/jupyter"))
@@ -496,21 +497,27 @@ plt.plot([1, 2, 3, 19])
       (setq org-startup-with-inline-images t)
       (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
+      (setq org-export-backends (quote (
+                                        ascii
+                                        html
+                                        confluence
+                                        beamer)))
+    
       (org-babel-do-load-languages
        'org-babel-load-languages
        '(
-	 ;; (dot . t)
-	 ;;   (ditaa . t)
-	 (emacs-lisp . t)
-	 (python . t)
-	 (ipython . t)
-	 (sh . t)
-	 ;; (sqlite . t)
-	 ;; (http . t)
-	 ;; (ledger . t)
-	 (shell . t)
-	 ;; (R . t)))
-	 ))
+         ;; (dot . t)
+         ;;   (ditaa . t)
+         (emacs-lisp . t)
+         (python . t)
+         (ipython . t)
+         (sh . t)
+         ;; (sqlite . t)
+         ;; (http . t)
+         ;; (ledger . t)
+         (shell . t)
+         ;; (R . t)))
+         ))
       ))
 
   (defun my-org-confirm-babel-evaluate (lang body)
