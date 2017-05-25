@@ -1220,6 +1220,13 @@ https://github.com/rakanalh/emacs-dashboard
 (load-library "terms_and_shells")
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq tramp-default-method "ssh")
+
+  ;; (setq tramp-ssh-controlmaster-options
+  ;;       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+#+END_SRC
+
 * My function key bindings
 ** Summary table
 *** old
