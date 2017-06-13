@@ -440,14 +440,24 @@ To update occasionally:
 ** use-package org, config babel load lang, ob-ipython, org element
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq jupyter-console-exec (substitute-in-file-name
-			      "$HOME/local/miniconda3/envs/py36/bin/jupyter"))
-  (message "***** use-package ob-ipython *****")
-  (use-package ob-ipython
-    :ensure t
-    :config
-    (setq ob-ipython-command jupyter-console-exec)
-    (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
+
+  ;; https://github.com/jkitchin/scimax/issues/92
+  ;; (with-eval-after-load 'ob-ipython
+  ;;     (add-to-list 'load-path "~/Elisp")
+  ;;     (require 'scimax-org-babel-ipython)
+  ;;     (require 'scimax-org-babel-python)
+  ;;     (setq org-babel-python-command "Users/user/anaconda3/bin/pythonw3")
+  ;;     (require 'ox-ipynb))
+
+
+    ;; (setq jupyter-console-exec (substitute-in-file-name
+    ;;                             "$HOME/local/miniconda3/envs/py36/bin/jupyter"))
+    ;; (message "***** use-package ob-ipython *****")
+    ;; (use-package ob-ipython
+    ;;   :ensure t
+    ;;   :config
+    ;;   (setq ob-ipython-command jupyter-console-exec)
+    ;;   (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
 #+END_SRC
 
 #+BEGIN_SRC ipython :session
@@ -489,7 +499,7 @@ plt.plot([1, 2, 3, 19])
   (message "***** use-package org *****")
   (use-package org
     :load-path "~/.emacs.d/elisp/org-mode/lisp"  ;; redundant, at this point
-    :ensure ob-ipython
+    ;; :ensure ob-ipython
     :config
     (progn
 
@@ -510,7 +520,7 @@ plt.plot([1, 2, 3, 19])
          ;;   (ditaa . t)
          (emacs-lisp . t)
          (python . t)
-         (ipython . t)
+         ;;(ipython . t)
          (sh . t)
          ;; (sqlite . t)
          ;; (http . t)
@@ -550,7 +560,7 @@ window, so I want org src to use the current window.
           ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE" "<quote>\n?\n</quote>")
           ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
           ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
-	 ("p" "#+BEGIN_SRC ipython :session :async t\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
+	  ;;("p" "#+BEGIN_SRC ipython :session :async t\n?\n#+END_SRC" "<src lang=\"ipython\">\n?\n</src>")
           ;;("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
           ("l" "#+BEGIN_SRC emacs-lisp :tangle yes\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")
           ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
@@ -805,6 +815,13 @@ Display a more compact mode line
     :ensure t)
 #+END_SRC
 
+** company mode (needed for scimax ipython mode in org mode)
+    #+begin_src emacs-lisp :tangle yes
+      (use-package company
+        :ensure t)
+(setq company-backends (remove 'ob-ipython-company-backend company-backends))
+#+end_src
+
 ** yas snippets (from Sacha)
     #+begin_src emacs-lisp :tangle yes
       (use-package yasnippet
@@ -941,6 +958,9 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
   ;; (setq python-shell-interpreter jupyter-console-exec
   ;;       python-shell-interpreter-args "console --existing --simple-prompt")
 
+    ;;   (setq ob-ipython-command jupyter-console-exec)
+    ;;   (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
+
   ;; python-shell-interpreter-args "--simple-prompt")
 #+END_SRC
 
@@ -967,37 +987,74 @@ hi there, you
 ** scimax, its version of ob-ipython
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; (setq my-jupyter-args " console --existing --simple-prompt")
-    ;; (setq my-jupyter-args " console --simple-prompt")
-    ;; (setq ob-ipython-command (concat jupyter-console-exec my-jupyter-args))
-      ;;(setq ob-ipython-command jupyter-console-exec)
+      ;; (setq my-jupyter-args " console --existing --simple-prompt")
+	;; (setq my-jupyter-args " console --simple-prompt")
+	;; (setq ob-ipython-command (concat jupyter-console-exec my-jupyter-args))
+	  ;;(setq ob-ipython-command jupyter-console-exec)
 
-    ;; see org-babel stuff for ipython in Org section above
-    ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
-    ;; Intermittent silliness!
-    ;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
+	;; see org-babel stuff for ipython in Org section above
+	;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/#disqus_thread
+	;; Intermittent silliness!
+	;;(require 'cl-lib)  ;; Might be needed with 'loop' error.
 
-    ;; (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
-    ;; (require 'scimax-org-babel-ipython)
+	;; (add-to-list 'load-path "~/.emacs.d/elisp/scimax")
+	;; (require 'scimax-org-babel-ipython)
 
-;; Provides functions for working with files
-(use-package f)
+    ;; Provides functions for working with files
+    (use-package f)
 
-;; Functions for working with strings
-(use-package s)
+    ;; Functions for working with strings
+    (use-package s)
 
-(use-package cl)
-(use-package cl-lib)
+    (use-package cl)
+    (use-package cl-lib)
 
+    (message "***** use-package scimax-org-babel-ipython *****")
+      (use-package beacon
+	:ensure t)
+
+
+  ;; no extra indentation in the source blocks
+  (setq org-src-preserve-indentation t)
+
+  ;; use syntax highlighting in org-file code blocks
+  (setq org-src-fontify-natively t)
+
+  (setq org-babel-default-header-args:python
+	'((:results . "output replace")
+	  (:session . "none")
+	  (:exports . "both")
+	  (:cache .   "no")
+	  (:noweb . "no")
+	  (:hlines . "no")
+	  (:tangle . "no")
+	  (:eval . "never-export")))
+
+  ;; ** jupyter ipython blocks
+
+;; ~/.emacs.d/elisp/scimax/ob-ipython/
+(add-to-list 'load-path (concat my/emacs-dotd-dir "elisp/scimax/ob-ipython"))
   (load-file (concat my/emacs-dotd-dir "elisp/scimax/scimax-org-babel-ipython.el"))
   (require 'scimax-org-babel-ipython)
+(setq ob-ipython-kernel-extra-args '("--simple-prompt"))
 
-  ;; (message "***** use-package scimax-org-babel-ipython *****")
-  ;; (use-package scimax-org-babel-ipython
-  ;;   :load-path "~/.emacs.d/elisp/scimax"
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
+  (defface org-block-ipython
+    `((t (:background "thistle1")))
+    "Face for python blocks") 
+
+      ;; (use-package ob-ipython
+      ;;   :load-path "~/.emacs.d/elisp/ob-ipython"
+      ;;   :ensure t
+      ;;   :config
+      ;;   (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
+
+
+      ;; (message "***** use-package scimax-org-babel-ipython *****")
+      ;; (use-package scimax-org-babel-ipython
+      ;;   :load-path "~/.emacs.d/elisp/scimax"
+      ;;   :ensure t
+      ;;   :config
+      ;;   (setq ob-ipython-kernel-extra-args '("--simple-prompt")))
 
 #+END_SRC
 
@@ -1030,8 +1087,16 @@ print('hi')
 | elpy-rpc--disconnect |
 
 * Colors
-** material
+** solarized-theme
 #+BEGIN_SRC emacs-lisp :tangle yes
+;; Two versions out there, I'm trying this one:
+;; https://github.com/bbatsov/solarized-emacs
+;; Also available is
+;; https://github.com/sellout/emacs-color-theme-solarized
+(load-theme 'solarized-light)
+#+END_SRC
+** material
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; https://emacs.stackexchange.com/questions/28940/how-to-overwrite-properly-a-face-for-a-particular-theme
   (use-package material-theme
     :ensure t

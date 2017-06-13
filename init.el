@@ -64,10 +64,6 @@
 
 
 
-;; https://www.emacswiki.org/emacs/FullScreen#toc26
-(set-frame-parameter nil 'fullscreen 'fullboth)
-
-
 ;; Load the rest of it.
 ;;(org-babel-load-file (concat my/emacs-dotd-dir "emacs_test.org"))
 (org-babel-load-file (concat my/emacs-dotd-dir "emacs.org"))
@@ -87,5 +83,9 @@
 	 "~/org/daily.org"
 	 "~/org/index.org"
 	 ))
+
+
+;; https://www.emacswiki.org/emacs/FullScreen#toc26
+(set-frame-parameter nil 'fullscreen 'fullboth)
 
 ;;; init.el ends here
