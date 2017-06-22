@@ -1363,7 +1363,7 @@ org, org-src
       (let
 
           ((proc my/target-proc)
-           pbuf min max command)
+           pbuff min max command)
 
         (setq pbuff (process-buffer proc))
 
@@ -1379,7 +1379,7 @@ org, org-src
           (goto-char (process-mark proc))
           (insert command)
           (move-marker (process-mark proc) (point))
-          ;(move-marker (process-mark proc) (end-of-buffer))
+          ;;(move-marker (process-mark proc) (end-of-buffer))
           )  ;;pop-to-buffer does not work with save-current-buffer -- bug?
 
         (process-send-string proc command)
@@ -1389,6 +1389,7 @@ org, org-src
 
         (when step
           (goto-char max)
+          ;;(goto-char (point-max))
           (next-line))
         )
       )
@@ -1434,7 +1435,8 @@ org, org-src
         ;;(display-buffer (process-buffer proc) t)
 
         (when step
-          (goto-char max)
+          ;;(goto-char max)
+          (goto-char (point-max))
           (next-line))
         )
       )
