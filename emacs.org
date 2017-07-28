@@ -760,6 +760,14 @@ Wow.  [[http://doc.norang.ca/org-mode.html][Great .org setup]]
        ;;   '((sequence "TODO" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED")))
 
 #+END_SRC
+
+** publish to medium.com
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'load-path "~/.emacs.d/elisp/org-medium")
+(require 'org-sendto-medium)
+;;(define-key org-mode-map (kbd "C-x C-j") 'org-sendto-medium)
+#+END_SRC
+
 * External packages
 ** Magit - nice git interface
 
@@ -949,6 +957,10 @@ From https://github.com/pcmantz/elisp/blob/master/my-bindings.el
 #+RESULTS:
 
 * Python
+** code folding
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'python-mode-hook 'outline-minor-mode)
+#+END_SRC
 ** Make jupyter default shell
 #+BEGIN_SRC emacs-lisp :tangle no
 
@@ -1732,6 +1744,9 @@ org, org-src
   (global-set-key [C-f12]
                   'eval-last-sexp)
 
+  ;; temp place for one-off keyboard macros, for now
+  (global-set-key [f14]
+                  'akmtdfgen)
 
   (add-hook 'org-mode-hook
             (lambda ()
