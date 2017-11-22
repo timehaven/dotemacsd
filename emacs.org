@@ -779,6 +779,17 @@ Wow.  [[http://doc.norang.ca/org-mode.html][Great .org setup]]
   (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
   (setq global-magit-file-mode t)
 #+end_src
+** highlight indent guides
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; https://github.com/DarthFennec/highlight-indent-guides
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+;; (setq highlight-indent-guides-method 'character)
+(setq highlight-indent-guides-method 'column)
+;; (setq highlight-indent-guides-method 'fill)
+#+END_SRC
+
+#+RESULTS:
+: character
 
 ** Mode line format
 

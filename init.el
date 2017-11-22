@@ -86,6 +86,7 @@
 
 
 ;; https://www.emacswiki.org/emacs/FullScreen#toc26
-(set-frame-parameter nil 'fullscreen 'fullboth)
+;;(set-frame-parameter nil 'fullscreen 'fullboth)
+(set-frame-parameter nil 'fullscreen 'maximized)
 
 ;;; init.el ends here
