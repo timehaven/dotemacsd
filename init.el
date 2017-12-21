@@ -22,6 +22,9 @@
 (tool-bar-mode -1)
 
 
+;; Explicit full path of ~/.emacs.d, such as
+;; /home/rwoodard/.emacs.d or
+;; /Users/rwoodard/.emacs.d
 (setq my/emacs-dotd-dir (file-name-directory (or (buffer-file-name) load-file-name)))
 
 
