@@ -423,12 +423,14 @@
 		'kill-buffer)
 
 ;; Set target buffer for sending commands to
-(global-set-key [C-f4]
-		(lambda ()
-		  (interactive)
-		  (setq my/target-proc (get-buffer-process (current-buffer)))
-		  (message (concat "New my/target-proc is " (buffer-name)))
-		  ))
+(defun my/set-target-buffer ()
+  "Tag as target buffer for shell commands"
+  (interactive "P")
+  (setq my/target-proc (get-buffer-process (current-buffer)))
+  (message (concat "New my/target-proc is " (buffer-name)))
+  )
+(global-set-key [C-S-f4] 'my/set-target-buffer)
+(global-set-key [M-s-f4] 'my/sh-send-line-or-region)
 
 ;; Switch to most recent buffer.
 (global-set-key [f5]
@@ -756,6 +758,7 @@
 * Other useful packages
 
 #+BEGIN_SRC emacs-lisp :tangle yes 
+(use-package sr-speedbar)
 (require 'sr-speedbar)
 
 ;; On Mac, -R does not work.
