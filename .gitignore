@@ -13,3 +13,4 @@ elisp/scimax
 elpa/*
 emacs.el
 zunused/*
+for_scimax_standalone/ryan_after_scimax.el
