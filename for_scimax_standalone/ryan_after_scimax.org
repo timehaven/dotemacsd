@@ -57,10 +57,10 @@
 (when (eq is-linux t)
   ;; Readable font
   (when (eq window-system 'x)
-    (set-face-attribute 'default nil :height 160)
-    (add-to-list 'initial-frame-alist '(height . 35))
+    (set-face-attribute 'default nil :height 200)
+    (add-to-list 'initial-frame-alist '(height . 40))
     (add-to-list 'initial-frame-alist '(width . 80))
-    (add-to-list 'default-frame-alist '(height . 35))
+    (add-to-list 'default-frame-alist '(height . 40))
     (add-to-list 'default-frame-alist '(width . 80))))
 
 (when (eq is-mac t)
@@ -425,7 +425,7 @@
 ;; Set target buffer for sending commands to
 (defun my/set-target-buffer ()
   "Tag as target buffer for shell commands"
-  (interactive "P")
+  (interactive)
   (setq my/target-proc (get-buffer-process (current-buffer)))
   (message (concat "New my/target-proc is " (buffer-name)))
   )
