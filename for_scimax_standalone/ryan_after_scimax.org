@@ -795,6 +795,18 @@ Validate
 
 #+RESULTS:
 
+Allow inline image resizing within org doc:
+
+#+BEGIN_EXAMPLE
+#+ATTR_ORG: :width 30%
+[[file:static/IMG_20171212_134953.jpg]]
+#+END_EXAMPLE
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq org-image-actual-width nil)
+#+END_SRC
+
 * Local dictionary files, paths
 
 #+BEGIN_SRC emacs-lisp :tangle yes
