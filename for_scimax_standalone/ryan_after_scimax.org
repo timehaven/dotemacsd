@@ -92,6 +92,9 @@
 
 #+RESULTS:
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of OS, Emacs version, default face/frame, whoami!")
+#+END_SRC
 * My funky functions
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -360,6 +363,9 @@
 #+RESULTS:
 : my/python-shell-send-line-or-region
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of my funky functions!")
+#+END_SRC
 * My key bindings
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -508,10 +514,18 @@
 	      'org-ctrl-c-ctrl-c)
 
 	    (define-key org-mode-map [f9]
-	      'org-previous-block)
+	      (lambda ()
+		(interactive)
+		(org-previous-block nil)
+		;; (org-show-block-all)
+		(outline-show-all)))
 
 	    (define-key org-mode-map [f10]
-	      'org-next-block)
+	      (lambda ()
+		(interactive)
+		(org-next-block nil)
+		;; (org-show-block-all)
+		(outline-show-all)))
 
 	    ;; Toggle hide of all results.
 	    (define-key org-mode-map [S-f9]
@@ -568,9 +582,15 @@
 		(insert-new-block-same-as-current-below)))
 
 
-	    (define-key org-mode-map [f12]
-	      'my/org-babel-send-line-of-src-block)
+	    ;; (define-key org-mode-map [f12]
+	    ;;   'my/org-babel-send-line-of-src-block)
 
+	    (define-key org-mode-map [f12]
+	      (lambda ()
+		(interactive)
+		(org-fill-paragraph)
+		(save-buffer)
+		(org-html-export-to-html)))
 
 	    (define-key org-mode-map [M-f12]
 	      'org-edit-special)
@@ -587,6 +607,13 @@
 
 	    (define-key org-src-mode-map [M-f12]
 	      'org-edit-src-exit)
+
+	    (define-key org-src-mode-map [f9]
+	      (lambda ()
+		(interactive)
+		(org-previous-block)
+		(org-show-block-all)))
+
 
 	    ))
 
@@ -739,8 +766,11 @@
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (define-key emacs-lisp-mode-map [f12] (lambda nil (interactive) (my/eval-line (quote eval-region))))) | lisp-outline-setup | (lambda nil (lispy-mode) (eldoc-mode)) | ac-emacs-lisp-mode-setup | aggressive-indent-mode |
+| (lambda nil (define-key emacs-lisp-mode-map [f12] (lambda nil (interactive) (my/eval-line (quote eval-region))))) | (lambda nil (define-key emacs-lisp-mode-map [f12] (function (lambda nil (interactive) (my/eval-line (quote eval-region)))))) | lisp-outline-setup | (lambda nil (lispy-mode) (eldoc-mode)) | ac-emacs-lisp-mode-setup | aggressive-indent-mode |
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of my key bindings!")
+#+END_SRC
 * SSH, tramp
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -749,12 +779,18 @@
 (setq tramp-chunksize 2000)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * SSH, tramp!")
+#+END_SRC
 * Confluence (corpwiki)
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (require 'ox-confluence)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * Confluence (corpwiki)!")
+#+END_SRC
 * Other useful packages
 
 #+BEGIN_SRC emacs-lisp :tangle yes 
@@ -768,6 +804,9 @@
   (setq projectile-tags-command "/usr/local/Cellar/ctags/5.8_1/bin/ctags -Re -f \"%s\" %s"))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * Other useful packages!")
+#+END_SRC
 * keymap
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -781,6 +820,9 @@
 
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * keymap!")
+#+END_SRC
 * org settings
 Remove this stuff from html publish:
 #+BEGIN_SRC
@@ -807,6 +849,29 @@ Allow inline image resizing within org doc:
 (setq org-image-actual-width nil)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * org settings!")
+#+END_SRC
+
+** org related macros
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; publish as html file
+(fset 'my/export-as-html-file
+   "\C-c\C-ehh")
+
+
+(define-key org-mode-map [f12]
+  (lambda ()
+    (interactive)
+    (org-fill-paragraph)
+    (save-buffer)
+    (org-html-export-to-html)))
+
+
+
+#+END_SRC
+
 * Local dictionary files, paths
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -829,6 +894,9 @@ Allow inline image resizing within org doc:
 #+RESULTS:
 | en_US | /Users/rwoodard/Library/Spelling/en_US.aff |
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * Local dictionary files, paths!")
+#+END_SRC
 * COMMENT Finalize theme
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1055,6 +1123,9 @@ Allow inline image resizing within org doc:
 #+RESULTS:
 : org-fontify-meta-lines-and-blocks-1
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * COMMENT Finalize theme!")
+#+END_SRC
 * Python, Jupyter, et al
 ** Connect to jupyter kernel started in Emacs from terminal
 #+BEGIN_SRC sh :tangle no
@@ -1064,6 +1135,9 @@ jupyter console --existing
 #+BEGIN_SRC emacs-lisp :tangle no
 (fset 'my/insert-ipy-block-below
    [?\C-u ?\M-x ?o ?r ?g ?  ?b ?a ?b ?e ?l ?  ?i ?n ?s ?e ?r ?t ?  ?b ?l ?o ?c ?k return])
+#+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of * Python, Jupyter, et al!")
 #+END_SRC
 * Message to show I reached end of this file
 
