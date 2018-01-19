@@ -106,7 +106,7 @@
       (org-show-block-all)
     (org-hide-block-all))
   (setq-local org-blocks-hidden (not org-blocks-hidden)))
-(add-hook 'org-mode-hook 'org-toggle-blocks)
+;; (add-hook 'org-mode-hook 'org-toggle-blocks)
 (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
 
 
@@ -869,8 +869,59 @@ Allow inline image resizing within org doc:
     (org-html-export-to-html)))
 
 
+;; (add-hook 'text-mode-hook 'refill-mode)
+;; (remove-hook 'text-mode-hook 'refill-mode)
+;; (add-hook 'text-mode-hook
+;; 	  (lambda()
 
+;; 	    (define-key emacs-lisp-mode-map [f12]
+;; 	      (lambda ()
+;; 		(interactive)
+;; 		(my/eval-line 'eval-region)))
+
+;; 	    ))
+
+
+;; Tough nut to crack.
+;; https://github.com/davidshepherd7/aggressive-fill-paragraph-mode
+;; https://emacs.stackexchange.com/questions/3746/is-there-fully-automatic-fill-paragraph-mode-for-code-comments
+
+;; does not work
+;; (add-hook 'org-mode-hook 'refill-mode)
+;; (add-hook 'org-src-mode-hook
+;; 	  (lambda ()
+;; 	    (interactive)
+;; 	    (refill-mode -1)))
+
+;; (remove-hook 'org-mode-hook 'refill-mode)
+;; (remove-hook 'org-src-mode-hook 'refill-mode)
+;;             (lambda ()
+;;               ;; Enable fill column indicator
+;;               ;;(fci-mode t)
+;;               ;; Turn off line numbering, it makes org so slow
+;;               ;;(linum-mode -1)
+;;               ;; Set fill column to 79
+;;               ;;(setq fill-column 79)
+;;               ;; Enable automatic line wrapping at fill column
+;;               (refill-mode t)))
+
+
+;; Allow 10 lines to be bold.
+;; https://emacs.stackexchange.com/questions/13820/inline-verbatim-and-code-with-quotes-in-org-mode
+;; (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
+
+;; https://ox-hugo.scripter.co/test/posts/multi-line-bold/
+(with-eval-after-load 'org
+  ;; Allow multiple line Org emphasis markup.
+  ;; http://emacs.stackexchange.com/a/13828/115
+  (setcar (nthcdr 4 org-emphasis-regexp-components) 20) ;Up to 20 lines, default is just 1
+  ;; Below is needed to apply the modified `org-emphasis-regexp-components'
+  ;; settings from above.
+  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components))
 #+END_SRC
+
+#+RESULTS:
+: 10
 
 * Local dictionary files, paths
 
