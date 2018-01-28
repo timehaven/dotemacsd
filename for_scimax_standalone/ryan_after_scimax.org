@@ -475,20 +475,23 @@
 
 	    (define-key org-mode-map [f4]
 	      'org-ctrl-c-ctrl-c)
+	      ;; 'org-babel-execute-src-block)
 
 	    (define-key org-mode-map [f9]
 	      (lambda ()
 		(interactive)
 		(org-previous-block nil)
 		;; (org-show-block-all)
-		(outline-show-all)))
+		;; (outline-show-all)
+		))
 
 	    (define-key org-mode-map [f10]
 	      (lambda ()
 		(interactive)
 		(org-next-block nil)
 		;; (org-show-block-all)
-		(outline-show-all)))
+		;; (outline-show-all)
+		))
 
 	    ;; Toggle hide of all results.
 	    (define-key org-mode-map [S-f9]
@@ -536,12 +539,14 @@
 	      (lambda ()
 		(interactive)
 		(org-ctrl-c-ctrl-c)
+		;; (org-babel-execute-src-block)
 		(org-next-block)))
 
 	    (define-key org-mode-map [M-f4]
 	      (lambda ()
 		(interactive)
 		(org-ctrl-c-ctrl-c)
+		;; (org-babel-execute-src-block)
 		(insert-new-block-same-as-current-below)))
 
 
@@ -1222,6 +1227,31 @@ jupyter console --existing
   org-mode source code blocks, so we need to set up a couple
   functions that we can use to set them.
 
+Interrupting Howard with the defaults that scimax sets; these are what
+I will want to overwrite.
+
+#+BEGIN_SRC emacs-lisp :tangle no :results silent :eval never
+(defface org-block-emacs-lisp
+  `((t (:background "LightCyan1")))
+  "Face for elisp src blocks")
+
+(defface org-block-python
+  `((t (:background "DarkSeaGreen1")))
+  "Face for python blocks")
+
+(defface org-block-ipython
+  `((t (:background "thistle1")))
+  "Face for python blocks") 
+
+(defface org-block-jupyter-hy
+  `((t (:background "light goldenrod yellow")))
+  "Face for hylang blocks")
+
+(defface org-block-sh
+  `((t (:background "gray90")))
+  "Face for python blocks")
+#+END_SRC
+
   #+BEGIN_SRC emacs-lisp :tangle yes
     (defun org-src-color-blocks-light ()
       "Colors the block headers and footers to make them stand out more for lighter themes"
@@ -1248,13 +1278,21 @@ jupyter console --existing
          ((t (:background "#000000"))))
        '(org-block
          ((t (:background "#000000"))))
+       '(org-block-emacs-lisp
+         ((t (:background "gray10"))))
+       '(org-block-python
+         ((t (:background "#000000"))))
+       '(org-block-ipython
+         ((t (:background "#000000"))))
+       '(org-block-sh
+         ((t (:background "gray20"))))
        '(org-block-end-line
          ((t (:foreground "#008ED1" :background "#002E41"))))))
 (message "Howard 3")
   #+END_SRC
 
   #+RESULTS:
-  : org-src-color-blocks-dark
+  : Howard 3
 
   No matter, the theme, I like /some/ of the ideas in the [[https://github.com/jonnay/emagicians-starter-kit/blob/master/themes/org-beautify-theme.org][EMagicians Starter Kit]],
   particularly in how the headers are larger, instead of different
@@ -1266,7 +1304,7 @@ jupyter console --existing
   #+END_SRC
 
   #+RESULTS:
-  : Sub-theme to beautify org mode
+  : Howard 4
 
   Since I’m using the Powerline project, switching my Emacs color
   theme, requires me to call =powerline-reset= in order to get the
@@ -1413,7 +1451,8 @@ jupyter console --existing
   (when (eq window-system 'ns)
     ;; On Mac, use Command-t to bring up font menu.
     ;;(set-face-attribute 'default nil :height 180)
-    (set-face-attribute 'default nil :height 220)
+    ;; (set-face-attribute 'default nil :height 190)
+    (set-face-attribute 'default nil :height 210)
     ;;(set-face-attribute 'default nil :height 240)
     (add-to-list 'initial-frame-alist '(height . 33))
     (add-to-list 'initial-frame-alist '(width . 80))
