@@ -43,43 +43,6 @@
 #+RESULTS:
 : Spinning up rwoodard@rwoodard using nil
 
-** default face/frame
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;  t for a termcap frame (a character-only terminal),
-;; ‘x’ for an Emacs frame that is really an X window,
-;; ‘w32’ for an Emacs frame that is a window on MS-Windows display,
-;; ‘ns’ for an Emacs frame on a GNUstep or Macintosh Cocoa display,
-
-;; Readability counts.
-;; `C-x C-+’ and ‘C-x C--’
-;; C-x C-0 to reset.
-(when (eq is-linux t)
-  ;; Readable font
-  (when (eq window-system 'x)
-    (set-face-attribute 'default nil :height 200)
-    (add-to-list 'initial-frame-alist '(height . 40))
-    (add-to-list 'initial-frame-alist '(width . 80))
-    (add-to-list 'default-frame-alist '(height . 40))
-    (add-to-list 'default-frame-alist '(width . 80))))
-
-(when (eq is-mac t)
-
-  ;; Macbook built-in display.
-  (when (eq window-system 'ns)
-    ;; On Mac, use Command-t to bring up font menu.
-    (set-face-attribute 'default nil :height 180)
-    ;;(set-face-attribute 'default nil :height 220)
-    ;;(set-face-attribute 'default nil :height 240)
-    (add-to-list 'initial-frame-alist '(height . 33))
-    (add-to-list 'initial-frame-alist '(width . 80))
-    (add-to-list 'default-frame-alist '(height . 33))
-    (add-to-list 'default-frame-alist '(width . 80))))
-#+END_SRC
-
-#+RESULTS:
-: ((width . 80) (height . 33))
-
 ** whoami
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -878,6 +841,15 @@ Allow inline image resizing within org doc:
 (message "Reached end of * org settings!")
 #+END_SRC
 
+** html css output
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; https://github.com/dakrone/ox-tufte
+(require 'ox-tufte)
+#+END_SRC
+
+#+RESULTS:
+: ox-tufte
+
 ** org related macros
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1229,12 +1201,6 @@ jupyter console --existing
 #+BEGIN_SRC emacs-lisp :tangle yes
 (message "Reached end of * Python, Jupyter, et al!")
 #+END_SRC
-* Message to show I reached end of this file
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(message "Reached end of ryan_after_scimax.org!")
-#+END_SRC
-
 * Howard's Color Theme
 
   Use the color theme project by following [[http://www.nongnu.org/color-theme/][these instructions]].
@@ -1246,6 +1212,7 @@ jupyter console --existing
       :init (require 'color-theme)
       :config (use-package color-theme-sanityinc-tomorrow
                :ensure t))
+(message "Howard 1")
   #+END_SRC
 
   #+RESULTS:
@@ -1269,6 +1236,8 @@ jupyter console --existing
        '(org-block-end-line
          ((t (:overline "#A7A6AA" :foreground "#008ED1" :background "#EAEAFF"))))))
 
+(message "Howard 2")
+
     (defun org-src-color-blocks-dark ()
       "Colors the block headers and footers to make them stand out more for dark themes"
       (interactive)
@@ -1281,6 +1250,7 @@ jupyter console --existing
          ((t (:background "#000000"))))
        '(org-block-end-line
          ((t (:foreground "#008ED1" :background "#002E41"))))))
+(message "Howard 3")
   #+END_SRC
 
   #+RESULTS:
@@ -1292,6 +1262,7 @@ jupyter console --existing
 
   #+BEGIN_SRC emacs-lisp :tangle yes
      (deftheme ha/org-theme "Sub-theme to beautify org mode")
+(message "Howard 4")
   #+END_SRC
 
   #+RESULTS:
@@ -1304,6 +1275,22 @@ jupyter console --existing
   We put all of these requirements in a single function call:
 
   #+BEGIN_SRC emacs-lisp :tangle yes
+(defvar ha/fixed-font-family
+  (cond ((x-list-fonts "Hasklig") "Hasklig")
+	((x-list-fonts "Hack") "Hack")
+	((x-list-fonts "Source Code Pro") "Source Code Pro")
+	((x-list-fonts "Anonymous Pro") "Anonymous Pro")
+	((x-list-fonts "M+ 1mn") "M+ 1mn"))
+  "My fixed width font based on what is installed, `nil' if not defined.")
+
+(defvar ha/variable-font-tuple
+  (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+        ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+        ((x-list-fonts "Verdana")         '(:font "Verdana"))
+        ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+        (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro.")))
+  "My variable width font available to org-mode files and whatnot.")
+
     (defun ha/change-theme (theme org-block-style)
       "Changes the color scheme and reset the mode line."
       (funcall theme)
@@ -1316,7 +1303,7 @@ jupyter console --existing
              (primary-color       (face-foreground 'mode-line nil))
              (secondary-color     (face-background 'secondary-selection nil 'region))
              (base-height         (face-attribute 'default :height))
-             (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+	     (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
 
         (when ha/fixed-font-family
           (set-frame-font ha/fixed-font-family)
@@ -1336,23 +1323,47 @@ jupyter console --existing
                                 `(org-block-background ((t (:inherit 'fixed-pitched))))
                                 `(org-block-begin-line ((t (:inherit 'fixed-pitched))))
                                 `(org-block-end-line ((t (:inherit 'fixed-pitched))))
-                                `(org-level-8 ((t (,@headline ,@ha/variable-font-tuple))))
-                                `(org-level-7 ((t (,@headline ,@ha/variable-font-tuple))))
-                                `(org-level-6 ((t (,@headline ,@ha/variable-font-tuple))))
-                                `(org-level-5 ((t (,@headline ,@ha/variable-font-tuple))))
-                                `(org-level-4 ((t (,@headline ,@ha/variable-font-tuple
-                                                              :height 1.1))))
-                                `(org-level-3 ((t (,@headline ,@ha/variable-font-tuple
-                                                              :height 1.1))))
-                                `(org-level-2 ((t (,@headline ,@ha/variable-font-tuple
-                                                              :height 1.1))))
-                                `(org-level-1 ((t (,@headline ,@ha/variable-font-tuple
-                                                              :height 2.1))))
-                                `(org-document-title ((t (,@headline ,@ha/variable-font-tuple :height 1.5 :underline nil)))))))
+                                ;; `(org-level-8 ((t (,@headline ,@ha/fixed-font-tuple))))
+                                ;; `(org-level-7 ((t (,@headline ,@ha/fixed-font-tuple))))
+                                ;; `(org-level-6 ((t (,@headline ,@ha/fixed-font-tuple))))
+                                ;; `(org-level-5 ((t (,@headline ,@ha/fixed-font-tuple))))
+                                ;; `(org-level-4 ((t (,@headline ,@ha/fixed-font-tuple
+                                ;;                               :height 1.1))))
+                                ;; `(org-level-3 ((t (,@headline ,@ha/fixed-font-tuple
+                                ;;                               :height 1.1))))
+                                ;; `(org-level-2 ((t (,@headline ,@ha/fixed-font-tuple
+                                ;;                               :height 1.1))))
+                                ;; `(org-level-1 ((t (,@headline ,@ha/fixed-font-tuple
+                                ;;                               :height 1.2))))
+                                `(org-document-title ((t (,@headline ,@ha/fixed-font-tuple :height 1.5 :underline nil)))))))
+
+        ;; (custom-theme-set-faces 'ha/org-theme
+        ;;                         `(org-agenda-structure ((t (:inherit default :height 2.0 :underline nil))))
+        ;;                         `(org-verbatim ((t (:inherit 'fixed-pitched :foreground "#aef"))))
+        ;;                         `(org-table ((t (:inherit 'fixed-pitched))))
+        ;;                         `(org-block ((t (:inherit 'fixed-pitched))))
+        ;;                         `(org-block-background ((t (:inherit 'fixed-pitched))))
+        ;;                         `(org-block-begin-line ((t (:inherit 'fixed-pitched))))
+        ;;                         `(org-block-end-line ((t (:inherit 'fixed-pitched))))
+        ;;                         `(org-level-8 ((t (,@headline ,@ha/variable-font-tuple))))
+        ;;                         `(org-level-7 ((t (,@headline ,@ha/variable-font-tuple))))
+        ;;                         `(org-level-6 ((t (,@headline ,@ha/variable-font-tuple))))
+        ;;                         `(org-level-5 ((t (,@headline ,@ha/variable-font-tuple))))
+        ;;                         `(org-level-4 ((t (,@headline ,@ha/variable-font-tuple
+        ;;                                                       :height 1.1))))
+        ;;                         `(org-level-3 ((t (,@headline ,@ha/variable-font-tuple
+        ;;                                                       :height 1.1))))
+        ;;                         `(org-level-2 ((t (,@headline ,@ha/variable-font-tuple
+        ;;                                                       :height 1.1))))
+        ;;                         `(org-level-1 ((t (,@headline ,@ha/variable-font-tuple
+        ;;                                                       :height 2.1))))
+        ;;                         `(org-document-title ((t (,@headline ,@ha/variable-font-tuple :height 1.5 :underline nil)))))))
+
+(message "Howard big ha/change-theme")
   #+END_SRC
 
   #+RESULTS:
-  : ha/change-theme
+  : Howard big ha/change-theme
 
   And the default startup goes to...night...
 
@@ -1368,6 +1379,56 @@ jupyter console --existing
      '(show-paren-mismatch ((t (:background "default" :foreground "#cc6666" :weight ultra-bold)))))
 
     (set-face-attribute 'region nil :background "#00a")
+
+(message "Howard last")
+
   #+END_SRC
 
+  #+RESULTS:
+  : Howard last
 
+* default face/frame
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;  t for a termcap frame (a character-only terminal),
+;; ‘x’ for an Emacs frame that is really an X window,
+;; ‘w32’ for an Emacs frame that is a window on MS-Windows display,
+;; ‘ns’ for an Emacs frame on a GNUstep or Macintosh Cocoa display,
+
+;; Readability counts.
+;; `C-x C-+’ and ‘C-x C--’
+;; C-x C-0 to reset.
+(when (eq is-linux t)
+  ;; Readable font
+  (when (eq window-system 'x)
+    (set-face-attribute 'default nil :height 200)
+    (add-to-list 'initial-frame-alist '(height . 40))
+    (add-to-list 'initial-frame-alist '(width . 80))
+    (add-to-list 'default-frame-alist '(height . 40))
+    (add-to-list 'default-frame-alist '(width . 80))))
+
+(when (eq is-mac t)
+
+  ;; Macbook built-in display.
+  (when (eq window-system 'ns)
+    ;; On Mac, use Command-t to bring up font menu.
+    ;;(set-face-attribute 'default nil :height 180)
+    (set-face-attribute 'default nil :height 220)
+    ;;(set-face-attribute 'default nil :height 240)
+    (add-to-list 'initial-frame-alist '(height . 33))
+    (add-to-list 'initial-frame-alist '(width . 80))
+    (add-to-list 'default-frame-alist '(height . 33))
+    (add-to-list 'default-frame-alist '(width . 80))))
+#+END_SRC
+
+#+RESULTS:
+: ((width . 80) (height . 33))
+
+* Message to show I reached end of this file
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(message "Reached end of ryan_after_scimax.org!")
+#+END_SRC
+
+#+RESULTS:
+: Reached end of ryan_after_scimax.org!
