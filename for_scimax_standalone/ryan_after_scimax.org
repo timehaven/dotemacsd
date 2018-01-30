@@ -1451,8 +1451,8 @@ I will want to overwrite.
   (when (eq window-system 'ns)
     ;; On Mac, use Command-t to bring up font menu.
     ;;(set-face-attribute 'default nil :height 180)
-    ;; (set-face-attribute 'default nil :height 190)
-    (set-face-attribute 'default nil :height 210)
+    (set-face-attribute 'default nil :height 180)
+    ;; (set-face-attribute 'default nil :height 210)
     ;;(set-face-attribute 'default nil :height 240)
     (add-to-list 'initial-frame-alist '(height . 33))
     (add-to-list 'initial-frame-alist '(width . 80))

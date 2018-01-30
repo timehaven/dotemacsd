@@ -14,3 +14,6 @@ elpa/*
 emacs.el
 zunused/*
 for_scimax_standalone/ryan_after_scimax.el
+for_scimax_standalone/ryan_after_scimax.html
+tramp
+metastore_db
