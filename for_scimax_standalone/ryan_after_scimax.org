@@ -216,6 +216,15 @@
   )
 
 
+(defun rw/add-results-silent-to-header-argument ()
+  (interactive)
+  (org-babel-previous-src-block)
+  (org-babel-next-src-block)
+  (org-end-of-line)
+  (insert " :results silent"))
+   
+
+
 (defun insert-block-same-as-current (el)
   "docstring"
   (let* ((language (org-element-property :language el))
@@ -1451,8 +1460,8 @@ I will want to overwrite.
   (when (eq window-system 'ns)
     ;; On Mac, use Command-t to bring up font menu.
     ;;(set-face-attribute 'default nil :height 180)
-    (set-face-attribute 'default nil :height 180)
-    ;; (set-face-attribute 'default nil :height 210)
+    ;; (set-face-attribute 'default nil :height 180)
+    (set-face-attribute 'default nil :height 190)
     ;;(set-face-attribute 'default nil :height 240)
     (add-to-list 'initial-frame-alist '(height . 33))
     (add-to-list 'initial-frame-alist '(width . 80))
