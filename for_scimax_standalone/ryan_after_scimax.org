@@ -61,6 +61,20 @@
 * My funky functions
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
+(defun rw/auto-replace-for-confluence ()
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward "theme=Confluence" nil t)
+    (replace-match "theme=Emacs" nil nil))
+  (goto-char (point-min))
+  (while (re-search-forward "ipython" nil t)
+    (replace-match "python" nil nil))
+  (goto-char (point-min))
+  (while (re-search-forward "=none" nil t)
+    (replace-match "=python" nil nil)))
+
+
 ;; https://emacs.stackexchange.com/questions/7211/collapse-src-blocks-in-org-mode-by-default
 (defvar org-blocks-hidden nil)
 (defun org-toggle-blocks ()
@@ -222,6 +236,14 @@
   (org-babel-next-src-block)
   (org-end-of-line)
   (insert " :results silent"))
+   
+
+(defun rw/add-ob-ipython-text/plain-to-header-argument ()
+  (interactive)
+  (org-babel-previous-src-block)
+  (org-babel-next-src-block)
+  (org-end-of-line)
+  (insert " :ob-ipython-results text/plain"))
    
 
 
@@ -562,12 +584,14 @@
 	    ;; (define-key org-mode-map [f12]
 	    ;;   'my/org-babel-send-line-of-src-block)
 
-	    (define-key org-mode-map [f12]
+	    (define-key org-mode-map [S-f12]
 	      (lambda ()
 		(interactive)
 		(org-fill-paragraph)
 		(save-buffer)
 		(org-html-export-to-html)))
+
+	    (define-key org-mode-map [f12] 'org-fill-paragraph)
 
 	    (define-key org-mode-map [M-f12]
 	      'org-edit-special)
