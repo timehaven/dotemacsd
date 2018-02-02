@@ -4,6 +4,12 @@
 
 * OS, Emacs version, default face/frame, whoami
 
+** Silence!
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; (setq ring-bell-function 'ignore)  ;; no bell, visual or audible
+(setq ring-bell-function nil)  ;; nil is needed for visible-bell to have an effect
+(setq visible-bell t) ;; flash the screen instead of ringing bell
+#+END_SRC
 ** OS
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -787,6 +793,7 @@
                     vc-ignore-dir-regexp
                     tramp-file-name-regexp))
 (setq tramp-verbose 1)
+(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
 #+END_SRC
 
 #+RESULTS:
