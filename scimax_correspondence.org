@@ -1,0 +1,57 @@
+* correspondence with John
+
+** [2018-02-15 Thu]
+
+That worked (didn't realize you were in mid-commits today).
+
+One thing that caught me off-guard a couple times is your binding of
+
+  Meta-<return>	run all blocks to point
+
+That conflicts with the standards set here:
+
+http://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Running%20Code.html
+
+My muscle memory from using notebooks a lot causes me to hit
+alt-return.  If you want to motivate more people to "move to your
+product" (since you're at google now, I'll phrase it in their terms)
+you want to make the "user experience" as seamless as possible.  For
+that reason, I would encourage you to be very careful about changing
+the known modifier-enter behavior.
+
+I'm using the remote kernel connections exclusively now.
+
+- I start a Jupyter notebook server on my remote machine and connect
+  to that as per normal (via a browser from my local machine)
+- I create a new notebook on that remote server blah.ipynb and can see
+  the kernel info (either in the terminal where the server is or via
+  %connect_info)
+- On my local machine I connect to the remote kernel as per already
+  discussed (and documented in your scimax-ipython.org file)
+- On my local machine, I could open up a qtconsole to this same
+  kernel, but the "-ssh.json" version
+- On my local machine, I have blah.org and set up the appropriate
+  PROPERTY to the "-ssh.json" version of the kernel
+
+Now I have the same kernel in the notebook, console, qtconsole and
+Emacs.  It's really magic and a beautiful example of the power of
+client/server and zmq messaging.
+
+In Emacs now, though, I am not getting much jedi completion so this is
+where the extra clients come in handy.
+
+Also, when I want to crank out a bunch of plots and scroll through
+them easily, I get the code going in Emacs, maybe even simply define a
+temp function `f()`.  Then swap over to my notebook and enter `f()` in
+a cell and all the plots appear with better scrolling and other
+browser benefits.
+
+It's really a high level use of all this machinery and is really
+starting to flow for me.
+
+Do you know Cosma Shalizi at CMU?  An old acquaintance and a known
+Emacs user.
+
+Ryan
+
+

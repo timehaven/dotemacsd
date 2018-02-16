@@ -837,6 +837,7 @@
   (setq ns-function-modifier 'hyper))
 
 (require 'scimax-hydra)  ;; OH..MY..GOODNESS...
+;; (require 'scimax-dashboard)
 
 #+END_SRC
 
@@ -887,9 +888,9 @@ Allow inline image resizing within org doc:
 #+END_SRC
 
 ** html css output
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; https://github.com/dakrone/ox-tufte
-(require 'ox-tufte)
+;; (require 'ox-tufte)
 #+END_SRC
 
 #+RESULTS:
@@ -993,7 +994,7 @@ Allow inline image resizing within org doc:
 #+END_SRC
 * COMMENT Finalize theme
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (load-theme 'misterioso)
 ;; (load-theme 'wombat)
 ;; (load-theme 'zenburn)
@@ -1250,6 +1251,13 @@ jupyter console --existing
 
   Use the color theme project by following [[http://www.nongnu.org/color-theme/][these instructions]].
   We now can do =M-x color-theme-<TAB> RET=
+
+*Important note.* The ~themes~ subdir does not get installed so make
+an empty one via:
+
+#+BEGIN_SRC sh
+mkdir ~/.emacs.d/elisp/scimax-master/elpa/color-theme-20070910.1007/themes
+#+END_SRC
 
   #+BEGIN_SRC emacs-lisp :tangle yes
     (use-package color-theme
