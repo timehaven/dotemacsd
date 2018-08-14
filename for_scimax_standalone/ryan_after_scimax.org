@@ -460,6 +460,16 @@
 		  (interactive)
 		  (other-window -1)))
 
+;; Go to next frame
+(global-set-key [C-f6]
+		(lambda ()
+		  (interactive)
+		  (other-frame 1)))
+
+;; center line
+(global-set-key [f7]
+		'recenter-top-bottom)
+
 ;; helm version of buffers.
 (global-set-key [f8]
 		'helm-mini)
@@ -827,7 +837,26 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
 (message "Reached end of * Other useful packages!")
 #+END_SRC
-* keymap
+
+* Dashboard at startup
+
+https://github.com/rakanalh/emacs-dashboard
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (use-package dashboard
+  ;;   :ensure t
+  ;;   :config
+  ;;   (dashboard-setup-startup-hook))
+
+;; https://github.com/daedreth/UncleDavesEmacs
+(use-package dashboard
+  :ensure t
+  :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-banner-logo-title "Welcome to Uncle Ryan's Emacs!"))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; http://irreal.org/blog/?p=1450
@@ -837,13 +866,14 @@
   (setq ns-function-modifier 'hyper))
 
 (require 'scimax-hydra)  ;; OH..MY..GOODNESS...
-;; (require 'scimax-dashboard)
+(require 'scimax-dashboard)
 
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (message "Reached end of * keymap!")
 #+END_SRC
+* keymap
 * org settings
 Remove this stuff from html publish:
 #+BEGIN_SRC
