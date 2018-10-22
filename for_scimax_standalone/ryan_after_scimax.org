@@ -834,6 +834,20 @@
   (setq projectile-tags-command "/usr/local/Cellar/ctags/5.8_1/bin/ctags -Re -f \"%s\" %s"))
 #+END_SRC
 
+
+[[http://pragmaticemacs.com/emacs/tree-style-directory-views-in-dired-with-dired-subtree/][dired subtree!]] source is [[https://github.com/Fuco1/dired-hacks][here]].
+
+In ~dired~ mode, use ~i~ to expand subdirectory and ~;~ to hide it
+again.  Great stuff!  Probably lots of other cool ~dired~ hacks there.
+
+#+BEGIN_SRC emacs-lisp :tangle yes 
+(use-package dired-subtree
+  :config
+  (bind-keys :map dired-mode-map
+             ("i" . dired-subtree-insert)
+             (";" . dired-subtree-remove)))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (message "Reached end of * Other useful packages!")
 #+END_SRC
@@ -907,7 +921,6 @@ Allow inline image resizing within org doc:
 #+ATTR_ORG: :width 30%
 [[file:static/IMG_20171212_134953.jpg]]
 #+END_EXAMPLE
-
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq org-image-actual-width nil)
@@ -1001,7 +1014,7 @@ Allow inline image resizing within org doc:
 
 From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; capture with C-c C-c
 (setq org-capture-templates '(("t" "Todo [inbox]" entry
                                (file+headline "~/org/inbox.org" "Tasks")
@@ -1016,8 +1029,9 @@ From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
 
 ;; for refile C-c C-w (daily!)
 (setq org-refile-targets '(("~/org/de.org" :maxlevel . 3)
-                           ("~/org/ml.org" :level . 1)
-                           ("~/org/read.org" :level . 1)
+                           ("~/org/personal.org" :maxlevel . 3)
+                           ("~/org/ml.org" :maxlevel . 3)
+                           ("~/org/read.org" :maxlevel . 3)
                            ("~/org/tickler.org" :maxlevel . 2)))
 
 
@@ -1026,6 +1040,38 @@ From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
 #+RESULTS:
 : ((~/org/de.org :maxlevel . 3) (~/org/ml.org :level . 1) (~/org/tickler.org :maxlevel . 2))
 
+** ivy views
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; Enable bookmarks and recentf
+(setq ivy-use-virtual-buffers t)
+
+;; Example setting for ivy-views
+(setq ivy-views
+      `(
+	("{} README_AN_useful.org de.org inbox.org ml.org read.org ryan_after_scimax.org"
+	 (vert
+	  (horz (file "/Users/rwoodard/org/inbox.org" 1)
+		(file "/Users/rwoodard/github/timehaven/dotemacsd/for_scimax_standalone/ryan_after_scimax.org" 1)
+		(file "/Users/rwoodard/org/README_AN_useful.org" 1))
+	  (horz (file "/Users/rwoodard/org/read.org" 1)
+		(file "/Users/rwoodard/org/ml.org" 1)
+		(file "/Users/rwoodard/org/de.org" 1))))
+
+("{} README_AN_useful.org de.org inbox.org ml.org personal.org
+  read.org ryan_after_scimax.org" (vert (horz (vert (file
+  "/Users/rwoodard/org/inbox.org" 9) (file
+  "/Users/rwoodard/org/personal.org" 226)) (file
+  "/Users/rwoodard/org/README_AN_useful.org" 1) (file
+  "/Users/rwoodard/github/timehaven/dotemacsd/for_scimax_standalone/ryan_after_scimax.org"
+  25206)) (horz (file "/Users/rwoodard/org/read.org" 1) (file
+  "/Users/rwoodard/org/de.org" 1) (file "/Users/rwoodard/org/ml.org"
+  7787))))
+
+	("{} *scratch* README_AN_useful.org"
+	 (vert (file "/Users/rwoodard/org/README_AN_useful.org" 1)
+	       (buffer "*scratch*" 146)))
+	))
+#+END_SRC
 
 * Local dictionary files, paths
 
