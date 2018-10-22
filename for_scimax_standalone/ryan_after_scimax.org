@@ -997,6 +997,36 @@ Allow inline image resizing within org doc:
 #+RESULTS:
 : 10
 
+** capture
+
+From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
+
+#+BEGIN_SRC emacs-lisp
+;; capture with C-c C-c
+(setq org-capture-templates '(("t" "Todo [inbox]" entry
+                               (file+headline "~/org/inbox.org" "Tasks")
+                               "* TODO %i%?")
+                              ("T" "Tickler" entry
+                               (file+headline "~/org/tickler.org" "Tickler")
+                               "* %i%? \n %U")
+                              ("r" "read" entry
+                               (file+headline "~/org/read.org" "Read!")
+                               "* %i%? \n %U")
+))
+
+;; for refile C-c C-w (daily!)
+(setq org-refile-targets '(("~/org/de.org" :maxlevel . 3)
+                           ("~/org/ml.org" :level . 1)
+                           ("~/org/read.org" :level . 1)
+                           ("~/org/tickler.org" :maxlevel . 2)))
+
+
+#+END_SRC
+
+#+RESULTS:
+: ((~/org/de.org :maxlevel . 3) (~/org/ml.org :level . 1) (~/org/tickler.org :maxlevel . 2))
+
+
 * Local dictionary files, paths
 
 #+BEGIN_SRC emacs-lisp :tangle yes
