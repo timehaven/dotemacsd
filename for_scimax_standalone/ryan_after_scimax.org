@@ -708,6 +708,7 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
 (message "Reached end of * Confluence (corpwiki)!")
 #+END_SRC
+
 * Other useful packages
 
 #+BEGIN_SRC emacs-lisp :tangle yes 
@@ -1030,6 +1031,9 @@ From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
 
 (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
 
+;; (setq org-log-done 'note)  ;; note and time
+(setq org-log-done 'time)  ;; time only
+
 (setq org-agenda-custom-commands 
       '(("o" "At the office" tags-todo "@office"
          ((org-agenda-overriding-header "Office")))))
@@ -1071,6 +1075,15 @@ From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
 (setq ivy-views
       `(
 	("{} main6"
+	 (vert
+	  (horz (file "/Users/rwoodard/org/inbox.org" 1)
+		(file "/Users/rwoodard/org/de.org" 1)
+		(file "/Users/rwoodard/org/ml.org" 1))
+	  (horz (file "/Users/rwoodard/org/read.org" 1)
+		(file "/Users/rwoodard/github/timehaven/dotemacsd/for_scimax_standalone/ryan_after_scimax.org" 1)
+		(file "/Users/rwoodard/org/README_AN_useful.org" 1))))
+
+	("{} main6old"
 	 (vert
 	  (horz (file "/Users/rwoodard/org/inbox.org" 1)
 		(file "/Users/rwoodard/github/timehaven/dotemacsd/for_scimax_standalone/ryan_after_scimax.org" 1)
@@ -1374,6 +1387,7 @@ jupyter console --existing
 #+BEGIN_SRC emacs-lisp :tangle yes
 (message "Reached end of * Python, Jupyter, et al!")
 #+END_SRC
+
 * Howard's Color Theme
 
   Use the color theme project by following [[http://www.nongnu.org/color-theme/][these instructions]].
