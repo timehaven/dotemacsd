@@ -1505,8 +1505,11 @@ I will want to overwrite.
 (defvar ha/fixed-font-family
   (cond ((x-list-fonts "Hasklig") "Hasklig")
 	((x-list-fonts "Hack") "Hack")
+	((x-list-fonts "Menlo") "Menlo")
+	((x-list-fonts "Andale Mono") "Andale Mono")
 	((x-list-fonts "Source Code Pro") "Source Code Pro")
 	((x-list-fonts "Anonymous Pro") "Anonymous Pro")
+	((x-list-fonts "Lucida Console") "Lucida Console")
 	((x-list-fonts "M+ 1mn") "M+ 1mn"))
   "My fixed width font based on what is installed, `nil' if not defined.")
 
@@ -1641,8 +1644,8 @@ I will want to overwrite.
     ;; On Mac, use Command-t to bring up font menu.
     ;;(set-face-attribute 'default nil :height 180)
     ;; (set-face-attribute 'default nil :height 180)
-    (set-face-attribute 'default nil :height 190)
-    ;;(set-face-attribute 'default nil :height 240)
+    ;;(set-face-attribute 'default nil :height 190)
+    (set-face-attribute 'default nil :height 200)
     (add-to-list 'initial-frame-alist '(height . 33))
     (add-to-list 'initial-frame-alist '(width . 80))
     (add-to-list 'default-frame-alist '(height . 33))
