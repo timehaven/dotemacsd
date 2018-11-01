@@ -711,6 +711,102 @@
 
 * Other useful packages
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; https://emacs.stackexchange.com/questions/20799/show-time-in-different-time-zones
+;; (setq display-time-world-time-format "%Z\t%a %d %b %R\t%Y-%m-%d %H:%M:%S\t%R %F %a")
+(setq display-time-world-time-format "\t%Z\t%R\t%F\t%a")
+(setq display-time-format "%R %F %a")
+(display-time-mode 1)
+;; used by (display-time-world)
+
+;; (defface egoge-display-time
+;;   '((((type x w32 mac))
+;;      ;; #060525 is the background colour of my default face.
+;;      (:foreground "#060525" :inherit bold))
+;;     (((type tty))
+;;      (:foreground "blue")))
+;;   "Face used to display the time in the mode line.")
+
+;; This causes the current time in the mode line to be displayed in
+;; `egoge-display-time-face' to make it stand out visually.
+;; (setq display-time-string-forms
+;;       '((propertize (concat " " 24-hours ":" minutes " ")
+;;  		    'face 'egoge-display-time)))
+
+;; (setq display-time-string-forms
+;;       '((substring year -2) "/" month "/" day
+;;     " " 24-hours ":" minutes ":" seconds
+;;     (if time-zone " (") time-zone (if time-zone ")")
+;;     (if mail " Mail" "")))
+
+
+;; (setq display-time-string-forms
+;;       '(year "-" month "-" day
+;;     " " 24-hours ":" minutes ":" seconds
+;;     (if time-zone " (") time-zone (if time-zone ")")))
+
+;; https://emacs.stackexchange.com/questions/7365/how-to-display-date-in-julian-in-the-mode-line
+(set-time-zone-rule t) ;; Use Universal time.
+(setq display-time-string-forms
+    '(24-hours ":" minutes ":" seconds
+    (if time-zone " (") time-zone (if time-zone ")")))
+
+(let ((time (current-time)))
+  (set-time-zone-rule t) ;; Use Universal time.
+  (prog1 (format-time-string "%Y-%m-%d %T UTC" time)
+    (set-time-zone-rule nil))) ;; Reset to default time zone.
+
+;; https://emacs.stackexchange.com/questions/20799/show-time-in-different-time-zones
+;; (add-to-list 'zoneinfo-style-world-list '("Europe/Greenwich" "Greenwich"))
+
+;; (setq zoneinfo-style-world-list '(("America/Los_Angeles" "Portland") ("America/New_York" "New York")
+;;  ("Europe/London" "London") ("Europe/Paris" "Paris") ("Asia/Calcutta"
+;;  "Bangalore") ("Asia/Tokyo" "Tokyo") ("Europe/Greenwich" "Greenwich")))
+
+(setq zoneinfo-style-world-list '(("America/Los_Angeles" "Portland") ("America/New_York" "New York")
+("Europe/Greenwich" "Greenwich")))
+
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; The following were automatically saved by savehist:
+
+;; (setq savehist-minibuffer-history-variables '(buffer-name-history file-name-history helm-apropos-history helm-M-x-input-history))
+;; (setq buffer-name-history '("for_scimax_standalone" "helm-adaptive-history"))
+;; (setq file-name-history '(#("~/.emacs.d/elisp/scimax/user/" 0 29 (ivy-index 0)) #("/Users/rwoodard/github/timehaven/dotemacsd/for_scimax_standalone/" 0 65 (ivy-index 0)) #("~/github/timehaven/dotemacsd/for_scimax_standalone/ryan_after_scimax.org" 1 2 (match-part "/Users/rwoodard/github/timehaven/dotemacsd/for_scimax_standalone/ryan_after_scimax.org") 2 72 (match-part "/Users/rwoodard/github/timehaven/dotemacsd/for_scimax_standalone/ryan_after_scimax.org")) #("/Users/rwoodard/.emacs.d/helm-adaptive-history" 0 46 (ivy-index 0))))
+;; (setq helm-apropos-history '("savehis"))
+;; (setq helm-M-x-input-history '("fin poi" "saveh" "info" "helm ap" "helm resu"))
+
+(setq history-delete-duplicates t)
+(setq savehist-additional-variables 
+                    '(command-history))
+
+;; some Stack Overflow post saved all of these, but probably not
+;; necessary.
+;; https://emacs.stackexchange.com/questions/45069/how-do-i-persist-m-x-calls-so-they-can-be-displayed-in-mru-order
+;;
+;; magit-read-rev-history
+;;                       read-expression-history
+;;                       helm-grep-history
+;;                       minibuffer-history
+;;                       file-name-history
+;;                       ido-file-history
+;;                       evil-ex-history
+;;                       mark-ring
+;;                       search-ring
+;;                       extended-command-history
+;;                       evil-jumps-history
+;;                       kill-ring
+;;                       search-ring
+;;                       regexp-search-ring
+;;                       compile-history
+;;                       log-edit-comment-ring
+;;                       command-history))
+(savehist-mode 1)
+#+END_SRC
+
+
 #+BEGIN_SRC emacs-lisp :tangle yes 
 (use-package sr-speedbar)
 (require 'sr-speedbar)
@@ -999,6 +1095,8 @@ Allow inline image resizing within org doc:
 ;;               (refill-mode t)))
 
 
+(setq org-hide-emphasis-markers t)
+
 ;; Allow 10 lines to be bold.
 ;; https://emacs.stackexchange.com/questions/13820/inline-verbatim-and-code-with-quotes-in-org-mode
 ;; (setcar (nthcdr 4 org-emphasis-regexp-components) 10)
@@ -1105,6 +1203,11 @@ From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
 	 (vert (file "/Users/rwoodard/org/README_AN_useful.org" 1)
 	       (buffer "*scratch*" 146)))
 	))
+#+END_SRC
+
+* server
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq server-socket-dir "~/.emacs.d/server-dir")
 #+END_SRC
 
 * Local dictionary files, paths
@@ -1663,3 +1766,4 @@ I will want to overwrite.
 
 #+RESULTS:
 : Reached end of ryan_after_scimax.org!
+
