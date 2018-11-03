@@ -716,7 +716,9 @@
 ;; (setq display-time-world-time-format "%Z\t%a %d %b %R\t%Y-%m-%d %H:%M:%S\t%R %F %a")
 (setq display-time-world-time-format "\t%Z\t%R\t%F\t%a")
 (setq display-time-format "%R %F %a")
-(display-time-mode 1)
+;;(display-time-mode 1)
+;;(display-time-mode 0)
+
 ;; used by (display-time-world)
 
 ;; (defface egoge-display-time
