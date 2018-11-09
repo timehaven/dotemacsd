@@ -712,6 +712,10 @@
 * Other useful packages
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+;; associated file extensions with modes
+(setq auto-mode-alist (append '(("\\.m$" . octave-mode))
+      auto-mode-alist))
+
 ;; https://emacs.stackexchange.com/questions/20799/show-time-in-different-time-zones
 ;; (setq display-time-world-time-format "%Z\t%a %d %b %R\t%Y-%m-%d %H:%M:%S\t%R %F %a")
 (setq display-time-world-time-format "\t%Z\t%R\t%F\t%a")
