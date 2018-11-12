@@ -1,5 +1,13 @@
 * Helpful things (but no commands issued)
 
+** ivy, helm doc et al
+
+Great blog with lots of good posts
+http://blog.binchen.org/index.html
+
+https://www.draketo.de/english/emacs/writing-papers-in-org-mode-acpd
+
+
 ** src blocks: ~org-hide-block-all~, ~org-show-block-all~
 
 * OS, Emacs version, default face/frame, whoami
@@ -1740,7 +1748,7 @@ I will want to overwrite.
 (when (eq is-linux t)
   ;; Readable font
   (when (eq window-system 'x)
-    (set-face-attribute 'default nil :height 200)
+    (set-face-attribute 'default nil :height 230)
     (add-to-list 'initial-frame-alist '(height . 40))
     (add-to-list 'initial-frame-alist '(width . 80))
     (add-to-list 'default-frame-alist '(height . 40))
@@ -1763,6 +1771,12 @@ I will want to overwrite.
 
 #+RESULTS:
 : ((width . 80) (height . 33))
+
+* external apps
+#+BEGIN_SRC emacs-lisp :tangle yes
+;; https://emacs.stackexchange.com/questions/17988/variable-to-set-org-export-pdf-viewer
+(add-to-list 'org-file-apps '("\\.pdf" . "zathura %s"))
+#+END_SRC
 
 * Message to show I reached end of this file
 
