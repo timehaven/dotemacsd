@@ -1764,6 +1764,40 @@ I will want to overwrite.
 #+RESULTS:
 : ((width . 80) (height . 33))
 
+* elpy
+
+Not sure if I want to tangle the following yet.  But if I do, here it
+is.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+; set up elpy
+(elpy-enable)
+
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+(defvar myPackages
+  '(elpy
+    flycheck
+    py-autopep8)) ;; add the autopep8 package
+
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
+
+
+(setenv "WORKON_HOME" "/Users/rwoodard/local/miniconda3/envs")
+(pyvenv-mode 1)
+;; recomended by https://emacs.stackexchange.com/questions/20092/using-conda-environments-in-emacs
+#+END_SRC
+
+
 * Message to show I reached end of this file
 
 #+BEGIN_SRC emacs-lisp :tangle yes
