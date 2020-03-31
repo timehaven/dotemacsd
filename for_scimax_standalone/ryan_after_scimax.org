@@ -12,6 +12,13 @@ https://www.draketo.de/english/emacs/writing-papers-in-org-mode-acpd
 
 * OS, Emacs version, default face/frame, whoami
 
+** Save desktop, registers, etc.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(desktop-save-mode 1)
+(add-to-list 'desktop-globals-to-save 'register-alist)
+#+END_SRC
+
 ** Silence!
 #+BEGIN_SRC emacs-lisp :tangle yes
 ;; (setq ring-bell-function 'ignore)  ;; no bell, visual or audible
@@ -75,6 +82,14 @@ https://www.draketo.de/english/emacs/writing-papers-in-org-mode-acpd
 * My funky functions
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+
+;; Get rid of this stuff that gets pasted into example blocks:
+;; ╭─ rwoodard@rwoodard  ~/stash/projects/dpaas/resources_dpaas-azure-terraform/env   aks-0.01 ● ?  (miniconda3) 
+;;                                                                                                                                        
+;; ✔
+(fset 'my/kill-zsh-prompts
+   [?\C-r ?r ?w ?o ?o ?d ?a ?r ?d ?@ ?r ?w ?o ?o ?d ?a return ?\C-a ?\C-k ?\C-k ?\C-k ?\C-k kp-delete kp-delete kp-delete])
+
 
 (defun rw/auto-replace-for-confluence ()
   (interactive)
@@ -1162,15 +1177,24 @@ From https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html:
                                "* %i%? \n %U")
 ))
 
+;; allow refile into top level of files
+(setq org-refile-allow-creating-parent-nodes t)
+(setq org-refile-use-outline-path 'file)
 ;; for refile C-c C-w (daily!)
-(setq org-refile-targets '(("~/org/inbox.org" :maxlevel . 3)
-                           ("~/org/read.org" :maxlevel . 3)
-                           ("~/org/ml.org" :maxlevel . 3)
-                           ("~/org/de.org" :maxlevel . 3)
-                           ("~/org/someday.org" :maxlevel . 3)
-                           ("~/org/personal.org" :maxlevel . 3)
-                           ("~/org/README_AN_useful.org" :maxlevel . 3)
-                           ("~/org/tickler.org" :maxlevel . 2)))
+(setq org-refile-targets '(("~/org/inbox.org" :maxlevel . 1)
+                           ("~/org/read.org" :maxlevel . 1)
+                           ("~/org/ml.org" :maxlevel . 1)
+                           ("~/org/de.org" :maxlevel . 1)
+                           ("~/org/k8s.org" :maxlevel . 1)
+                           ("~/org/azure.org" :maxlevel . 1)
+                           ("~/org/dpaas_from_scratch_raw.org" :maxlevel . 1)
+                           ("~/org/README_AN_useful.org" :maxlevel . 1)
+                           ("~/org/dpaas_scratch.org" :maxlevel . 1)
+                           ("~/org/admin.org" :maxlevel . 1)
+                           ("~/org/someday.org" :maxlevel . 1)
+                           ("~/org/personal.org" :maxlevel . 1)
+                           ("~/org/README_AN_useful.org" :maxlevel . 1)
+                           ("~/org/tickler.org" :maxlevel . 1)))
 
 
 #+END_SRC
@@ -1501,8 +1525,19 @@ jupyter console --existing
 (fset 'my/insert-ipy-block-below
    [?\C-u ?\M-x ?o ?r ?g ?  ?b ?a ?b ?e ?l ?  ?i ?n ?s ?e ?r ?t ?  ?b ?l ?o ?c ?k return])
 #+END_SRC
+
+#+BEGIN_SRC ipython
+(setq ob-ipython-show-mime-types nil)
+(setq ob-ipython-execution-count 'ob-ipython-execution-count-suppress)
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (message "Reached end of * Python, Jupyter, et al!")
+#+END_SRC
+
+* scala, indenting, code
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq scala-indent:step 4)  ;; default is 2 spaces for Scala indent
 #+END_SRC
 
 * Howard's Color Theme
@@ -1762,7 +1797,7 @@ I will want to overwrite.
     ;;(set-face-attribute 'default nil :height 180)
     ;; (set-face-attribute 'default nil :height 180)
     ;;(set-face-attribute 'default nil :height 190)
-    (set-face-attribute 'default nil :height 200)
+    (set-face-attribute 'default nil :height 160)
     (add-to-list 'initial-frame-alist '(height . 33))
     (add-to-list 'initial-frame-alist '(width . 80))
     (add-to-list 'default-frame-alist '(height . 33))
@@ -1805,6 +1840,29 @@ is.
 ;; recomended by https://emacs.stackexchange.com/questions/20092/using-conda-environments-in-emacs
 #+END_SRC
 
+* hide show xml editing
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'hideshow)
+(require 'sgml-mode)
+(require 'nxml-mode)
+
+(add-to-list 'hs-special-modes-alist
+             '(nxml-mode
+               "<!--\\|<[^/>]*[^/]>"
+               "-->\\|</[^/>]*[^/]>"
+
+               "<!--"
+               sgml-skip-tag-forward
+               nil))
+
+
+
+(add-hook 'nxml-mode-hook 'hs-minor-mode)
+
+;; optional key bindings, easier than hs defaults
+(define-key nxml-mode-map (kbd "C-c h") 'hs-toggle-hiding)
+#+END_SRC
 
 * external apps
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1821,4 +1879,186 @@ is.
 
 #+RESULTS:
 : Reached end of ryan_after_scimax.org!
+
+* Testing new things
+** howardism literate devops
+
+[[http://www.howardism.org/Technical/Emacs/literate-devops.html][literate devops]]
+
+#+NAME: ls-stuff
+#+BEGIN_SRC sh :results list
+ls /
+#+END_SRC
+
+#+RESULTS: ls-stuff
+- ("Applications" "")
+- ("Incompatible" "Software")
+- ("Library" "")
+- ("Network" "")
+- ("System" "")
+- ("TMVersion.ini" "")
+- ("Users" "")
+- ("Volumes" "")
+- ("bin" "")
+- ("cores" "")
+- ("dev" "")
+- ("etc" "")
+- ("home" "")
+- ("home_prev" "")
+- ("installer.failurerequests" "")
+- ("libpeerconnection.log" "")
+- ("libpeerconnection.log.0.gz" "")
+- ("libpeerconnection.log.1.gz" "")
+- ("libpeerconnection.log.2.gz" "")
+- ("libpeerconnection.log.3.gz" "")
+- ("libpeerconnection.log.4.gz" "")
+- ("mnt" "")
+- ("net" "")
+- ("opt" "")
+- ("private" "")
+- ("sbin" "")
+- ("tmp" "")
+- ("usr" "")
+- ("var" "")
+
+#+NAME: some-python-code
+#+BEGIN_SRC python
+print("some python is good")
+#+END_SRC
+
+#+BEGIN_SRC sh :noweb yes
+python -c '<<some-python-code>>'
+#+END_SRC
+
+#+RESULTS:
+: some python is good
+
+#+BEGIN_SRC sh :var LIST=ls-stuff
+for f in $LIST
+do
+  echo $f
+done
+#+END_SRC
+
+#+RESULTS:
+| Applications               |
+| Incompatible               |
+| Software                   |
+| Library                    |
+| Network                    |
+| System                     |
+| TMVersion.ini              |
+| Users                      |
+| Volumes                    |
+| bin                        |
+| cores                      |
+| dev                        |
+| etc                        |
+| home                       |
+| home_prev                  |
+| installer.failurerequests  |
+| libpeerconnection.log      |
+| libpeerconnection.log.0.gz |
+| libpeerconnection.log.1.gz |
+| libpeerconnection.log.2.gz |
+| libpeerconnection.log.3.gz |
+| libpeerconnection.log.4.gz |
+| mnt                        |
+| net                        |
+| opt                        |
+| private                    |
+| sbin                       |
+| tmp                        |
+| usr                        |
+| var                        |
+
+#+BEGIN_SRC sh :results raw
+ls
+#+END_SRC
+
+#+RESULTS:
+#ryan_after_scimax.org#
+custom.el
+ryan_after_scimax.el
+ryan_after_scimax.html
+ryan_after_scimax.org
+user.el
+
+#+BEGIN_SRC sh :results raw :dir /Users
+ls
+#+END_SRC
+
+#+RESULTS:
+Shared
+appadmin
+rwoodard
+
+#+BEGIN_SRC sh :results raw :dir /ssh:541.bm-rwoodard.user.nym2.adnexus.net:/home/rwoodard
+ls
+#+END_SRC
+
+#+RESULTS:
+backup	derby.log  github  local  metastore_db	mypyspark  stash
+backup	derby.log  github  local  metastore_db	mypyspark  stash
+backup	derby.log  github  local  metastore_db	mypyspark  stash
+
+#+BEGIN_SRC sh :results raw :dir /ssh:bare:/home/rwoodard
+ls
+#+END_SRC
+
+#+RESULTS:
+backup	derby.log  github  local  metastore_db	mypyspark  stash
+
+#+BEGIN_SRC sh :dir /ssh:jump.adnxs.net|ssh:07.ebee.sand-08.fra1:/home/rwoodard
+env | grep HOST
+#+END_SRC
+
+#+RESULTS:
+: HOSTNAME=07.ebee.sand-08.fra1
+
+#+BEGIN_SRC sh :dir /ssh:jump.adnxs.net:/home/rwoodard
+env | grep HOST
+#+END_SRC
+
+#+RESULTS:
+: HOSTNAME=27.jump.mgmt.nym2
+
+#+BEGIN_SRC sh :dir /Users/rwoodard
+env | grep HOME
+#+END_SRC
+
+#+RESULTS:
+: HOME=/Users/rwoodard
+
+With sessions:
+
+#+BEGIN_SRC sh :session bare
+ssh bare
+#+END_SRC
+
+#+RESULTS:
+|         |                                     |                                 |          |            |            |                   |         |             |
+| Welcome | to                                  | Ubuntu                          | 16.04.5  | LTS        | (GNU/Linux | 4.4.0-141-generic | x86_64) |             |
+|         |                                     |                                 |          |            |            |                   |         |             |
+| *       | Documentation:                      | https://help.ubuntu.com         |          |            |            |                   |         |             |
+| *       | Management:                         | https://landscape.canonical.com |          |            |            |                   |         |             |
+| *       | Support:                            | https://ubuntu.com/advantage    |          |            |            |                   |         |             |
+|         |                                     |                                 |          |            |            |                   |         |             |
+| 26      | packages                            | can                             | be       | updated.   |            |                   |         |             |
+| 5       | updates                             | are                             | security | updates.   |            |                   |         |             |
+|         |                                     |                                 |          |            |            |                   |         |             |
+| New     | release                             | '18.04.2                        | LTS'     | available. |            |                   |         |             |
+| Run     | 'do-release-upgrade'                | to                              | upgrade  | to         | it.        |                   |         |             |
+|         |                                     |                                 |          |            |            |                   |         |             |
+|         |                                     |                                 |          |            |            |                   |         |             |
+| Last    | login:                              | Wed                             | Apr      | 24         | 23:34:43   |              2019 | from    | 10.0.12.158 |
+| (py36)  | [rwoodard@541.bm-rwoodard.user.nym2 | ~]                              |          |            |            |                   |         |             |
+
+#+BEGIN_SRC sh :session bare
+hostname -I
+#+END_SRC
+
+#+RESULTS:
+| 10.3.67.182 |                                     |    |
+|      (py36) | [rwoodard@541.bm-rwoodard.user.nym2 | ~] |
 
