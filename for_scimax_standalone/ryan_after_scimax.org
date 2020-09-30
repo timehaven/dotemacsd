@@ -1,3 +1,8 @@
+* TODO
+
+- [ ] emacs from [[https://www.emacswiki.org/emacs/EmacsForMacOS#toc26][Mac icon]]
+- [ ] option, command key
+
 * Helpful things (but no commands issued)
 
 ** ivy, helm doc et al
@@ -16,7 +21,9 @@ https://www.draketo.de/english/emacs/writing-papers-in-org-mode-acpd
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (desktop-save-mode 1)
-(add-to-list 'desktop-globals-to-save 'register-alist)
+;; (add-to-list 'desktop-globals-to-save 'register-alist)
+(add-to-list 'desktop-path "~/.emacs.d")
+;; (setq desktop-save t) 
 #+END_SRC
 
 ** Silence!
@@ -1869,6 +1876,12 @@ is.
 ;; https://emacs.stackexchange.com/questions/17988/variable-to-set-org-export-pdf-viewer
 (when (eq is-linux t)
   (add-to-list 'org-file-apps '("\\.pdf" . "zathura %s")))
+#+END_SRC
+
+* Load desktop of previous session
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(desktop-read)
 #+END_SRC
 
 * Message to show I reached end of this file
